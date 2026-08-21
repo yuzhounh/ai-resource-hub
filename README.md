@@ -4,8 +4,6 @@
 
 <h1 align="center">AI Resource Hub</h1>
 
-<hr>
-
 <p align="center"><strong>AI 工具集、API 控制台与 Agent 生态地图的统一入口</strong></p>
 
 <p align="center">
