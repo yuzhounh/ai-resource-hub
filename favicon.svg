@@ -1,9 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
   <style>
-    .tile{fill:#8b96a5;fill-opacity:.1;stroke:#8b96a5;stroke-opacity:.4}.link{stroke:#8b96a5}.hub{fill:#8875de}.left{fill:#43a68f}.right{fill:#668dd8}.center{fill:#d39448}
-    @media(prefers-color-scheme:dark){.tile{fill-opacity:.16;stroke-opacity:.6}}
+    .link{stroke:#8b96a5}.hub{fill:#8875de}.left{fill:#43a68f}.right{fill:#668dd8}.center{fill:#d39448}
   </style>
-  <rect class="tile" x=".75" y=".75" width="22.5" height="22.5" rx="5.5" stroke-width="1.5"/>
   <path class="link" d="M12 7v2.5M12 9.5 4.5 13.75M12 9.5l7.5 4.25M12 9.5v9" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
   <circle class="hub" cx="12" cy="5.25" r="3.6"/>
   <rect class="left" x="1.75" y="11" width="5.5" height="5.5" rx="1.6"/>

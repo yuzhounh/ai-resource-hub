@@ -2,10 +2,6 @@
   <title id="title">AI Resource Hub</title>
   <desc id="desc">A vertically symmetrical hub connected to three colorful rounded-square resource nodes.</desc>
   <defs>
-    <linearGradient id="tileGradient" x1="5" y1="4" x2="43" y2="45" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#668dd8" stop-opacity=".14"/>
-      <stop offset="1" stop-color="#8875de" stop-opacity=".1"/>
-    </linearGradient>
     <linearGradient id="hubGradient" x1="18" y1="4" x2="30" y2="17" gradientUnits="userSpaceOnUse">
       <stop stop-color="#7457e8"/>
       <stop offset="1" stop-color="#de4f82"/>
@@ -24,16 +20,14 @@
     </linearGradient>
   </defs>
   <style>
-    .tile{fill:url(#tileGradient);stroke:#668dd8;stroke-opacity:.28;stroke-width:1.5}
     .link{fill:none;stroke:#668dd8;stroke-opacity:.62;stroke-width:2.7;stroke-linecap:round;stroke-linejoin:round}
     .hub{fill:url(#hubGradient)}
     .left{fill:url(#mintGradient)}
     .right{fill:url(#oceanGradient)}
     .center{fill:url(#amberGradient)}
     .detail{fill:#fff;fill-opacity:.94}
-    @media(prefers-color-scheme:dark){.tile{stroke-opacity:.5}.link{stroke-opacity:.78}.detail{fill-opacity:.88}}
+    @media(prefers-color-scheme:dark){.link{stroke-opacity:.78}.detail{fill-opacity:.88}}
   </style>
-  <rect class="tile" x="1" y="1" width="46" height="46" rx="12"/>
   <path class="link" d="M24 14.5v5M24 19.5 9.25 28.5M24 19.5l14.75 9M24 19.5v17"/>
   <circle class="hub" cx="24" cy="10.5" r="7.75"/>
   <path class="detail" d="M24 6.2c.35 2.55 1.75 3.95 4.3 4.3-2.55.35-3.95 1.75-4.3 4.3-.35-2.55-1.75-3.95-4.3-4.3 2.55-.35 3.95-1.75 4.3-4.3Z"/>
