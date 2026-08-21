@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI API Console Navigator</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f7f8fa;
+      --card: #ffffff;
+      --text: #1f2328;
+      --muted: #667085;
+      --border: #e5e7eb;
+      --accent: #2563eb;
+      --header: #f3f4f6;
+      --col-total: 11;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f1115;
+        --card: #171a21;
+        --text: #edf0f5;
+        --muted: #9aa4b2;
+        --border: #2a2f3a;
+        --accent: #7aa2ff;
+        --header: #20242d;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Microsoft YaHei", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 40px 20px 64px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+      letter-spacing: -0.02em;
+    }
+    .subtitle {
+      margin: 0 0 32px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+    section {
+      margin-top: 34px;
+    }
+    h2 {
+      margin: 0 0 14px;
+      font-size: 22px;
+    }
+    .table-wrap {
+      overflow-x: auto;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.05);
+    }
+    table {
+      width: 100%;
+      min-width: 1000px;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 14px;
+    }
+    col.col-platform { width: calc(100% * 2 / var(--col-total)); }
+    col.col-key { width: calc(100% * 2.5 / var(--col-total)); }
+    col.col-usage { width: calc(100% * 2.5 / var(--col-total)); }
+    col.col-billing { width: calc(100% * 2.5 / var(--col-total)); }
+    col.col-docs { width: calc(100% * 1.5 / var(--col-total)); }
+    th, td {
+      padding: 12px 14px;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--border);
+      line-height: 1.45;
+      overflow-wrap: break-word;
+      word-break: keep-all;
+    }
+    th {
+      background: var(--header);
+      font-size: 14px;
+    }
+    tr:last-child td { border-bottom: none; }
+    td:first-child {
+      font-weight: 700;
+    }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    a:hover { text-decoration: underline; }
+    .arrow {
+      color: var(--muted);
+      font-size: 13px;
+      margin-left: 4px;
+    }
+    footer {
+      margin-top: 32px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <h1>AI API Console Navigator</h1>
+    <p class="subtitle">模型厂商代表方案与 API Router / 聚合平台，按国内外分类，含 API Key、Usage、充值 / 套餐与文档入口。</p>
+
+    <section>
+      <h2>模型厂商代表方案 · 国内</h2>
+      <div class="table-wrap">
+        <table>
+          <colgroup>
+            <col class="col-platform">
+            <col class="col-key">
+            <col class="col-usage">
+            <col class="col-billing">
+            <col class="col-docs">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>平台</th>
+              <th>API Key</th>
+              <th>Usage</th>
+              <th>充值 / 套餐</th>
+              <th>文档</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>DeepSeek</td>
+              <td><a href="https://platform.deepseek.com/api_keys" target="_blank" rel="noopener">API Keys</a></td>
+              <td><a href="https://platform.deepseek.com/usage" target="_blank" rel="noopener">Usage</a></td>
+              <td><a href="https://platform.deepseek.com/top_up" target="_blank" rel="noopener">充值</a></td>
+              <td><a href="https://api-docs.deepseek.com/" target="_blank" rel="noopener">API Docs</a></td>
+            </tr>
+            <tr>
+              <td>GLM / 智谱 / BigModel</td>
+              <td><a href="https://bigmodel.cn/apikey/platform" target="_blank" rel="noopener">API Key</a></td>
+              <td><a href="https://bigmodel.cn/coding-plan/personal/usage" target="_blank" rel="noopener">用量统计</a></td>
+              <td><a href="https://bigmodel.cn/coding-plan/personal/overview" target="_blank" rel="noopener">Coding Plan 套餐</a></td>
+              <td><a href="https://docs.bigmodel.cn/cn/guide/start/model-overview" target="_blank" rel="noopener">开发文档</a></td>
+            </tr>
+            <tr>
+              <td>阿里云百炼</td>
+              <td><a href="https://bailian.console.aliyun.com/cn-beijing/?apiKey=1&amp;tab=globalset#/efm/api_key" target="_blank" rel="noopener">API Key</a></td>
+              <td><a href="https://bailian.console.aliyun.com/" target="_blank" rel="noopener">百炼控制台</a><span class="arrow">→ 模型用量</span></td>
+              <td><a href="https://bailian.console.aliyun.com/" target="_blank" rel="noopener">百炼控制台</a><span class="arrow">→ 费用 / 资源包</span></td>
+              <td><a href="https://help.aliyun.com/zh/model-studio/" target="_blank" rel="noopener">文档</a></td>
+            </tr>
+            <tr>
+              <td>Qwen Token Plan [1]</td>
+              <td><a href="https://bailian.console.aliyun.com/" target="_blank" rel="noopener">Token Plan 控制台</a><span class="arrow">→ API Key</span></td>
+              <td><a href="https://bailian.console.aliyun.com/" target="_blank" rel="noopener">我的订阅 / 用量分析</a></td>
+              <td><a href="https://bailian.console.aliyun.com/" target="_blank" rel="noopener">Token Plan</a><span class="arrow">→ 我的订阅</span></td>
+              <td><a href="https://help.aliyun.com/zh/model-studio/token-plan-personal-faq" target="_blank" rel="noopener">Token Plan 文档</a></td>
+            </tr>
+            <tr>
+              <td>Qwen Token Plan [2]</td>
+              <td><a href="https://platform.qianwenai.com/home/api-keys" target="_blank" rel="noopener">API Key</a></td>
+              <td><a href="https://platform.qianwenai.com/home/billing/subscription/token-plan-individual" target="_blank" rel="noopener">我的订阅</a><span class="arrow">→ 用量分析</span></td>
+              <td><a href="https://platform.qianwenai.com/pricing/token-plan" target="_blank" rel="noopener">Token Plan 套餐</a></td>
+              <td><a href="https://platform.qianwenai.com/docs/token-plan/personal/token-plan-personal-quickstart" target="_blank" rel="noopener">开发文档</a></td>
+            </tr>
+            <tr>
+              <td>Kimi / 月之暗面</td>
+              <td><a href="https://platform.kimi.com/console/api-keys" target="_blank" rel="noopener">API Keys</a></td>
+              <td><a href="https://platform.kimi.com/" target="_blank" rel="noopener">控制台</a><span class="arrow">→ Usage</span></td>
+              <td><a href="https://platform.kimi.com/" target="_blank" rel="noopener">控制台</a><span class="arrow">→ 余额 / 充值 / Kimi Code</span></td>
+              <td><a href="https://platform.kimi.com/docs/" target="_blank" rel="noopener">文档</a></td>
+            </tr>
+            <tr>
+              <td>MiniMax</td>
+              <td><a href="https://platform.minimaxi.com/" target="_blank" rel="noopener">开放平台</a><span class="arrow">→ 接口密钥</span></td>
+              <td><a href="https://platform.minimaxi.com/" target="_blank" rel="noopener">开放平台</a><span class="arrow">→ 用量统计</span></td>
+              <td><a href="https://platform.minimax.io/subscribe/coding-plan" target="_blank" rel="noopener">订阅管理</a><span class="arrow">→ Token Plan</span></td>
+              <td><a href="https://platform.minimaxi.com/docs" target="_blank" rel="noopener">文档</a></td>
+            </tr>
+            <tr>
+              <td>MiMo / 小米</td>
+              <td><a href="https://platform.xiaomimimo.com/" target="_blank" rel="noopener">MiMo 平台</a><span class="arrow">→ API Key</span></td>
+              <td><a href="https://platform.xiaomimimo.com/" target="_blank" rel="noopener">MiMo 平台</a><span class="arrow">→ 用量</span></td>
+              <td><a href="https://mimo.xiaomi.com/" target="_blank" rel="noopener">小米 MiMo</a><span class="arrow">→ Token Plan 订阅</span></td>
+              <td><a href="https://mimo.xiaomi.com/" target="_blank" rel="noopener">官方文档</a></td>
+            </tr>
+            <tr>
+              <td>火山方舟 / 字节跳动</td>
+              <td><a href="https://console.volcengine.com/ark" target="_blank" rel="noopener">方舟控制台</a><span class="arrow">→ API Key 管理</span></td>
+              <td><a href="https://console.volcengine.com/ark" target="_blank" rel="noopener">方舟控制台</a><span class="arrow">→ 用量分析</span></td>
+              <td><a href="https://console.volcengine.com/ark" target="_blank" rel="noopener">方舟控制台</a><span class="arrow">→ Coding Plan / Agent Plan</span></td>
+              <td><a href="https://www.volcengine.com/docs/82379" target="_blank" rel="noopener">文档</a></td>
+            </tr>
+            <tr>
+              <td>百度千帆</td>
+              <td><a href="https://cloud.baidu.com/product/qianfan.html" target="_blank" rel="noopener">千帆控制台</a><span class="arrow">→ 系统管理 → API Key</span></td>
+              <td><a href="https://cloud.baidu.com/product/qianfan.html" target="_blank" rel="noopener">千帆控制台</a><span class="arrow">→ 用量</span></td>
+              <td><a href="https://cloud.baidu.com/product/codingplan.html" target="_blank" rel="noopener">Token Plan 个人版</a></td>
+              <td><a href="https://cloud.baidu.com/doc/qianfan/index.html" target="_blank" rel="noopener">文档</a></td>
+            </tr>
+            <tr>
+              <td>腾讯云 Token Plan</td>
+              <td><a href="https://cloud.tencent.cn/product/tokenhub" target="_blank" rel="noopener">TokenHub</a><span class="arrow">→ API Key</span></td>
+              <td><a href="https://cloud.tencent.cn/product/tokenhub" target="_blank" rel="noopener">TokenHub</a><span class="arrow">→ 用量</span></td>
+              <td><a href="https://cloud.tencent.cn/act/pro/tokenplan" target="_blank" rel="noopener">Token Plan 套餐</a></td>
+              <td><a href="https://cloud.tencent.cn/product/tokenhub" target="_blank" rel="noopener">产品页</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>模型厂商代表方案 · 国外</h2>
+      <div class="table-wrap">
+        <table>
+          <colgroup>
+            <col class="col-platform">
+            <col class="col-key">
+            <col class="col-usage">
+            <col class="col-billing">
+            <col class="col-docs">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>平台</th>
+              <th>API Key</th>
+              <th>Usage</th>
+              <th>充值 / 套餐</th>
+              <th>文档</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>OpenAI</td>
+              <td><a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">API Keys</a></td>
+              <td><a href="https://platform.openai.com/usage" target="_blank" rel="noopener">Usage</a></td>
+              <td><a href="https://platform.openai.com/settings" target="_blank" rel="noopener">Settings</a><span class="arrow">→ Billing</span></td>
+              <td><a href="https://developers.openai.com/api/" target="_blank" rel="noopener">API Docs</a></td>
+            </tr>
+            <tr>
+              <td>Anthropic</td>
+              <td><a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">API Keys</a></td>
+              <td><a href="https://console.anthropic.com/" target="_blank" rel="noopener">Console</a><span class="arrow">→ Usage</span></td>
+              <td><a href="https://console.anthropic.com/" target="_blank" rel="noopener">Console</a><span class="arrow">→ Plans &amp; Billing</span></td>
+              <td><a href="https://docs.anthropic.com/" target="_blank" rel="noopener">Docs</a></td>
+            </tr>
+            <tr>
+              <td>xAI</td>
+              <td><a href="https://console.x.ai/" target="_blank" rel="noopener">Console</a><span class="arrow">→ API Keys</span></td>
+              <td><a href="https://console.x.ai/" target="_blank" rel="noopener">Console</a><span class="arrow">→ Usage</span></td>
+              <td><a href="https://console.x.ai/" target="_blank" rel="noopener">Console</a><span class="arrow">→ Billing → Payment</span></td>
+              <td><a href="https://docs.x.ai/" target="_blank" rel="noopener">Docs</a></td>
+            </tr>
+            <tr>
+              <td>Mistral AI</td>
+              <td><a href="https://console.mistral.ai/api-keys/" target="_blank" rel="noopener">API Keys</a></td>
+              <td><a href="https://console.mistral.ai/" target="_blank" rel="noopener">Console</a><span class="arrow">→ Usage</span></td>
+              <td><a href="https://console.mistral.ai/" target="_blank" rel="noopener">Console</a><span class="arrow">→ Billing</span></td>
+              <td><a href="https://docs.mistral.ai/" target="_blank" rel="noopener">Docs</a></td>
+            </tr>
+            <tr>
+              <td>Gemini / Google AI Studio</td>
+              <td><a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">API Keys</a></td>
+              <td><a href="https://console.cloud.google.com/apis/api/generativelanguage.googleapis.com/metrics" target="_blank" rel="noopener">API Metrics</a></td>
+              <td><a href="https://console.cloud.google.com/billing" target="_blank" rel="noopener">Google Cloud Billing</a></td>
+              <td><a href="https://ai.google.dev/gemini-api/docs" target="_blank" rel="noopener">Gemini API Docs</a></td>
+            </tr>
+            <tr>
+              <td>OpenCode Zen / Go</td>
+              <td><a href="https://opencode.ai/auth" target="_blank" rel="noopener">登录</a><span class="arrow">→ opencode.ai/zen</span></td>
+              <td><a href="https://opencode.ai/zen" target="_blank" rel="noopener">Zen 平台</a><span class="arrow">→ Usage</span></td>
+              <td><a href="https://opencode.ai/zen" target="_blank" rel="noopener">Zen 平台</a><span class="arrow">→ Plans / Billing</span></td>
+              <td><a href="https://opencode.ai/docs/zen/" target="_blank" rel="noopener">Zen Docs</a></td>
+            </tr>
+            <tr>
+              <td>Ollama Cloud</td>
+              <td><a href="https://ollama.com/settings/keys" target="_blank" rel="noopener">API Keys</a></td>
+              <td><a href="https://ollama.com/settings" target="_blank" rel="noopener">Settings</a></td>
+              <td><a href="https://ollama.com/cloud" target="_blank" rel="noopener">Ollama</a><span class="arrow">→ Cloud Plan</span></td>
+              <td><a href="https://docs.ollama.com/api" target="_blank" rel="noopener">API Docs</a></td>
+            </tr>
+            <tr>
+              <td>NVIDIA NIM / Build</td>
+              <td><a href="https://build.nvidia.com/settings/api-keys" target="_blank" rel="noopener">API Keys</a></td>
+              <td><a href="https://build.nvidia.com/" target="_blank" rel="noopener">NVIDIA Build</a><span class="arrow">→ Usage / Limits</span></td>
+              <td><a href="https://build.nvidia.com/" target="_blank" rel="noopener">NVIDIA Build</a><span class="arrow">→ Credits / Plans</span></td>
+              <td><a href="https://build.nvidia.com/" target="_blank" rel="noopener">API Catalog</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>API Router / 聚合平台 · 国内</h2>
+      <div class="table-wrap">
+        <table>
+          <colgroup>
+            <col class="col-platform">
+            <col class="col-key">
+            <col class="col-usage">
+            <col class="col-billing">
+            <col class="col-docs">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>平台</th>
+              <th>API Key</th>
+              <th>Usage</th>
+              <th>充值 / 套餐</th>
+              <th>文档</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>SiliconFlow 硅基流动</td>
+              <td><a href="https://cloud.siliconflow.cn/account/ak" target="_blank" rel="noopener">API 密钥</a></td>
+              <td><a href="https://cloud.siliconflow.cn/" target="_blank" rel="noopener">控制台</a><span class="arrow">→ 用量</span></td>
+              <td><a href="https://cloud.siliconflow.cn/" target="_blank" rel="noopener">控制台</a><span class="arrow">→ 余额 / 充值</span></td>
+              <td><a href="https://docs.siliconflow.cn/" target="_blank" rel="noopener">文档</a></td>
+            </tr>
+            <tr>
+              <td>魔搭 ModelScope</td>
+              <td><a href="https://modelscope.cn/my/myaccesstoken" target="_blank" rel="noopener">访问令牌</a></td>
+              <td><a href="https://modelscope.cn/" target="_blank" rel="noopener">魔搭社区</a><span class="arrow">→ 在线推理 / 用量</span></td>
+              <td><a href="https://modelscope.cn/" target="_blank" rel="noopener">魔搭社区</a><span class="arrow">→ 资源包</span></td>
+              <td><a href="https://modelscope.cn/docs" target="_blank" rel="noopener">文档</a></td>
+            </tr>
+            <tr>
+              <td>共绩算力</td>
+              <td><a href="https://maas.suanli.cn/api-keys" target="_blank" rel="noopener">API Keys</a></td>
+              <td><a href="https://maas.suanli.cn/" target="_blank" rel="noopener">MaaS 控制台</a><span class="arrow">→ 用量</span></td>
+              <td><a href="https://maas.suanli.cn/" target="_blank" rel="noopener">MaaS 控制台</a><span class="arrow">→ 余额 / 充值</span></td>
+              <td><a href="https://suanli.cn/" target="_blank" rel="noopener">官网 / 文档</a></td>
+            </tr>
+            <tr>
+              <td>优云智算</td>
+              <td><a href="https://console.compshare.cn/light-gpu/api-keys" target="_blank" rel="noopener">API Keys</a></td>
+              <td><a href="https://console.compshare.cn/" target="_blank" rel="noopener">控制台</a><span class="arrow">→ 用量</span></td>
+              <td><a href="https://console.compshare.cn/light-gpu/model-subscription" target="_blank" rel="noopener">模型订阅</a></td>
+              <td><a href="https://www.compshare.cn/docs/modelverse/modelverseapi" target="_blank" rel="noopener">文档</a></td>
+            </tr>
+            <tr>
+              <td>超算互联网 SCNet</td>
+              <td><a href="https://www.scnet.cn/ui/console/index.html#/llm/models" target="_blank" rel="noopener">大模型控制台</a><span class="arrow">→ API Key</span></td>
+              <td><a href="https://www.scnet.cn/ui/console/index.html#/llm/models" target="_blank" rel="noopener">大模型控制台</a><span class="arrow">→ 用量</span></td>
+              <td><a href="https://www.scnet.cn/" target="_blank" rel="noopener">SCNet</a><span class="arrow">→ Token Plan / Coding Plan</span></td>
+              <td><a href="https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/tutorial/quickstart.html" target="_blank" rel="noopener">文档</a></td>
+            </tr>
+            <tr>
+              <td>TaoToken</td>
+              <td><a href="https://taotoken.net/" target="_blank" rel="noopener">控制台</a><span class="arrow">→ KEY 管理</span></td>
+              <td><a href="https://taotoken.net/" target="_blank" rel="noopener">控制台</a><span class="arrow">→ 用量</span></td>
+              <td><a href="https://taotoken.net/" target="_blank" rel="noopener">官网</a><span class="arrow">→ Token Plan / Coding Plan</span></td>
+              <td><a href="https://taotoken.net/" target="_blank" rel="noopener">官网 / 文档</a></td>
+            </tr>
+            <tr>
+              <td>华为云 MaaS</td>
+              <td><a href="https://console.huaweicloud.com/modelarts/?region=cn-southwest-2" target="_blank" rel="noopener">MaaS 控制台</a><span class="arrow">→ API Key 管理</span></td>
+              <td><a href="https://console.huaweicloud.com/modelarts/?region=cn-southwest-2" target="_blank" rel="noopener">MaaS 控制台</a><span class="arrow">→ 订阅管理 / 用量</span></td>
+              <td><a href="https://console.huaweicloud.com/modelarts/?region=cn-southwest-2" target="_blank" rel="noopener">MaaS 控制台</a><span class="arrow">→ Token Plan 订阅</span></td>
+              <td><a href="https://support.huaweicloud.com/Token-plan-maas/tokenplan-maas-0001.html" target="_blank" rel="noopener">Token Plan 文档</a></td>
+            </tr>
+            <tr>
+              <td>阶跃星辰 StepFun</td>
+              <td><a href="https://platform.stepfun.com/interface-key" target="_blank" rel="noopener">接口密钥</a></td>
+              <td><a href="https://platform.stepfun.com/" target="_blank" rel="noopener">开放平台</a><span class="arrow">→ 使用详情</span></td>
+              <td><a href="https://platform.stepfun.com/" target="_blank" rel="noopener">开放平台</a><span class="arrow">→ Step Plan / 充值</span></td>
+              <td><a href="https://platform.stepfun.com/docs/zh/quickstart/overview" target="_blank" rel="noopener">文档</a></td>
+            </tr>
+            <tr>
+              <td>京东云 JoyBuilder</td>
+              <td><a href="https://console.jdcloud.com/" target="_blank" rel="noopener">京东云控制台</a><span class="arrow">→ JoyBuilder → API Key</span></td>
+              <td><a href="https://console.jdcloud.com/" target="_blank" rel="noopener">JoyBuilder</a><span class="arrow">→ 用量</span></td>
+              <td><a href="https://www.jdcloud.com/cn/pages/codingplan" target="_blank" rel="noopener">Coding Plan</a></td>
+              <td><a href="https://docs.jdcloud.com/cn/jdaip/api-key" target="_blank" rel="noopener">文档</a></td>
+            </tr>
+            <tr>
+              <td>讯飞星辰 MaaS</td>
+              <td><a href="https://maas.xfyun.cn/packageSubscription" target="_blank" rel="noopener">套餐订阅</a><span class="arrow">→ API Key</span></td>
+              <td><a href="https://maas.xfyun.cn/" target="_blank" rel="noopener">星辰 MaaS</a><span class="arrow">→ 用量</span></td>
+              <td><a href="https://maas.xfyun.cn/packageSubscription" target="_blank" rel="noopener">Coding / Token Plan</a></td>
+              <td><a href="https://www.xfyun.cn/doc/spark/CodingPlan.html" target="_blank" rel="noopener">文档</a></td>
+            </tr>
+            <tr>
+              <td>联通云 / 元景</td>
+              <td><a href="https://console.cucloud.cn/console/cuig/subscribePlan/" target="_blank" rel="noopener">订阅套餐</a><span class="arrow">→ API Key</span></td>
+              <td><a href="https://console.cucloud.cn/" target="_blank" rel="noopener">联通云控制台</a><span class="arrow">→ 用量</span></td>
+              <td><a href="https://console.cucloud.cn/console/cuig/subscribePlan/create/codingplan?packageClass=codingplan" target="_blank" rel="noopener">Coding / Token Plan</a></td>
+              <td><a href="https://www.cucloud.cn/" target="_blank" rel="noopener">官网</a></td>
+            </tr>
+            <tr>
+              <td>移动云</td>
+              <td><a href="https://ecloud.10086.cn/" target="_blank" rel="noopener">移动云控制台</a><span class="arrow">→ 大模型 / API Key</span></td>
+              <td><a href="https://ecloud.10086.cn/" target="_blank" rel="noopener">移动云控制台</a><span class="arrow">→ 用量</span></td>
+              <td><a href="https://ecloud.10086.cn/" target="_blank" rel="noopener">移动云</a><span class="arrow">→ Token 套餐</span></td>
+              <td><a href="https://ecloud.10086.cn/" target="_blank" rel="noopener">官网</a></td>
+            </tr>
+            <tr>
+              <td>商汤日日新 SenseNova</td>
+              <td><a href="https://platform.sensenova.cn/console" target="_blank" rel="noopener">大装置控制台</a><span class="arrow">→ API-Key 管理</span></td>
+              <td><a href="https://platform.sensenova.cn/console" target="_blank" rel="noopener">控制台</a><span class="arrow">→ 用量</span></td>
+              <td><a href="https://platform.sensenova.cn/token-plan" target="_blank" rel="noopener">Token Plan</a></td>
+              <td><a href="https://platform.sensenova.cn/" target="_blank" rel="noopener">官网 / 文档</a></td>
+            </tr>
+            <tr>
+              <td>摩尔线程 Coding Plan</td>
+              <td><a href="https://docs.mthreads.com/playbook/playbook-doc-online/openclaw/" target="_blank" rel="noopener">接入文档</a><span class="arrow">→ 专属 API Key</span></td>
+              <td><a href="https://developer.mthreads.com/" target="_blank" rel="noopener">开发者平台</a><span class="arrow">→ 用量</span></td>
+              <td><a href="https://developer.mthreads.com/" target="_blank" rel="noopener">开发者平台</a><span class="arrow">→ Coding Plan</span></td>
+              <td><a href="https://docs.mthreads.com/playbook/playbook-doc-online/openclaw/" target="_blank" rel="noopener">OpenClaw 接入</a></td>
+            </tr>
+            <tr>
+              <td>GPTs API / WildCard</td>
+              <td><a href="https://gptsapi.net/" target="_blank" rel="noopener">控制台</a></td>
+              <td><a href="https://gptsapi.net/" target="_blank" rel="noopener">控制台</a><span class="arrow">→ Usage</span></td>
+              <td><a href="https://gptsapi.net/" target="_blank" rel="noopener">控制台</a><span class="arrow">→ Billing</span></td>
+              <td><a href="https://gptsapi.net/" target="_blank" rel="noopener">官网 / 文档</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>API Router / 聚合平台 · 国外</h2>
+      <div class="table-wrap">
+        <table>
+          <colgroup>
+            <col class="col-platform">
+            <col class="col-key">
+            <col class="col-usage">
+            <col class="col-billing">
+            <col class="col-docs">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>平台</th>
+              <th>API Key</th>
+              <th>Usage</th>
+              <th>充值 / 套餐</th>
+              <th>文档</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>OpenRouter</td>
+              <td><a href="https://openrouter.ai/settings/keys" target="_blank" rel="noopener">API Keys</a></td>
+              <td><a href="https://openrouter.ai/activity" target="_blank" rel="noopener">Activity</a></td>
+              <td><a href="https://openrouter.ai/settings/credits" target="_blank" rel="noopener">Credits</a></td>
+              <td><a href="https://openrouter.ai/docs" target="_blank" rel="noopener">Docs</a></td>
+            </tr>
+            <tr>
+              <td>Together AI</td>
+              <td><a href="https://api.together.ai/settings/api-keys" target="_blank" rel="noopener">API Keys</a></td>
+              <td><a href="https://api.together.ai/" target="_blank" rel="noopener">Console</a><span class="arrow">→ Usage</span></td>
+              <td><a href="https://api.together.ai/" target="_blank" rel="noopener">Console</a><span class="arrow">→ Billing</span></td>
+              <td><a href="https://docs.together.ai/" target="_blank" rel="noopener">Docs</a></td>
+            </tr>
+            <tr>
+              <td>Fireworks AI</td>
+              <td><a href="https://fireworks.ai/" target="_blank" rel="noopener">Console</a><span class="arrow">→ API Keys</span></td>
+              <td><a href="https://fireworks.ai/" target="_blank" rel="noopener">Console</a><span class="arrow">→ Usage</span></td>
+              <td><a href="https://fireworks.ai/" target="_blank" rel="noopener">Console</a><span class="arrow">→ Billing / Plans</span></td>
+              <td><a href="https://docs.fireworks.ai/" target="_blank" rel="noopener">Docs</a></td>
+            </tr>
+            <tr>
+              <td>GroqCloud</td>
+              <td><a href="https://console.groq.com/keys" target="_blank" rel="noopener">API Keys</a></td>
+              <td><a href="https://console.groq.com/" target="_blank" rel="noopener">Console</a><span class="arrow">→ Usage</span></td>
+              <td><a href="https://console.groq.com/" target="_blank" rel="noopener">Console</a><span class="arrow">→ Billing</span></td>
+              <td><a href="https://console.groq.com/docs/overview" target="_blank" rel="noopener">Docs</a></td>
+            </tr>
+            <tr>
+              <td>Hugging Face Inference Providers</td>
+              <td><a href="https://huggingface.co/settings/tokens" target="_blank" rel="noopener">Access Tokens</a></td>
+              <td><a href="https://huggingface.co/settings/billing" target="_blank" rel="noopener">Billing</a><span class="arrow">→ Usage</span></td>
+              <td><a href="https://huggingface.co/settings/billing" target="_blank" rel="noopener">Billing</a><span class="arrow">→ Inference Credits</span></td>
+              <td><a href="https://huggingface.co/docs/inference-providers" target="_blank" rel="noopener">Docs</a></td>
+            </tr>
+            <tr>
+              <td>Replicate</td>
+              <td><a href="https://replicate.com/account/api-tokens" target="_blank" rel="noopener">API Tokens</a></td>
+              <td><a href="https://replicate.com/account/billing" target="_blank" rel="noopener">Billing</a><span class="arrow">→ Usage</span></td>
+              <td><a href="https://replicate.com/account/billing" target="_blank" rel="noopener">Billing</a></td>
+              <td><a href="https://replicate.com/docs" target="_blank" rel="noopener">Docs</a></td>
+            </tr>
+            <tr>
+              <td>Baseten</td>
+              <td><a href="https://app.baseten.co/" target="_blank" rel="noopener">App</a><span class="arrow">→ API Keys</span></td>
+              <td><a href="https://app.baseten.co/" target="_blank" rel="noopener">App</a><span class="arrow">→ Usage</span></td>
+              <td><a href="https://app.baseten.co/" target="_blank" rel="noopener">App</a><span class="arrow">→ Billing</span></td>
+              <td><a href="https://docs.baseten.co/" target="_blank" rel="noopener">Docs</a></td>
+            </tr>
+            <tr>
+              <td>AWS Bedrock</td>
+              <td><a href="https://console.aws.amazon.com/bedrock/home#/api-keys" target="_blank" rel="noopener">API Keys</a></td>
+              <td><a href="https://console.aws.amazon.com/cost-management/home#/cost-explorer" target="_blank" rel="noopener">Cost Explorer</a></td>
+              <td><a href="https://console.aws.amazon.com/billing/home" target="_blank" rel="noopener">Billing</a></td>
+              <td><a href="https://docs.aws.amazon.com/bedrock/" target="_blank" rel="noopener">Docs</a></td>
+            </tr>
+            <tr>
+              <td>Vertex AI Model Garden</td>
+              <td><a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener">Credentials</a></td>
+              <td><a href="https://console.cloud.google.com/billing" target="_blank" rel="noopener">Billing</a><span class="arrow">→ Reports</span></td>
+              <td><a href="https://console.cloud.google.com/billing" target="_blank" rel="noopener">Billing</a></td>
+              <td><a href="https://cloud.google.com/vertex-ai/generative-ai/docs/model-garden/explore-models" target="_blank" rel="noopener">Model Garden Docs</a></td>
+            </tr>
+            <tr>
+              <td>Microsoft Foundry Models</td>
+              <td><a href="https://ai.azure.com/" target="_blank" rel="noopener">Azure AI Foundry</a><span class="arrow">→ Keys &amp; Endpoint</span></td>
+              <td><a href="https://ai.azure.com/" target="_blank" rel="noopener">Azure AI Foundry</a><span class="arrow">→ Usage</span></td>
+              <td><a href="https://portal.azure.com/#view/Microsoft_Azure_CostManagement/Menu/~/overview" target="_blank" rel="noopener">Azure Billing</a></td>
+              <td><a href="https://learn.microsoft.com/azure/ai-foundry/" target="_blank" rel="noopener">Docs</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      所有链接均在新标签页打开。部分控制台在登录后可能自动跳转到新版页面；聚合平台的套餐、模型白名单与计费规则请以官方页面为准。GPTs API / WildCard 等非官方中转服务请自行核实来源与数据条款。生态地图参考：<a href="https://github.com/yuzhounh/ai-agent-landscape" target="_blank" rel="noopener">ai-agent-landscape</a>。
+    </footer>
+  </main>
+</body>
+</html>
