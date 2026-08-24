@@ -797,13 +797,14 @@
         <div class="manager-toolbar">
           <label class="manager-search">
             <span class="sr-only">搜索管理数据</span>
-            <input id="manager-search" type="search" placeholder="搜索 Plan、模型、Harness 或备注…">
+            <input id="manager-search" type="search" placeholder="搜索 Plan、投入、模型、Harness 或备注…">
           </label>
           <div class="manager-toolbar-actions">
             <div class="manager-add-control">
               <button id="manager-add-button" class="manager-button primary" type="button" aria-haspopup="true" aria-expanded="false">＋ 新增记录</button>
               <div id="manager-add-menu" class="manager-add-menu" hidden>
                 <button type="button" data-add="plans"><strong>Plan</strong><span>套餐、金额、额度和期限</span></button>
+                <button type="button" data-add="transactions"><strong>充值 / 购买套餐</strong><span>记录每次投入的金额和日期</span></button>
                 <button type="button" data-add="models"><strong>模型</strong><span>协议、能力和实测效果</span></button>
                 <button type="button" data-add="compatibilityTests"><strong>Harness 测试</strong><span>兼容性与错误记录</span></button>
                 <button type="button" data-add="usageSnapshots"><strong>用量快照</strong><span>手动记录剩余额度</span></button>
@@ -818,6 +819,7 @@
         <nav class="manager-nav" aria-label="Plan 管理分类">
           <button type="button" data-manager-view="dashboard" class="active">总览</button>
           <button type="button" data-manager-view="plans">Plan</button>
+          <button type="button" data-manager-view="transactions">投入记录</button>
           <button type="button" data-manager-view="models">模型</button>
           <button type="button" data-manager-view="compatibility">Harness</button>
           <button type="button" data-manager-view="usage">用量</button>
@@ -847,6 +849,11 @@
         <section class="manager-panel" data-manager-panel="plans" hidden>
           <div class="manager-section-heading"><div><p class="manager-eyebrow">SUBSCRIPTIONS</p><h2>Plan</h2><p>管理购买金额、额度、期限、Base URL 和官方入口。</p></div><button class="manager-button primary" type="button" data-add="plans">新增 Plan</button></div>
           <div id="manager-plans-list" class="manager-list"></div>
+        </section>
+
+        <section class="manager-panel" data-manager-panel="transactions" hidden>
+          <div class="manager-section-heading"><div><p class="manager-eyebrow">PAYMENTS</p><h2>投入记录</h2><p>记录每次充值或购买套餐的金额和日期。</p></div><button class="manager-button primary" type="button" data-add="transactions">新增投入记录</button></div>
+          <div id="manager-transactions-list" class="manager-list"></div>
         </section>
 
         <section class="manager-panel" data-manager-panel="models" hidden>
