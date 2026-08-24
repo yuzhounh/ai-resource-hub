@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="AI 工具集、API 控制台与 Agent 生态地图的统一导航入口">
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="stylesheet" href="./manager.css">
   <title>AI Resource Hub</title>
   <style>
     :root{color-scheme:light dark;--bg:#f6f7f9;--card:#fff;--text:#17191c;--muted:#69707c;--line:#e3e6ea;--accent:#2563eb;--soft:#eef4ff;--warn:#fff7e6;--bar:color-mix(in srgb,var(--bg) 91%,transparent)}
@@ -18,7 +19,7 @@
 
     .view-tools section{margin:26px 0 36px}.view-tools h1{margin:0;font-size:30px}.view-tools h2{font-size:21px;margin:0 0 12px}.view-tools h2 span{font-size:12px;font-weight:500;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 7px}.view-tools .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:10px}.view-tools .card{text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 14px;min-height:74px;display:flex;flex-direction:column;gap:6px;transition:.15s}.view-tools .card:hover{transform:translateY(-2px);border-color:var(--accent)}.view-tools .card b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.view-tools .card small{color:var(--muted)}
 
-    .view-api h1{margin:0;font-size:30px}.view-api section{margin-top:34px}.view-api h2{margin:0 0 14px;font-size:22px}.view-api .table-wrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.05)}.view-api table{width:100%;min-width:1000px;border-collapse:collapse;table-layout:fixed;font-size:14px}.view-api col.col-star{width:2.5rem}.view-api col.col-platform{width:17%}.view-api col.col-key,.view-api col.col-usage,.view-api col.col-billing{width:22%}.view-api col.col-docs{width:13%}.view-api th,.view-api td{padding:12px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);line-height:1.45;overflow-wrap:break-word;word-break:keep-all}.view-api th.col-star,.view-api td.col-star{text-align:center;padding-inline:6px;font-weight:600;font-size:15px;line-height:1.2}.view-api th.col-star{color:var(--text)}.view-api td.col-star{color:var(--accent)}.view-api th{background:color-mix(in srgb,var(--card) 78%,var(--soft));font-size:14px}.view-api tr:last-child td{border-bottom:0}.view-api td:nth-child(2){font-weight:700}.view-api td a{font-weight:600;text-decoration:none}.view-api td a:hover{text-decoration:underline}.view-api .arrow{color:var(--muted);font-size:13px;margin-left:4px}
+    .view-api h1{margin:0;font-size:30px}.view-api section{margin-top:34px}.view-api h2{margin:0 0 14px;font-size:22px}.view-api .subnav a{width:120px;box-sizing:border-box;text-align:center}.view-api .table-wrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.05)}.view-api table{width:100%;min-width:1000px;border-collapse:collapse;table-layout:fixed;font-size:14px}.view-api col.col-star{width:2.5rem}.view-api col.col-platform{width:17%}.view-api col.col-key,.view-api col.col-usage,.view-api col.col-billing{width:22%}.view-api col.col-docs{width:13%}.view-api th,.view-api td{padding:12px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);line-height:1.45;overflow-wrap:break-word;word-break:keep-all}.view-api th.col-star,.view-api td.col-star{text-align:center;padding-inline:6px;font-weight:600;font-size:15px;line-height:1.2}.view-api th.col-star{color:var(--text)}.view-api td.col-star{color:var(--accent)}.view-api th{background:color-mix(in srgb,var(--card) 78%,var(--soft));font-size:14px}.view-api tr:last-child td{border-bottom:0}.view-api td:nth-child(2){font-weight:700}.view-api td a{font-weight:600;text-decoration:none}.view-api td a:hover{text-decoration:underline}.view-api .arrow{color:var(--muted);font-size:13px;margin-left:4px}
 
     .view-agents .view-intro{margin:0 0 18px}.view-agents .tagline{font-size:16px;color:var(--muted);margin:0 0 12px}.view-agents .meta{display:flex;gap:9px;flex-wrap:wrap;color:var(--muted);font-size:13px}.view-agents .badge{border:1px solid var(--line);background:var(--card);padding:4px 9px;border-radius:999px}.view-agents .intro{max-width:1100px;color:var(--muted);margin:14px 0 4px}.view-agents section{margin:34px 0 44px}.view-agents .section-title{display:flex;align-items:center;gap:10px;margin-bottom:12px}.view-agents h2{font-size:23px;margin:0}.view-agents h3{font-size:16px;margin:20px 0 10px;color:var(--muted)}.view-agents .table-intro{max-width:1100px;margin:0 0 12px;color:var(--muted);font-size:14px}.view-agents .table-wrap{overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:14px}.view-agents table{border-collapse:collapse;width:100%;min-width:860px}.view-agents th,.view-agents td{padding:12px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}.view-agents th{background:color-mix(in srgb,var(--card) 78%,var(--soft));font-size:13px;white-space:nowrap}.view-agents td{font-size:13.5px}.view-agents tr:last-child td{border-bottom:0}.view-agents td:first-child{font-weight:650;white-space:nowrap}.view-agents .lead-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.view-agents .lead-grid.five{grid-template-columns:repeat(5,1fr)}.view-agents .mini{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px;display:flex;flex-direction:column;gap:6px}.view-agents .mini span{font-size:13px;color:var(--muted)}.view-agents .concepts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.view-agents .concepts span{font-size:13px;border:1px solid var(--line);background:var(--card);padding:7px 10px;border-radius:10px}.view-agents .architecture{max-width:1050px;margin:auto;text-align:center}.view-agents .node{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:12px 16px;margin:auto;max-width:650px}.view-agents .node.strong{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 15%,transparent)}.view-agents .node small{color:var(--muted)}.view-agents .arrow{color:var(--muted);font-size:22px;height:28px}.view-agents .branch{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.view-agents .branch .node{width:100%}.view-agents .fuel{margin-top:12px;color:var(--muted);font-size:13px}.view-agents .note{margin-top:12px;border:1px solid var(--line);background:var(--soft);border-radius:12px;padding:12px 14px;font-size:13px}.view-agents .note.warn{background:var(--warn)}.view-agents .steps{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 18px 15px 40px}.view-agents .steps li{margin:5px 0}
     @media(max-width:900px){.view-agents .lead-grid,.view-agents .lead-grid.five{grid-template-columns:repeat(2,1fr)}.view-agents .branch{grid-template-columns:1fr}.view-agents h1{font-size:30px}}
@@ -35,6 +36,7 @@
       <a id="tab-tools" role="tab" href="#tools" aria-controls="view-tools">工具集</a>
       <a id="tab-api" role="tab" href="#api" aria-controls="view-api">API 控制台</a>
       <a id="tab-agents" role="tab" href="#agents" aria-controls="view-agents">Agent 生态地图</a>
+      <a id="tab-manage" role="tab" href="#manage" aria-controls="view-manage">Plan 管理</a>
     </nav>
   </div>
   <main class="app-shell">
@@ -50,12 +52,12 @@
     <div class="view-toolbar">
       <div class="search"><input id="api-search" type="search" placeholder="搜索平台、API Key、Usage、套餐或文档…（按 / 聚焦）" aria-label="搜索 API 控制台导航"></div>
       <nav class="subnav" aria-label="API 控制台分类">
-        <a href="#api/api-plan-cn">Token Plan·国内 <em data-count-for="api-plan-cn">—</em></a>
-        <a href="#api/api-plan-global">Token Plan·国外 <em data-count-for="api-plan-global">—</em></a>
-        <a href="#api/api-vendor-cn">API·国内 <em data-count-for="api-vendor-cn">—</em></a>
-        <a href="#api/api-vendor-global">API·国外 <em data-count-for="api-vendor-global">—</em></a>
-        <a href="#api/api-router-cn">API Router·国内 <em data-count-for="api-router-cn">—</em></a>
-        <a href="#api/api-router-global">API Router·国外 <em data-count-for="api-router-global">—</em></a>
+        <a href="#api/api-plan-cn">Plan · 国内 <em data-count-for="api-plan-cn">—</em></a>
+        <a href="#api/api-plan-global">Plan · 国外 <em data-count-for="api-plan-global">—</em></a>
+        <a href="#api/api-vendor-cn">API · 国内 <em data-count-for="api-vendor-cn">—</em></a>
+        <a href="#api/api-vendor-global">API · 国外 <em data-count-for="api-vendor-global">—</em></a>
+        <a href="#api/api-router-cn">Router · 国内 <em data-count-for="api-router-cn">—</em></a>
+        <a href="#api/api-router-global">Router · 国外 <em data-count-for="api-router-global">—</em></a>
       </nav>
     </div>
     <p class="empty-state" id="api-empty" hidden>没有找到匹配的平台或入口。</p>
@@ -755,9 +757,135 @@
 <div class="table-wrap"><table class="data-table"><thead><tr><th>目标</th><th>优先考察的类别</th><th>关键问题</th></tr></thead><tbody><tr><td>在当前项目里边看边改</td><td>AI IDE / CLI Agent</td><td>大仓理解、测试、权限、diff、撤销</td></tr><tr><td>把 Issue 委派出去，回来审 PR</td><td>Cloud / Repository-native Agent</td><td>沙箱、并发、PR 质量、日志、凭据、成本</td></tr><tr><td>自动审查每个 Pull Request</td><td>Repository-native Review Agent</td><td>全仓上下文、误报、规则、修复闭环、数据范围</td></tr><tr><td>处理本地文档、表格和 PPT</td><td>Work / Desktop Agent</td><td>文件保真、隐私、可撤销性、交付质量</td></tr><tr><td>自动填写网页或跨应用操作</td><td>Browser / Computer Use</td><td>登录态隔离、确认、失败恢复、提示注入防护</td></tr><tr><td>让个人 Agent 定时或常驻工作</td><td>Personal / Always-on Agent</td><td>设备在线、远程入口、记忆、密钥、预算、审计</td></tr><tr><td>开发自己的 Agent 或工作流</td><td>Framework / Workflow Platform</td><td>Runtime、状态、工具、部署、观测、人工介入、许可证</td></tr><tr><td>给多个 Agent 统一购买模型额度</td><td>Coding / Token Plan 或 Router</td><td>客户端白名单、模型、速率、真实成本、数据条款</td></tr><tr><td>生产级模型托管与企业治理</td><td>Inference / Hyperscaler Platform</td><td>区域、SLA、网络、合规、专用部署、可观测性</td></tr></tbody></table></div><ol class="steps"><li>先确定工作对象：代码、仓库、网页、桌面还是办公文件。</li><li>再确定执行位置：本机、云沙箱、CI 还是常驻服务器。</li><li>选择 Harness / 产品入口。</li><li>最后比较模型和额度方案。</li><li>用真实任务测试成功率、人工接管、回滚与总成本，而不是只看模型榜单。</li></ol></section>
 <footer>内容依据 <a href="https://github.com/yuzhounh/ai-agent-landscape" target="_blank" rel="noopener">yuzhounh/ai-agent-landscape</a> 当前 README（v0.2.0，2026-08-21 核验）整理。产品能力、价格、额度、地区可用性和名称变化很快；如与官方页面冲突，以官方最新说明为准。</footer>
 </div>
+
+    <div id="view-manage" class="view view-manager" role="tabpanel" aria-labelledby="tab-manage" hidden>
+      <div class="manager-summary-row">
+        <p class="view-summary">手动维护套餐、模型、Harness 兼容性、用量和使用笔记；本页面不会收集或保存 API Key。</p>
+        <div id="manager-account" class="manager-account" hidden>
+          <button id="manager-user-menu-button" class="manager-user-button" type="button" aria-label="打开用户菜单" aria-haspopup="true" aria-expanded="false">
+            <img id="manager-user-avatar" alt="" hidden>
+            <span id="manager-user-avatar-fallback" aria-hidden="true"></span>
+          </button>
+          <div id="manager-user-menu" class="manager-user-menu" hidden>
+            <div class="manager-user-menu-profile">
+              <div class="manager-user-menu-avatar">
+                <img id="manager-menu-avatar" alt="" hidden>
+                <span id="manager-menu-avatar-fallback" aria-hidden="true"></span>
+              </div>
+              <div class="manager-user-menu-identity">
+                <strong id="manager-user-name"></strong>
+                <span id="manager-user-email"></span>
+              </div>
+            </div>
+            <div class="manager-user-menu-actions">
+              <button id="manager-signout" type="button">退出登录</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section id="manager-login" class="manager-login-card">
+        <div class="manager-lock" aria-hidden="true">◇</div>
+        <p class="manager-eyebrow">FIREBASE AUTHENTICATION</p>
+        <h2>登录个人管理区</h2>
+        <p>登录后，数据将保存在你自己的 Firestore 路径中。请勿在任何字段粘贴 API Key、访问令牌或其他凭证。</p>
+        <button id="manager-signin" class="manager-button primary" type="button">使用 Google 登录</button>
+        <p id="manager-auth-message" class="manager-message" role="status"></p>
+      </section>
+
+      <div id="manager-app" hidden>
+        <div class="manager-toolbar">
+          <label class="manager-search">
+            <span class="sr-only">搜索管理数据</span>
+            <input id="manager-search" type="search" placeholder="搜索 Plan、模型、Harness 或备注…">
+          </label>
+          <div class="manager-toolbar-actions">
+            <div class="manager-add-control">
+              <button id="manager-add-button" class="manager-button primary" type="button" aria-haspopup="true" aria-expanded="false">＋ 新增记录</button>
+              <div id="manager-add-menu" class="manager-add-menu" hidden>
+                <button type="button" data-add="plans"><strong>Plan</strong><span>套餐、金额、额度和期限</span></button>
+                <button type="button" data-add="models"><strong>模型</strong><span>协议、能力和实测效果</span></button>
+                <button type="button" data-add="compatibilityTests"><strong>Harness 测试</strong><span>兼容性与错误记录</span></button>
+                <button type="button" data-add="usageSnapshots"><strong>用量快照</strong><span>手动记录剩余额度</span></button>
+                <button type="button" data-add="notes"><strong>备注</strong><span>配置、限制和解决办法</span></button>
+              </div>
+            </div>
+            <button id="manager-export" class="manager-button ghost" type="button">导出</button>
+            <label class="manager-button ghost manager-import-label">导入<input id="manager-import" type="file" accept="application/json,.json"></label>
+          </div>
+        </div>
+
+        <nav class="manager-nav" aria-label="Plan 管理分类">
+          <button type="button" data-manager-view="dashboard" class="active">总览</button>
+          <button type="button" data-manager-view="plans">Plan</button>
+          <button type="button" data-manager-view="models">模型</button>
+          <button type="button" data-manager-view="compatibility">Harness</button>
+          <button type="button" data-manager-view="usage">用量</button>
+          <button type="button" data-manager-view="notes">备注</button>
+        </nav>
+
+        <p id="manager-sync-message" class="manager-message" role="status"></p>
+
+        <section class="manager-panel active" data-manager-panel="dashboard">
+          <div id="manager-metrics" class="manager-metrics"></div>
+          <div class="manager-dashboard-grid">
+            <article class="manager-card">
+              <div class="manager-card-heading"><div><p class="manager-eyebrow">ATTENTION</p><h2>需要关注</h2></div></div>
+              <div id="manager-attention" class="manager-list compact"></div>
+            </article>
+            <article class="manager-card">
+              <div class="manager-card-heading"><div><p class="manager-eyebrow">RECENT</p><h2>最近记录</h2></div></div>
+              <div id="manager-recent" class="manager-list compact"></div>
+            </article>
+          </div>
+          <article class="manager-card manager-identity-card">
+            <div><p class="manager-eyebrow">SECURITY</p><h2>当前 Firebase 身份</h2><p>将下面的 UID 写入 Firestore Security Rules 后，可把数据库严格限制为仅此账号访问。</p></div>
+            <code id="manager-uid"></code>
+          </article>
+        </section>
+
+        <section class="manager-panel" data-manager-panel="plans" hidden>
+          <div class="manager-section-heading"><div><p class="manager-eyebrow">SUBSCRIPTIONS</p><h2>Plan</h2><p>管理购买金额、额度、期限、Base URL 和官方入口。</p></div><button class="manager-button primary" type="button" data-add="plans">新增 Plan</button></div>
+          <div id="manager-plans-list" class="manager-list"></div>
+        </section>
+
+        <section class="manager-panel" data-manager-panel="models" hidden>
+          <div class="manager-section-heading"><div><p class="manager-eyebrow">MODEL CATALOG</p><h2>模型</h2><p>记录模型协议、能力、上下文和实测状态。</p></div><button class="manager-button primary" type="button" data-add="models">新增模型</button></div>
+          <div id="manager-models-list" class="manager-list"></div>
+        </section>
+
+        <section class="manager-panel" data-manager-panel="compatibility" hidden>
+          <div class="manager-section-heading"><div><p class="manager-eyebrow">COMPATIBILITY</p><h2>Harness 兼容性</h2><p>分别记录同一 Plan 在 Codex、Claude Code、OpenCode 等 Harness 中的表现。</p></div><button class="manager-button primary" type="button" data-add="compatibilityTests">新增测试</button></div>
+          <div id="manager-compatibility-list" class="manager-list"></div>
+        </section>
+
+        <section class="manager-panel" data-manager-panel="usage" hidden>
+          <div class="manager-section-heading"><div><p class="manager-eyebrow">MANUAL SNAPSHOTS</p><h2>用量</h2><p>从供应商控制台查看后手动记录余额；不运行后台监控。</p></div><button class="manager-button primary" type="button" data-add="usageSnapshots">记录用量</button></div>
+          <div id="manager-usage-list" class="manager-list"></div>
+        </section>
+
+        <section class="manager-panel" data-manager-panel="notes" hidden>
+          <div class="manager-section-heading"><div><p class="manager-eyebrow">KNOWLEDGE</p><h2>备注</h2><p>记录配置方法、限制、错误和解决办法，但不要记录任何凭证。</p></div><button class="manager-button primary" type="button" data-add="notes">新增备注</button></div>
+          <div id="manager-notes-list" class="manager-list"></div>
+        </section>
+      </div>
+
+      <dialog id="manager-dialog" class="manager-dialog">
+        <form id="manager-form" method="dialog">
+          <div class="manager-dialog-heading">
+            <div><p id="manager-dialog-eyebrow" class="manager-eyebrow"></p><h2 id="manager-dialog-title"></h2></div>
+            <button class="manager-icon-button" type="button" data-dialog-close aria-label="关闭">×</button>
+          </div>
+          <div id="manager-form-fields" class="manager-form-grid"></div>
+          <p class="manager-secret-warning">请勿填写 API Key、访问令牌、Cookie 或其他凭证。</p>
+          <p id="manager-form-message" class="manager-message" role="status"></p>
+          <div class="manager-dialog-actions"><button class="manager-button ghost" type="button" data-dialog-close>取消</button><button class="manager-button primary" type="submit">保存</button></div>
+        </form>
+      </dialog>
+    </div>
   </main>
   <script>
-    const viewNames=['tools','api','agents'];
+    const viewNames=['tools','api','agents','manage'];
     let activeView=null;
 
     function hashParts(){
@@ -869,11 +997,11 @@
     });
 
     document.addEventListener('keydown',event=>{
-      const input={tools:toolsSearch,api:apiSearch,agents:agentsSearch}[activeView];
+      const input={tools:toolsSearch,api:apiSearch,manage:document.getElementById('manager-search'),agents:agentsSearch}[activeView];
       if(event.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){
-        event.preventDefault();input.focus();
+        if(input){event.preventDefault();input.focus()}
       }
-      if(event.key==='Escape'&&document.activeElement===input){
+      if(input&&event.key==='Escape'&&document.activeElement===input){
         input.value='';input.dispatchEvent(new Event('input'));input.blur();
       }
     });
@@ -885,5 +1013,6 @@
     },{rootMargin:'-155px 0px -65% 0px',threshold:0});
     document.querySelectorAll('.view section[id]').forEach(section=>observer.observe(section));
   </script>
+  <script type="module" src="./manager.js"></script>
 </body>
 </html>
