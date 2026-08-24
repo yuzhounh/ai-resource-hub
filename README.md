@@ -8,16 +8,16 @@
 
 <p align="center">
   <a href="https://github.com/yuzhounh/ai-resource-hub/releases"><img src="https://img.shields.io/badge/version-v1.2.0-8875DE" alt="version v1.2.0"></a>
-  <a href="https://yuzhounh.github.io/ai-resource-hub/"><img src="https://img.shields.io/badge/GitHub%20Pages-online-43A68F" alt="GitHub Pages online"></a>
+  <a href="https://ai-resource-hub-manager.vercel.app/"><img src="https://img.shields.io/badge/Vercel-online-43A68F" alt="Vercel online"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-D39448" alt="MIT License"></a>
-  <img src="https://img.shields.io/badge/last%20updated-2026--08--23-668DD8" alt="last updated 2026-08-23">
+  <img src="https://img.shields.io/badge/last%20updated-2026--08--25-668DD8" alt="last updated 2026-08-25">
 </p>
 
 AI Resource Hub 将三个互相关联的静态导航页面整合为一个统一入口，覆盖常用 AI 产品、模型与 API 控制台，以及 AI Agent 产品和运行形态。
 
 ## 在线访问
 
-<https://yuzhounh.github.io/ai-resource-hub/>
+<https://ai-resource-hub-manager.vercel.app/>
 
 ## 内容
 
