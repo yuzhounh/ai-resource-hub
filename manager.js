@@ -33,7 +33,7 @@ const db = getFirestore(app);
 const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: "select_account" });
 
-const collectionNames = ["plans", "transactions", "models", "compatibilityTests", "usageSnapshots", "notes"];
+const collectionNames = ["plans", "promotions", "transactions", "models", "compatibilityTests", "usageSnapshots", "notes"];
 const state = {
   user: null,
   activePanel: "plans",
@@ -59,19 +59,38 @@ const schemas = {
       { name: "status", label: "状态", type: "select", options: statusOptions },
       { name: "purchaseAmount", label: "购买 / 充值金额", type: "number", step: "0.01" },
       { name: "currency", label: "币种", type: "select", options: ["CNY", "USD", "EUR", "JPY", "其他"] },
-      { name: "remainingMode", label: "剩余额度类型", type: "select", options: ["百分比", "金额"], defaultValue: "百分比" },
-      { name: "remainingValue", label: "当前剩余", type: "number", step: "0.01", min: "0", defaultValue: 100, help: "百分比模式填写 0–100；金额模式填写实际余额。" },
+      { name: "remainingMode", label: "额度数值类型", type: "select", options: ["百分比", "金额"], defaultValue: "百分比" },
+      { name: "quotaDisplayMode", label: "额度显示方式", type: "select", options: ["剩余", "已用"], defaultValue: "剩余" },
+      { name: "remainingValue", label: "当前剩余", type: "number", step: "0.01", min: "0", defaultValue: 100, help: "百分比模式填写 0–100；金额模式填写实际数值。" },
       { name: "quotaPeriodDays", label: "额度周期（天）", type: "number", step: "1", min: "1", defaultValue: 7, help: "默认按 7 天额度周期记录。" },
-      { name: "nextResetAt", label: "下次重置时间", type: "datetime-local", step: "1", help: "记录到日期、时、分、秒。" },
+      { name: "nextResetAt", label: "下次重置时间", type: "datetime-local", step: "1", help: "可填写具体时间，或输入 27 days 4 hours / 27天4小时；按当前设备本地时间换算。" },
       { name: "quotaTotal", label: "套餐标称总额度（可选）", type: "number", step: "any" },
       { name: "quotaUnit", label: "额度单位", type: "select", options: ["Tokens", "Credits", "CNY", "USD", "请求", "其他"] },
       { name: "startDate", label: "开始日期", type: "date" },
       { name: "expiresAt", label: "截止日期", type: "date" },
       { name: "openaiBaseUrl", label: "OpenAI Base URL", type: "url", full: true, help: "用于 OpenAI Responses / Chat Completions 兼容接口。" },
       { name: "anthropicBaseUrl", label: "Anthropic Base URL", type: "url", full: true, help: "用于 Anthropic Messages 兼容接口。只记录服务地址，不记录认证信息。" },
-      { name: "credentialLabel", label: "凭证别名", help: "例如“个人主账号”；不要填写真实 Key。" },
       { name: "consoleUrl", label: "控制台 / Usage 链接", type: "url" },
       { name: "docsUrl", label: "官方文档链接", type: "url" },
+      { name: "credentialLabel", label: "凭证别名", help: "例如“个人主账号”；不要填写真实 Key。" },
+      { name: "notes", label: "注意事项", type: "textarea", full: true }
+    ]
+  },
+  promotions: {
+    title: "限时优惠",
+    eyebrow: "LIMITED OFFER",
+    fields: [
+      { name: "title", label: "优惠名称", required: true, full: true },
+      { name: "provider", label: "提供方", required: true },
+      { name: "offerType", label: "优惠类型", type: "select", options: ["模型免费", "免费额度", "折扣", "赠送 Credits", "其他"] },
+      { name: "status", label: "状态", type: "select", options: ["进行中", "即将开始", "已结束"], defaultValue: "进行中" },
+      { name: "planId", label: "关联 Plan（可选）", type: "planSelect" },
+      { name: "models", label: "适用模型 / 资源", full: true, help: "例如 OX Alpha，或填写多种可免费体验的模型。" },
+      { name: "benefit", label: "优惠内容", type: "textarea", full: true, required: true, help: "例如免费一周、赠送免费消费额或提供体验额度。" },
+      { name: "startsAt", label: "开始时间", type: "datetime-local", help: "可填写具体时间，也可输入相对当前时间的时长。" },
+      { name: "expiresAt", label: "结束时间", type: "datetime-local", help: "可填写具体时间，也可输入 7 days / 7天。" },
+      { name: "consoleUrl", label: "活动 / 控制台链接", type: "url" },
+      { name: "docsUrl", label: "说明文档链接", type: "url" },
       { name: "notes", label: "注意事项", type: "textarea", full: true }
     ]
   },
@@ -256,13 +275,24 @@ function parseDateInput(value) {
 
 function parseDateTimeInput(value) {
   if (!value) return "";
-  const match = String(value).trim().match(/^(\d{4})年(\d{1,2})月(\d{1,2})日\s+(\d{1,2}):(\d{2}):(\d{2})$/);
-  if (!match) throw new Error("日期时间格式应为“2026年8月24日 14:30:00”。");
-  const [, year, month, day, hour, minute, second] = match;
-  const date = new Date(Number(year), Number(month) - 1, Number(day), Number(hour), Number(minute), Number(second));
-  if (date.getFullYear() !== Number(year) || date.getMonth() !== Number(month) - 1 || date.getDate() !== Number(day) || Number(hour) > 23 || Number(minute) > 59 || Number(second) > 59) throw new Error("请输入有效的日期和 24 小时时间。");
+  const text = String(value).trim();
   const pad = number => String(number).padStart(2, "0");
-  return `${year}-${pad(month)}-${pad(day)}T${pad(hour)}:${pad(minute)}:${pad(second)}`;
+  const toStoredValue = date => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+  const absoluteMatch = text.match(/^(\d{4})年(\d{1,2})月(\d{1,2})日\s+(\d{1,2}):(\d{2}):(\d{2})$/);
+  if (absoluteMatch) {
+    const [, year, month, day, hour, minute, second] = absoluteMatch;
+    const date = new Date(Number(year), Number(month) - 1, Number(day), Number(hour), Number(minute), Number(second));
+    if (date.getFullYear() !== Number(year) || date.getMonth() !== Number(month) - 1 || date.getDate() !== Number(day) || Number(hour) > 23 || Number(minute) > 59 || Number(second) > 59) throw new Error("请输入有效的日期和 24 小时时间。");
+    return toStoredValue(date);
+  }
+  const relativeMatch = text.match(/^(?:(\d+(?:\.\d+)?)\s*天)?\s*(?:(\d+(?:\.\d+)?)\s*小时)?\s*(?:(\d+(?:\.\d+)?)\s*分钟)?$/)
+    || text.match(/^(?:(\d+(?:\.\d+)?)\s*days?)?\s*(?:(\d+(?:\.\d+)?)\s*hours?)?\s*(?:(\d+(?:\.\d+)?)\s*minutes?)?$/i);
+  if (relativeMatch && relativeMatch.slice(1).some(part => part !== undefined)) {
+    const [, days = 0, hours = 0, minutes = 0] = relativeMatch;
+    const durationMs = (Number(days) * 24 * 60 + Number(hours) * 60 + Number(minutes)) * 60000;
+    if (durationMs > 0) return toStoredValue(new Date(Date.now() + durationMs));
+  }
+  throw new Error("请输入“2026年8月24日 14:30:00”、‘27 days 4 hours’或“27天4小时”。");
 }
 
 function formatNumber(value) {
@@ -282,6 +312,26 @@ function daysUntil(dateString) {
   const target = new Date(`${dateString}T23:59:59`);
   if (Number.isNaN(target.getTime())) return null;
   return Math.ceil((target.getTime() - Date.now()) / 86400000);
+}
+
+function formatResetDistance(value) {
+  if (!value) return "尚未设置";
+  const target = new Date(value);
+  if (Number.isNaN(target.getTime())) return "时间格式无效";
+  const differenceMs = target.getTime() - Date.now();
+  if (differenceMs <= 0) return "已到重置时间";
+  return `${(differenceMs / 86400000).toFixed(1)}天`;
+}
+
+function countdownTone(value) {
+  if (!value) return "";
+  const target = new Date(value);
+  if (Number.isNaN(target.getTime())) return "";
+  const days = (target.getTime() - Date.now()) / 86400000;
+  if (days <= 3) return "countdown-critical";
+  if (days <= 7) return "countdown-warning";
+  if (days <= 30) return "countdown-safe";
+  return "countdown-distant";
 }
 
 function byUpdated(items) {
@@ -307,7 +357,7 @@ function findModel(id) {
   return state.data.models.find(item => item.id === id);
 }
 
-function remainingPercent(item) {
+function quotaPercent(item) {
   if (item.remainingMode === "金额") return null;
   const current = Number(item.remainingValue);
   if (Number.isFinite(current)) return Math.max(0, Math.min(100, current));
@@ -319,10 +369,16 @@ function remainingPercent(item) {
   return null;
 }
 
+function remainingPercent(item) {
+  const percent = quotaPercent(item);
+  if (percent === null) return null;
+  return item.quotaDisplayMode === "已用" ? 100 - percent : percent;
+}
+
 function badge(status) {
-  const ok = ["正常", "可用"].includes(status);
-  const bad = ["不可用", "已到期", "已用尽", "已失效"].includes(status);
-  const warn = ["部分可用", "不稳定", "暂停"].includes(status);
+  const ok = ["正常", "可用", "进行中"].includes(status);
+  const bad = ["不可用", "已到期", "已用尽", "已失效", "已结束"].includes(status);
+  const warn = ["部分可用", "不稳定", "暂停", "即将开始"].includes(status);
   return `<span class="manager-badge${ok ? " ok" : bad ? " bad" : warn ? " warn" : ""}">${escapeHtml(status || "未设置")}</span>`;
 }
 
@@ -343,6 +399,20 @@ function actionButtons(collectionName, id) {
   return `<div class="manager-list-actions"><button type="button" data-edit="${collectionName}" data-id="${escapeHtml(id)}">编辑</button><button type="button" data-delete="${collectionName}" data-id="${escapeHtml(id)}">删除</button></div>`;
 }
 
+function renderPromotions() {
+  const items = byTitle(state.data.promotions).filter(matchesQuery);
+  document.getElementById("manager-promotions-list").innerHTML = items.length ? items.map(item => {
+    const plan = findPlan(item.planId);
+    const consoleLink = externalLink(item.consoleUrl, "活动 / 控制台");
+    const docsLink = externalLink(item.docsUrl, "说明文档");
+    const startsAt = item.startsAt || (item.startDate ? `${item.startDate}T00:00:00` : "");
+    const distance = item.expiresAt ? formatResetDistance(item.expiresAt) : "未设置结束时间";
+    const tone = countdownTone(item.expiresAt);
+    const periodStart = startsAt ? formatDateTime(startsAt) : "未设置开始时间";
+    return `<article class="manager-list-item manager-promotion-card"><div class="manager-list-main"><div class="manager-record-header"><div class="manager-list-title"><strong>${escapeHtml(item.title)}</strong>${badge(item.status)}</div>${actionButtons("promotions", item.id)}</div><div class="manager-promotion-overview"><div class="manager-plan-fact manager-plan-provider"><div class="manager-plan-provider-info"><span>提供方</span><strong>${escapeHtml(item.provider || "未填写")}</strong><small>${escapeHtml(item.offerType || "其他")}${plan ? ` · ${escapeHtml(plan.name)}` : ""}</small></div>${consoleLink || docsLink ? `<div class="manager-plan-card-links">${consoleLink}${docsLink}</div>` : ""}</div><div class="manager-plan-fact"><span>优惠内容</span><strong class="manager-promotion-benefit-value">${linkifyText(item.benefit || "未填写")}</strong></div><div class="manager-plan-fact"><span>适用模型 / 资源</span><strong class="manager-promotion-model-value">${escapeHtml(item.models || "未填写")}</strong></div><div class="manager-plan-fact manager-promotion-time"><span>剩余</span><strong class="manager-promotion-countdown${tone ? ` ${tone}` : ""}">${escapeHtml(distance)}</strong><small><span>活动时间 ${escapeHtml(periodStart)}${item.expiresAt ? " —" : ""}</span>${item.expiresAt ? `<span>${escapeHtml(formatDateTime(item.expiresAt))}</span>` : ""}</small></div></div>${item.notes ? `<div class="manager-record-note"><span>注意事项</span><p>${linkifyText(item.notes)}</p></div>` : ""}</div></article>`;
+  }).join("") : empty("还没有限时优惠记录。");
+}
+
 function renderPlans() {
   const items = byTitle(state.data.plans).filter(matchesQuery);
   const otherItems = items.filter(item => item.type !== "按量 API");
@@ -353,11 +423,20 @@ function renderPlans() {
     const periodDays = Number(item.quotaPeriodDays) > 0 ? Number(item.quotaPeriodDays) : 7;
     const isApi = item.type === "按量 API";
     const isAmount = item.remainingMode === "金额";
+    const isUsed = item.quotaDisplayMode === "已用";
     const remainingValue = Number(item.remainingValue);
+    const declaredTotal = item.quotaTotal === null || item.quotaTotal === "" || item.quotaTotal === undefined ? null : Number(item.quotaTotal);
+    const purchaseTotal = item.purchaseAmount === null || item.purchaseAmount === "" || item.purchaseAmount === undefined ? null : Number(item.purchaseAmount);
+    const amountTotal = Number.isFinite(declaredTotal) ? declaredTotal : Number.isFinite(purchaseTotal) ? purchaseTotal : null;
+    const displayedAmount = Number.isFinite(remainingValue)
+      ? isUsed ? amountTotal !== null ? Math.max(0, amountTotal - remainingValue) : null : remainingValue
+      : null;
     const consoleUrl = safeUrl(item.consoleUrl);
     const docsUrl = safeUrl(item.docsUrl);
     const openaiBaseUrl = item.openaiBaseUrl || item.baseUrl || "";
-    return `<article class="manager-list-item manager-plan-card"><div class="manager-list-main"><div class="manager-record-header"><div class="manager-list-title"><strong>${escapeHtml(item.name)}</strong>${badge(item.status)}${item.credentialLabel ? `<span class="manager-credential">凭证 · ${escapeHtml(item.credentialLabel)}</span>` : ""}</div>${actionButtons("plans", item.id)}</div><div class="manager-plan-overview${isApi ? " api-plan" : ""}"><div class="manager-plan-fact manager-plan-provider"><div class="manager-plan-provider-info"><span>提供方</span><strong>${escapeHtml(item.provider || "未填写")}</strong><small>${escapeHtml(item.type || "其他")}</small></div>${consoleUrl || docsUrl ? `<div class="manager-plan-card-links">${consoleUrl ? `<a href="${escapeHtml(consoleUrl)}" target="_blank" rel="noopener">控制台</a>` : ""}${docsUrl ? `<a href="${escapeHtml(docsUrl)}" target="_blank" rel="noopener">官方文档</a>` : ""}</div>` : ""}</div><div class="manager-plan-fact"><span>投入</span><strong>${formatMoney(item.purchaseAmount, item.currency)}</strong><small>${escapeHtml(item.region || "未设置地区")}</small></div><div class="manager-plan-fact manager-plan-quota">${isAmount ? `<span>账户余额</span><strong>${Number.isFinite(remainingValue) ? formatMoney(remainingValue, item.currency || "CNY") : "—"}</strong><small>${isApi ? "长期有效" : "金额余额"}</small>` : `<span>${isApi ? "剩余额度" : `${periodDays} 天额度剩余`}</span><strong>${percent === null ? "—" : `${formatNumber(percent)}%`}</strong><div class="manager-progress" aria-label="额度剩余百分比"><i style="width:${percent === null ? 0 : percent}%"></i></div>`}</div>${isApi ? "" : `<div class="manager-plan-fact"><span>下次重置</span><strong class="manager-plan-datetime">${formatDateTime(item.nextResetAt)}</strong><small>${item.nextResetAt ? "24 小时制" : "尚未设置"}</small></div><div class="manager-plan-fact"><span>有效期</span><strong>${formatDate(item.expiresAt)}</strong><small>${item.startDate ? `开始于 ${formatDate(item.startDate)}` : "未填写开始日期"}</small></div>`}</div>${openaiBaseUrl || item.anthropicBaseUrl ? `<div class="manager-endpoints">${openaiBaseUrl ? `<div><div class="manager-endpoint-value"><span>OpenAI Base URL</span><code>${escapeHtml(openaiBaseUrl)}</code></div><button type="button" data-copy-plan="${escapeHtml(item.id)}" data-copy-field="openaiBaseUrl">复制</button></div>` : ""}${item.anthropicBaseUrl ? `<div><div class="manager-endpoint-value"><span>Anthropic Base URL</span><code>${escapeHtml(item.anthropicBaseUrl)}</code></div><button type="button" data-copy-plan="${escapeHtml(item.id)}" data-copy-field="anthropicBaseUrl">复制</button></div>` : ""}</div>` : ""}${item.notes ? `<div class="manager-record-note"><span>注意事项</span><p>${linkifyText(item.notes)}</p></div>` : ""}</div></article>`;
+    const resetDistance = formatResetDistance(item.nextResetAt);
+    const resetTone = countdownTone(item.nextResetAt);
+    return `<article class="manager-list-item manager-plan-card"><div class="manager-list-main"><div class="manager-record-header"><div class="manager-list-title"><strong>${escapeHtml(item.name)}</strong>${badge(item.status)}${item.credentialLabel ? `<span class="manager-credential">凭证 · ${escapeHtml(item.credentialLabel)}</span>` : ""}</div>${actionButtons("plans", item.id)}</div><div class="manager-plan-overview${isApi ? " api-plan" : ""}"><div class="manager-plan-fact manager-plan-provider"><div class="manager-plan-provider-info"><span>提供方</span><strong>${escapeHtml(item.provider || "未填写")}</strong><small>${escapeHtml(item.type || "其他")}</small></div>${consoleUrl || docsUrl ? `<div class="manager-plan-card-links">${consoleUrl ? `<a href="${escapeHtml(consoleUrl)}" target="_blank" rel="noopener">控制台</a>` : ""}${docsUrl ? `<a href="${escapeHtml(docsUrl)}" target="_blank" rel="noopener">官方文档</a>` : ""}</div>` : ""}</div><div class="manager-plan-fact"><span>投入</span><strong>${formatMoney(item.purchaseAmount, item.currency)}</strong><small>${escapeHtml(item.region || "未设置地区")}</small></div><div class="manager-plan-fact manager-plan-quota">${isAmount ? `<span>${isApi ? "账户余额" : "剩余金额"}</span><strong>${displayedAmount === null ? "—" : formatMoney(displayedAmount, item.currency || "CNY")}</strong><small>${isApi ? "长期有效" : "金额余额"}</small>` : `<span>${isApi ? "剩余额度" : `${periodDays} 天额度剩余`}</span><strong>${percent === null ? "—" : `${formatNumber(percent)}%`}</strong><div class="manager-progress" aria-label="额度剩余百分比"><i style="width:${percent === null ? 0 : percent}%"></i></div>`}</div>${isApi ? "" : `<div class="manager-plan-fact manager-plan-reset"><span>距离重置</span><strong class="manager-reset-value${resetTone ? ` ${resetTone}` : ""}">${escapeHtml(resetDistance)}</strong><small>下次重置 ${escapeHtml(formatDateTime(item.nextResetAt))}</small></div><div class="manager-plan-fact"><span>有效期</span><strong>${formatDate(item.expiresAt)}</strong><small>${item.startDate ? `开始于 ${formatDate(item.startDate)}` : "未填写开始日期"}</small></div>`}</div>${openaiBaseUrl || item.anthropicBaseUrl ? `<div class="manager-endpoints">${openaiBaseUrl ? `<div><div class="manager-endpoint-value"><span>OpenAI Base URL</span><code>${escapeHtml(openaiBaseUrl)}</code></div><button type="button" data-copy-plan="${escapeHtml(item.id)}" data-copy-field="openaiBaseUrl">复制</button></div>` : ""}${item.anthropicBaseUrl ? `<div><div class="manager-endpoint-value"><span>Anthropic Base URL</span><code>${escapeHtml(item.anthropicBaseUrl)}</code></div><button type="button" data-copy-plan="${escapeHtml(item.id)}" data-copy-field="anthropicBaseUrl">复制</button></div>` : ""}</div>` : ""}${item.notes ? `<div class="manager-record-note"><span>注意事项</span><p>${linkifyText(item.notes)}</p></div>` : ""}</div></article>`;
   }).join("");
   const groups = [
     { title: "会员权益、Token Plan、Coding Plan 等", items: otherItems, className: "other" },
@@ -368,6 +447,8 @@ function renderPlans() {
     : empty("还没有 Plan。先记录一个正在使用或准备购买的套餐。");
   document.querySelectorAll("#manager-plans-list .manager-plan-card").forEach((card, index) => {
     card.classList.toggle("manager-plan-card-highlight", displayedItems[index]?.type !== "按量 API");
+    const validityHint = [...card.querySelectorAll(".manager-plan-fact>small")].find(element => /^(开始于|未填写开始日期)/.test(element.textContent));
+    if (validityHint) validityHint.parentElement.classList.add("manager-plan-validity");
   });
   document.querySelectorAll("#manager-plans-list [data-copy-plan]").forEach(button => {
     button.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="11" height="11" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg>';
@@ -462,12 +543,13 @@ function renderDashboard() {
   document.getElementById("manager-attention").innerHTML = attention.length ? attention.slice(0, 10).map(item => `<div class="manager-list-item"><div class="manager-list-main"><div class="manager-list-title"><strong>${escapeHtml(item.title)}</strong>${badge(item.status)}</div><div class="manager-list-meta"><span>${escapeHtml(item.meta)}</span></div></div>${actionButtons(item.collectionName, item.id)}</div>`).join("") : empty("当前没有需要特别关注的项目。");
 
   const recent = collectionNames.flatMap(name => state.data[name].map(item => ({ ...item, _collection: name }))).sort((a, b) => (b.updatedAt || b.createdAt || 0) - (a.updatedAt || a.createdAt || 0)).slice(0, 8);
-  const collectionLabels = { plans: "Plan", transactions: "投入", models: "模型", compatibilityTests: "Harness", usageSnapshots: "用量", notes: "备注" };
+  const collectionLabels = { plans: "Plan", promotions: "优惠", transactions: "投入", models: "模型", compatibilityTests: "Harness", usageSnapshots: "用量", notes: "备注" };
   document.getElementById("manager-recent").innerHTML = recent.length ? recent.map(item => `<div class="manager-list-item"><div class="manager-list-main"><div class="manager-list-title"><strong>${escapeHtml(item.name || item.title || item.harness || findPlan(item.planId)?.name || "记录")}</strong><span class="manager-badge">${collectionLabels[item._collection]}</span></div><div class="manager-list-meta"><span>${new Intl.DateTimeFormat("zh-CN", { dateStyle: "medium", timeStyle: "short" }).format(new Date(item.updatedAt || item.createdAt))}</span></div></div>${actionButtons(item._collection, item.id)}</div>`).join("") : empty("尚未创建任何记录。");
 }
 
 function renderAll() {
   renderDashboard();
+  renderPromotions();
   renderPlans();
   renderTransactions();
   renderModels();
@@ -500,7 +582,7 @@ function fieldHtml(field, value = "") {
   } else if (field.type === "date") {
     control = `<input name="${field.name}" type="text" value="${escapeHtml(formatDateInput(value))}" placeholder="2026年8月17日" inputmode="numeric"${required}>`;
   } else if (field.type === "datetime-local") {
-    control = `<input name="${field.name}" type="text" value="${escapeHtml(formatDateTimeInput(value))}" placeholder="2026年8月24日 14:30:00" inputmode="numeric"${required}>`;
+    control = `<input name="${field.name}" type="text" value="${escapeHtml(formatDateTimeInput(value))}" placeholder="2026年8月24日 14:30:00 或 27天4小时"${required}>`;
   } else {
     control = `<input name="${field.name}" type="${field.type || "text"}" value="${escapeHtml(value)}"${field.step ? ` step="${field.step}"` : ""}${field.min !== undefined ? ` min="${field.min}"` : ""}${field.max !== undefined ? ` max="${field.max}"` : ""}${required}>`;
   }
@@ -511,12 +593,13 @@ function updatePlanFieldVisibility() {
   if (state.editing?.collectionName !== "plans") return;
   const isApi = els.form.elements.type?.value === "按量 API";
   const isAmount = els.form.elements.remainingMode?.value === "金额";
+  const isUsed = els.form.elements.quotaDisplayMode?.value === "已用";
   ["quotaPeriodDays", "nextResetAt", "startDate", "expiresAt"].forEach(name => {
     const field = els.fields.querySelector(`[data-field-name="${name}"]`);
     if (field) field.hidden = isApi;
   });
   const valueLabel = els.fields.querySelector('[data-field-name="remainingValue"] label');
-  if (valueLabel) valueLabel.textContent = isAmount ? "当前剩余金额" : "当前剩余（%）";
+  if (valueLabel) valueLabel.textContent = isAmount ? `当前${isUsed ? "已用" : "剩余"}金额` : `当前${isUsed ? "已用" : "剩余"}（%）`;
 }
 
 function openEditor(collectionName, id = null) {
@@ -527,9 +610,10 @@ function openEditor(collectionName, id = null) {
   els.dialogTitle.textContent = `${item ? "编辑" : "新增"}${schema.title}`;
   els.fields.innerHTML = schema.fields.map(field => {
     const legacyValue = collectionName === "plans" && field.name === "openaiBaseUrl" ? item?.baseUrl : undefined;
+    const legacyPromotionStart = collectionName === "promotions" && field.name === "startsAt" && item?.startDate ? `${item.startDate}T00:00:00` : undefined;
     const legacyPercent = collectionName === "plans" && field.name === "remainingValue" && item ? remainingPercent(item) : undefined;
     const defaultValue = field.defaultValue ?? (field.name === "status" ? schema === schemas.plans ? "正常" : "未测试" : field.name === "recordedAt" || field.name === "testedAt" ? new Date().toISOString().slice(0, 10) : "");
-    return fieldHtml(field, item?.[field.name] ?? legacyValue ?? legacyPercent ?? defaultValue);
+    return fieldHtml(field, item?.[field.name] ?? legacyValue ?? legacyPromotionStart ?? legacyPercent ?? defaultValue);
   }).join("");
   updatePlanFieldVisibility();
   setMessage(els.formMessage);
@@ -586,7 +670,7 @@ async function saveEditor(event) {
     if (id) await setDoc(doc(base, id), payload);
     else await addDoc(base, payload);
     els.dialog.close();
-    const targetPanel = { plans: "plans", transactions: "transactions", models: "models", compatibilityTests: "compatibility", usageSnapshots: "usage", notes: "notes" }[collectionName];
+    const targetPanel = { plans: "plans", promotions: "plans", transactions: "transactions", models: "models", compatibilityTests: "compatibility", usageSnapshots: "usage", notes: "notes" }[collectionName];
     if (targetPanel) showPanel(targetPanel);
     setMessage(els.syncMessage, "已保存到 Firestore。", "success");
   } catch (error) {
@@ -736,7 +820,7 @@ document.getElementById("manager-export").addEventListener("click", exportData);
 document.getElementById("manager-import").addEventListener("change", event => importData(event.target.files?.[0]));
 els.form.addEventListener("submit", saveEditor);
 els.form.addEventListener("change", event => {
-  if (["type", "remainingMode"].includes(event.target.name)) updatePlanFieldVisibility();
+  if (["type", "remainingMode", "quotaDisplayMode"].includes(event.target.name)) updatePlanFieldVisibility();
 });
 document.querySelectorAll("[data-dialog-close]").forEach(button => button.addEventListener("click", () => els.dialog.close()));
 document.querySelector(".manager-nav").addEventListener("click", event => {

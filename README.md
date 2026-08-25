@@ -7,7 +7,7 @@
 <p align="center"><strong>AI 工具集、API 控制台与 Agent 生态地图的统一入口</strong></p>
 
 <p align="center">
-  <a href="https://github.com/yuzhounh/ai-resource-hub/releases"><img src="https://img.shields.io/badge/version-v1.2.0-8875DE" alt="version v1.2.0"></a>
+  <a href="https://github.com/yuzhounh/ai-resource-hub/releases"><img src="https://img.shields.io/badge/version-v1.3.0-8875DE" alt="version v1.3.0"></a>
   <a href="https://ai-resource-hub-manager.vercel.app/"><img src="https://img.shields.io/badge/Vercel-online-43A68F" alt="Vercel online"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-D39448" alt="MIT License"></a>
   <img src="https://img.shields.io/badge/last%20updated-2026--08--25-668DD8" alt="last updated 2026-08-25">
@@ -30,7 +30,7 @@ AI Resource Hub 将三个互相关联的静态导航页面整合为一个统一�
 - 四个一级标签和各自的二级分类导航。
 - 三个独立搜索框，其中表格页面支持行级过滤。
 - 使用 Firebase Authentication 和 Cloud Firestore 的个人 Plan 管理区。
-- 手动维护 Plan、模型、Harness 兼容性、用量快照和备注。
+- 手动维护 Plan、限时优惠、模型、Harness 兼容性、用量快照和备注。
 - URL 哈希深链接、浏览器前进与后退。
 - 响应式布局、深色模式和键盘快捷键。
 - `/` 聚焦当前搜索框，`Esc` 清空搜索。
