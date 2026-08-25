@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="AI 工具集、API 控制台与 Agent 生态地图的统一导航入口">
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
-  <link rel="stylesheet" href="./manager.css?v=20260825w">
+  <link rel="stylesheet" href="./manager.css?v=20260825x">
   <title>AI Resource Hub</title>
   <style>
     :root{color-scheme:light dark;--bg:#f6f7f9;--card:#fff;--text:#17191c;--muted:#69707c;--line:#e3e6ea;--accent:#2563eb;--soft:#eef4ff;--warn:#fff7e6;--bar:color-mix(in srgb,var(--bg) 91%,transparent)}
@@ -825,22 +825,6 @@
             <span class="sr-only">搜索管理数据</span>
             <input id="manager-search" type="search" placeholder="搜索 Plan、优惠、投入、模型、Harness 或备注…">
           </label>
-          <div class="manager-toolbar-actions">
-            <div class="manager-add-control">
-              <button id="manager-add-button" class="manager-button primary" type="button" aria-haspopup="true" aria-expanded="false">＋ 新增记录</button>
-              <div id="manager-add-menu" class="manager-add-menu" hidden>
-                <button type="button" data-add="plans"><strong>Plan</strong><span>套餐、金额、额度和期限</span></button>
-                <button type="button" data-add="promotions"><strong>限时优惠</strong><span>模型免费、体验额度和活动期限</span></button>
-                <button type="button" data-add="transactions"><strong>充值 / 购买套餐</strong><span>记录每次投入的金额和日期</span></button>
-                <button type="button" data-add="models"><strong>模型</strong><span>协议、能力和实测效果</span></button>
-                <button type="button" data-add="compatibilityTests"><strong>Harness 测试</strong><span>兼容性与错误记录</span></button>
-                <button type="button" data-add="usageSnapshots"><strong>用量快照</strong><span>手动记录剩余额度</span></button>
-                <button type="button" data-add="notes"><strong>备注</strong><span>配置、限制和解决办法</span></button>
-              </div>
-            </div>
-            <button id="manager-export" class="manager-button ghost" type="button">导出</button>
-            <label class="manager-button ghost manager-import-label">导入<input id="manager-import" type="file" accept="application/json,.json"></label>
-          </div>
         </div>
 
         <nav class="manager-nav" aria-label="Plan 管理分类">
@@ -874,7 +858,25 @@
         </section>
 
         <section class="manager-panel" data-manager-panel="plans" hidden>
-          <div class="manager-section-heading"><div><p class="manager-eyebrow">SUBSCRIPTIONS</p><h2>Plan</h2><p>管理购买金额、额度、期限、Base URL 和官方入口。</p></div><button class="manager-button primary" type="button" data-add="plans">新增 Plan</button></div>
+          <div class="manager-section-heading">
+            <div><p class="manager-eyebrow">SUBSCRIPTIONS</p><h2>Plan</h2><p>管理购买金额、额度、期限、Base URL 和官方入口。</p></div>
+            <div class="manager-toolbar-actions">
+              <button id="manager-export" class="manager-button ghost" type="button">导出</button>
+              <label class="manager-button ghost manager-import-label">导入<input id="manager-import" type="file" accept="application/json,.json"></label>
+              <div class="manager-add-control">
+                <button id="manager-add-button" class="manager-button primary" type="button" aria-haspopup="true" aria-expanded="false">＋ 新增记录</button>
+                <div id="manager-add-menu" class="manager-add-menu" hidden>
+                  <button type="button" data-add="plans"><strong>Plan</strong><span>套餐、金额、额度和期限</span></button>
+                  <button type="button" data-add="promotions"><strong>限时优惠</strong><span>模型免费、体验额度和活动期限</span></button>
+                  <button type="button" data-add="transactions"><strong>充值 / 购买套餐</strong><span>记录每次投入的金额和日期</span></button>
+                  <button type="button" data-add="models"><strong>模型</strong><span>协议、能力和实测效果</span></button>
+                  <button type="button" data-add="compatibilityTests"><strong>Harness 测试</strong><span>兼容性与错误记录</span></button>
+                  <button type="button" data-add="usageSnapshots"><strong>用量快照</strong><span>手动记录剩余额度</span></button>
+                  <button type="button" data-add="notes"><strong>备注</strong><span>配置、限制和解决办法</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
           <section class="manager-promotions-section">
             <div class="manager-plan-subheading"><h3>限时优惠</h3><button class="manager-button" type="button" data-add="promotions">新增限时优惠</button></div>
             <div id="manager-promotions-list" class="manager-list"></div>
@@ -1051,6 +1053,6 @@
     },{rootMargin:'-155px 0px -65% 0px',threshold:0});
     document.querySelectorAll('.view section[id]').forEach(section=>observer.observe(section));
   </script>
-  <script type="module" src="./manager.js?v=20260825w"></script>
+  <script type="module" src="./manager.js?v=20260825x"></script>
 </body>
 </html>

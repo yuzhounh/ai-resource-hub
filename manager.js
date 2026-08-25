@@ -439,12 +439,10 @@ function renderPlans() {
     return `<article class="manager-list-item manager-plan-card"><div class="manager-list-main"><div class="manager-record-header"><div class="manager-list-title"><strong>${escapeHtml(item.name)}</strong>${badge(item.status)}${item.credentialLabel ? `<span class="manager-credential">凭证 · ${escapeHtml(item.credentialLabel)}</span>` : ""}</div>${actionButtons("plans", item.id)}</div><div class="manager-plan-overview${isApi ? " api-plan" : ""}"><div class="manager-plan-fact manager-plan-provider"><div class="manager-plan-provider-info"><span>提供方</span><strong>${escapeHtml(item.provider || "未填写")}</strong><small>${escapeHtml(item.type || "其他")}</small></div>${consoleUrl || docsUrl ? `<div class="manager-plan-card-links">${consoleUrl ? `<a href="${escapeHtml(consoleUrl)}" target="_blank" rel="noopener">控制台</a>` : ""}${docsUrl ? `<a href="${escapeHtml(docsUrl)}" target="_blank" rel="noopener">官方文档</a>` : ""}</div>` : ""}</div><div class="manager-plan-fact"><span>投入</span><strong>${formatMoney(item.purchaseAmount, item.currency)}</strong><small>${escapeHtml(item.region || "未设置地区")}</small></div><div class="manager-plan-fact manager-plan-quota">${isAmount ? `<span>${isApi ? "账户余额" : "剩余金额"}</span><strong>${displayedAmount === null ? "—" : formatMoney(displayedAmount, item.currency || "CNY")}</strong><small>${isApi ? "长期有效" : "金额余额"}</small>` : `<span>${isApi ? "剩余额度" : `${periodDays} 天额度剩余`}</span><strong>${percent === null ? "—" : `${formatNumber(percent)}%`}</strong><div class="manager-progress" aria-label="额度剩余百分比"><i style="width:${percent === null ? 0 : percent}%"></i></div>`}</div>${isApi ? "" : `<div class="manager-plan-fact manager-plan-reset"><span>距离重置</span><strong class="manager-reset-value${resetTone ? ` ${resetTone}` : ""}">${escapeHtml(resetDistance)}</strong><small>下次重置 ${escapeHtml(formatDateTime(item.nextResetAt))}</small></div><div class="manager-plan-fact"><span>有效期</span><strong>${formatDate(item.expiresAt)}</strong><small>${item.startDate ? `开始于 ${formatDate(item.startDate)}` : "未填写开始日期"}</small></div>`}</div>${openaiBaseUrl || item.anthropicBaseUrl ? `<div class="manager-endpoints">${openaiBaseUrl ? `<div><div class="manager-endpoint-value"><span>OpenAI Base URL</span><code>${escapeHtml(openaiBaseUrl)}</code></div><button type="button" data-copy-plan="${escapeHtml(item.id)}" data-copy-field="openaiBaseUrl">复制</button></div>` : ""}${item.anthropicBaseUrl ? `<div><div class="manager-endpoint-value"><span>Anthropic Base URL</span><code>${escapeHtml(item.anthropicBaseUrl)}</code></div><button type="button" data-copy-plan="${escapeHtml(item.id)}" data-copy-field="anthropicBaseUrl">复制</button></div>` : ""}</div>` : ""}${item.notes ? `<div class="manager-record-note"><span>注意事项</span><p>${linkifyText(item.notes)}</p></div>` : ""}</div></article>`;
   }).join("");
   const groups = [
-    { title: "会员权益、Token Plan、Coding Plan 等", items: otherItems, className: "other" },
-    { title: "按量 API", items: apiItems, className: "api" }
-  ].filter(group => group.items.length);
-  document.getElementById("manager-plans-list").innerHTML = items.length
-    ? groups.map(group => `<section class="manager-plan-group manager-plan-group-${group.className}"><h3>${group.title}</h3><div class="manager-plan-group-grid">${renderPlanCards(group.items)}</div></section>`).join("")
-    : empty("还没有 Plan。先记录一个正在使用或准备购买的套餐。");
+    { title: "会员权益、Token Plan、Coding Plan 等", items: otherItems, className: "other", addLabel: "新增 Plan", emptyText: "还没有会员权益、Token Plan 或 Coding Plan。" },
+    { title: "按量 API", items: apiItems, className: "api", addLabel: "新增按量 API", planType: "按量 API", emptyText: "还没有按量 API。" }
+  ];
+  document.getElementById("manager-plans-list").innerHTML = groups.map(group => `<section class="manager-plan-group manager-plan-group-${group.className}"><div class="manager-plan-subheading"><h3>${group.title}</h3><button class="manager-button" type="button" data-add="plans"${group.planType ? ` data-plan-type="${group.planType}"` : ""}>${group.addLabel}</button></div>${group.items.length ? `<div class="manager-plan-group-grid">${renderPlanCards(group.items)}</div>` : empty(group.emptyText)}</section>`).join("");
   document.querySelectorAll("#manager-plans-list .manager-plan-card").forEach((card, index) => {
     card.classList.toggle("manager-plan-card-highlight", displayedItems[index]?.type !== "按量 API");
     const validityHint = [...card.querySelectorAll(".manager-plan-fact>small")].find(element => /^(开始于|未填写开始日期)/.test(element.textContent));
@@ -602,7 +600,7 @@ function updatePlanFieldVisibility() {
   if (valueLabel) valueLabel.textContent = isAmount ? `当前${isUsed ? "已用" : "剩余"}金额` : `当前${isUsed ? "已用" : "剩余"}（%）`;
 }
 
-function openEditor(collectionName, id = null) {
+function openEditor(collectionName, id = null, defaults = {}) {
   const schema = schemas[collectionName];
   const item = id ? state.data[collectionName].find(entry => entry.id === id) : null;
   state.editing = { collectionName, id };
@@ -613,7 +611,7 @@ function openEditor(collectionName, id = null) {
     const legacyPromotionStart = collectionName === "promotions" && field.name === "startsAt" && item?.startDate ? `${item.startDate}T00:00:00` : undefined;
     const legacyPercent = collectionName === "plans" && field.name === "remainingValue" && item ? remainingPercent(item) : undefined;
     const defaultValue = field.defaultValue ?? (field.name === "status" ? schema === schemas.plans ? "正常" : "未测试" : field.name === "recordedAt" || field.name === "testedAt" ? new Date().toISOString().slice(0, 10) : "");
-    return fieldHtml(field, item?.[field.name] ?? legacyValue ?? legacyPromotionStart ?? legacyPercent ?? defaultValue);
+    return fieldHtml(field, item?.[field.name] ?? legacyValue ?? legacyPromotionStart ?? legacyPercent ?? defaults[field.name] ?? defaultValue);
   }).join("");
   updatePlanFieldVisibility();
   setMessage(els.formMessage);
@@ -832,7 +830,7 @@ document.getElementById("manager-app").addEventListener("click", event => {
   const edit = event.target.closest("[data-edit]");
   const remove = event.target.closest("[data-delete]");
   const copy = event.target.closest("[data-copy-plan]");
-  if (add) openEditor(add.dataset.add);
+  if (add) openEditor(add.dataset.add, null, add.dataset.planType ? { type: add.dataset.planType } : {});
   if (add) {
     els.addMenu.hidden = true;
     els.addButton.setAttribute("aria-expanded", "false");
