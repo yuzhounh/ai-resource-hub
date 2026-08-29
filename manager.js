@@ -234,6 +234,69 @@ function setMessage(element, message = "", type = "") {
   element.className = `manager-message${type ? ` ${type}` : ""}`;
 }
 
+function fieldContainer(name) {
+  return els.fields.querySelector(`[data-field-name="${CSS.escape(name)}"]`);
+}
+
+function clearFieldError(name) {
+  const field = fieldContainer(name);
+  if (!field) return;
+  field.classList.remove("has-error");
+  const control = field.querySelector("input, select, textarea");
+  const error = field.querySelector(".manager-field-error");
+  control?.removeAttribute("aria-invalid");
+  control?.removeAttribute("aria-describedby");
+  if (error) {
+    error.textContent = "";
+    error.hidden = true;
+  }
+}
+
+function clearFieldErrors() {
+  els.fields.querySelectorAll("[data-field-name]").forEach(field => clearFieldError(field.dataset.fieldName));
+}
+
+function setFieldError(name, message) {
+  const field = fieldContainer(name);
+  if (!field) return;
+  const control = field.querySelector("input, select, textarea");
+  const error = field.querySelector(".manager-field-error");
+  field.classList.add("has-error");
+  control?.setAttribute("aria-invalid", "true");
+  if (error) {
+    error.textContent = message;
+    error.hidden = false;
+    control?.setAttribute("aria-describedby", error.id);
+  }
+}
+
+function showFieldErrors(errors) {
+  errors.forEach(error => setFieldError(error.fieldName, error.message));
+  const firstField = errors.length ? fieldContainer(errors[0].fieldName) : null;
+  const firstControl = firstField?.querySelector("input, select, textarea");
+  const summary = errors.length === 1 ? errors[0].message : `有 ${errors.length} 个字段需要修改，请查看标红位置。`;
+  setMessage(els.formMessage, summary, "error");
+  firstControl?.focus({ preventScroll: true });
+  firstField?.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function nativeValidationMessage(control) {
+  const label = control.closest(".manager-field")?.querySelector("label")?.textContent || "此字段";
+  if (control.validity.valueMissing) return `请填写“${label}”。`;
+  if (control.validity.typeMismatch && control.type === "url") return "请输入以 http:// 或 https:// 开头的完整链接。";
+  if (control.validity.rangeUnderflow) return `数值不能小于 ${control.min}。`;
+  if (control.validity.rangeOverflow) return `数值不能大于 ${control.max}。`;
+  if (control.validity.stepMismatch) return "请输入符合要求的数值。";
+  if (control.validity.badInput) return "请输入有效数值。";
+  return control.validationMessage || "请检查此字段。";
+}
+
+function nativeFormErrors() {
+  return [...els.form.elements]
+    .filter(control => control.name && control.willValidate && !control.validity.valid)
+    .map(control => ({ fieldName: control.name, message: nativeValidationMessage(control) }));
+}
+
 function formatDate(value) {
   if (!value) return "—";
   const date = new Date(`${value}T00:00:00`);
@@ -264,7 +327,7 @@ function formatDateTimeInput(value) {
 
 function parseDateInput(value) {
   if (!value) return "";
-  const match = String(value).trim().match(/^(\d{4})年(\d{1,2})月(\d{1,2})日$/);
+  const match = String(value).trim().match(/^(\d{4})年(\d{1,2})月(\d{1,2})[日号]$/);
   if (!match) throw new Error("日期格式应为“2026年8月17日”。");
   const [, year, month, day] = match;
   const date = new Date(Number(year), Number(month) - 1, Number(day));
@@ -278,7 +341,7 @@ function parseDateTimeInput(value) {
   const text = String(value).trim();
   const pad = number => String(number).padStart(2, "0");
   const toStoredValue = date => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
-  const absoluteMatch = text.match(/^(\d{4})年(\d{1,2})月(\d{1,2})日\s+(\d{1,2}):(\d{2}):(\d{2})$/);
+  const absoluteMatch = text.match(/^(\d{4})年(\d{1,2})月(\d{1,2})[日号]\s+(\d{1,2}):(\d{2}):(\d{2})$/);
   if (absoluteMatch) {
     const [, year, month, day, hour, minute, second] = absoluteMatch;
     const date = new Date(Number(year), Number(month) - 1, Number(day), Number(hour), Number(minute), Number(second));
@@ -568,6 +631,7 @@ function fieldHtml(field, value = "") {
   const required = field.required ? " required" : "";
   const full = field.full ? " full" : "";
   const help = field.help ? `<small>${escapeHtml(field.help)}</small>` : "";
+  const errorId = `manager-field-error-${field.name}`;
   let control;
   if (field.type === "select") {
     control = `<select name="${field.name}"${required}>${optionsHtml(field.options, value)}</select>`;
@@ -584,7 +648,7 @@ function fieldHtml(field, value = "") {
   } else {
     control = `<input name="${field.name}" type="${field.type || "text"}" value="${escapeHtml(value)}"${field.step ? ` step="${field.step}"` : ""}${field.min !== undefined ? ` min="${field.min}"` : ""}${field.max !== undefined ? ` max="${field.max}"` : ""}${required}>`;
   }
-  return `<div class="manager-field${full}" data-field-name="${escapeHtml(field.name)}"><label>${escapeHtml(field.label)}</label>${control}${help}</div>`;
+  return `<div class="manager-field${full}" data-field-name="${escapeHtml(field.name)}"><label>${escapeHtml(field.label)}</label>${control}${help}<small class="manager-field-error" id="${errorId}" hidden></small></div>`;
 }
 
 function updatePlanFieldVisibility() {
@@ -614,6 +678,7 @@ function openEditor(collectionName, id = null, defaults = {}) {
     return fieldHtml(field, item?.[field.name] ?? legacyValue ?? legacyPromotionStart ?? legacyPercent ?? defaults[field.name] ?? defaultValue);
   }).join("");
   updatePlanFieldVisibility();
+  clearFieldErrors();
   setMessage(els.formMessage);
   els.dialog.showModal();
 }
@@ -622,13 +687,27 @@ function formObject(collectionName) {
   const schema = schemas[collectionName];
   const formData = new FormData(els.form);
   const result = {};
+  const errors = [];
   schema.fields.forEach(field => {
     const raw = formData.get(field.name);
-    if (field.type === "number") result[field.name] = raw === "" ? null : Number(raw);
-    else if (field.type === "date") result[field.name] = parseDateInput(String(raw || "").trim());
-    else if (field.type === "datetime-local") result[field.name] = parseDateTimeInput(String(raw || "").trim());
-    else result[field.name] = String(raw || "").trim();
+    try {
+      if (field.type === "number") result[field.name] = raw === "" ? null : Number(raw);
+      else if (field.type === "date") {
+        result[field.name] = parseDateInput(String(raw || "").trim());
+        if (result[field.name]) els.form.elements[field.name].value = formatDateInput(result[field.name]);
+      } else if (field.type === "datetime-local") {
+        result[field.name] = parseDateTimeInput(String(raw || "").trim());
+        if (result[field.name]) els.form.elements[field.name].value = formatDateTimeInput(result[field.name]);
+      } else result[field.name] = String(raw || "").trim();
+    } catch (error) {
+      errors.push({ fieldName: field.name, message: error.message });
+    }
   });
+  if (errors.length) {
+    const error = new Error(errors[0].message);
+    error.fieldErrors = errors;
+    throw error;
+  }
   return result;
 }
 
@@ -636,11 +715,18 @@ async function saveEditor(event) {
   event.preventDefault();
   if (!state.user || !state.editing) return;
   const { collectionName, id } = state.editing;
+  clearFieldErrors();
+  const nativeErrors = nativeFormErrors();
+  if (nativeErrors.length) {
+    showFieldErrors(nativeErrors);
+    return;
+  }
   let value;
   try {
     value = formObject(collectionName);
   } catch (error) {
-    setMessage(els.formMessage, error.message, "error");
+    if (error.fieldErrors) showFieldErrors(error.fieldErrors);
+    else setMessage(els.formMessage, error.message, "error");
     return;
   }
   if (collectionName === "plans") {
@@ -651,12 +737,19 @@ async function saveEditor(event) {
       value.expiresAt = "";
     }
     if (value.remainingMode === "百分比" && Number(value.remainingValue) > 100) {
-      setMessage(els.formMessage, "百分比不能大于 100。", "error");
+      showFieldErrors([{ fieldName: "remainingValue", message: "百分比不能大于 100。" }]);
       return;
     }
   }
   if (containsLikelySecret(value)) {
+    const secretFields = Object.entries(value)
+      .filter(([, fieldValue]) => containsLikelySecret(fieldValue))
+      .map(([fieldName]) => ({ fieldName, message: "此处包含疑似凭证，请删除后再保存。" }));
+    secretFields.forEach(error => setFieldError(error.fieldName, error.message));
     setMessage(els.formMessage, "检测到疑似 API Key 或 Bearer Token。请删除凭证后再保存。", "error");
+    const firstSecretField = secretFields.length ? fieldContainer(secretFields[0].fieldName) : null;
+    firstSecretField?.querySelector("input, select, textarea")?.focus({ preventScroll: true });
+    firstSecretField?.scrollIntoView({ behavior: "smooth", block: "center" });
     return;
   }
   const now = Date.now();
@@ -817,6 +910,11 @@ document.addEventListener("click", event => {
 document.getElementById("manager-export").addEventListener("click", exportData);
 document.getElementById("manager-import").addEventListener("change", event => importData(event.target.files?.[0]));
 els.form.addEventListener("submit", saveEditor);
+els.form.addEventListener("input", event => {
+  if (!event.target.name) return;
+  clearFieldError(event.target.name);
+  if (els.formMessage.classList.contains("error")) setMessage(els.formMessage);
+});
 els.form.addEventListener("change", event => {
   if (["type", "remainingMode", "quotaDisplayMode"].includes(event.target.name)) updatePlanFieldVisibility();
 });
