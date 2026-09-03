@@ -477,6 +477,8 @@ function renderPromotions() {
   const items = byTitle(filtered).filter(matchesQuery);
 
   const sectionEl = document.querySelector(".manager-promotions-section");
+  const addPromoBtn = document.getElementById("manager-add-promotion");
+  if (addPromoBtn) addPromoBtn.hidden = isArchivedView;
   if (isArchivedView && !items.length) {
     if (sectionEl) sectionEl.hidden = true;
     return;

@@ -6,7 +6,7 @@
   <meta name="description" content="AI 工具集、API 控制台与 Agent 生态地图的统一导航入口">
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <link rel="stylesheet" href="./manager.css?v=20260903d">
-  <link rel="stylesheet" href="./inbox.css?v=20260903p">
+  <link rel="stylesheet" href="./notes.css?v=20260904b">
   <title>AI Resource Hub</title>
   <style>
     :root{color-scheme:light dark;--bg:#f6f7f9;--card:#fff;--text:#17191c;--muted:#69707c;--line:#e3e6ea;--accent:#2563eb;--soft:#eef4ff;--warn:#fff7e6;--bar:color-mix(in srgb,var(--bg) 91%,transparent)}
@@ -14,7 +14,8 @@
     *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:150px}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.55}
     a{color:var(--accent)}.app-shell{width:min(calc(100% - 44px),1280px);margin-inline:auto}.site-header{padding:30px 0 18px;text-align:left}.brand-row{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}.brand{min-width:0}.brand-title{display:flex;align-items:center;justify-content:flex-start;gap:10px;margin-bottom:6px}.brand-title img{width:36px;height:36px;flex:0 0 auto}.site-header h1{font-size:34px;letter-spacing:-.03em;margin:0}.site-header p{color:var(--muted);margin:0}
     .hub-account{position:relative;flex:0 0 auto;display:flex;align-items:center}.hub-signin-button{border:1px solid var(--line);background:var(--card);color:var(--text);font:inherit;font-size:14px;font-weight:650;padding:9px 16px;border-radius:999px;cursor:pointer;transition:.15s;white-space:nowrap}.hub-signin-button:hover{border-color:var(--accent);color:var(--accent)}.hub-user{position:relative}.hub-user-button{display:flex;align-items:center;justify-content:center;width:38px;height:38px;padding:0;border:1px solid var(--line);border-radius:50%;background:var(--card);cursor:pointer;overflow:hidden}.hub-user-button img{width:100%;height:100%;object-fit:cover;display:block}.hub-user-button span{font-weight:700;color:var(--accent);font-size:16px}.hub-user-menu{position:absolute;right:0;top:calc(100% + 8px);z-index:60;width:250px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,.12);padding:12px}.hub-user-menu-profile{display:flex;align-items:center;gap:10px;padding:4px 4px 10px;border-bottom:1px solid var(--line)}.hub-user-menu-avatar{width:36px;height:36px;flex:0 0 auto;border-radius:50%;overflow:hidden;background:var(--soft);display:flex;align-items:center;justify-content:center}.hub-user-menu-avatar img{width:100%;height:100%;object-fit:cover}.hub-user-menu-avatar span{font-weight:700;color:var(--accent)}.hub-user-menu-identity{min-width:0;display:flex;flex-direction:column;gap:2px}.hub-user-menu-identity strong{font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hub-user-menu-identity span{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hub-user-menu-actions{padding-top:8px}.hub-user-menu-actions button{width:100%;border:1px solid var(--line);background:transparent;color:var(--text);font:inherit;font-size:13px;padding:8px 10px;border-radius:9px;cursor:pointer}.hub-user-menu-actions button:hover{border-color:var(--accent);color:var(--accent)}
-    .view[data-hub-locked]>:not(.hub-lock-card){display:none!important}.hub-lock-card{max-width:520px;margin:70px auto;padding:38px 30px;text-align:center;background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.05)}.hub-lock-icon{font-size:30px;margin-bottom:10px}.hub-lock-card h2{margin:0 0 10px;font-size:22px}.hub-lock-card>p{color:var(--muted);font-size:14px;line-height:1.7;margin:0 0 20px}.hub-lock-card .hub-signin-button{font-size:15px;padding:11px 22px}.hub-lock-message{margin:14px 0 0!important;font-size:13px;color:var(--muted)}.hub-lock-message.error{color:var(--danger-text,var(--accent))}
+    .hub-gated-tab{display:none}body.hub-signed-in .hub-gated-tab{display:block}
+    .view[data-hub-locked]>:not(.hub-lock-card){display:none!important}.view:not([data-hub-locked])>.hub-lock-card{display:none!important}.hub-lock-card{max-width:520px;margin:70px auto;padding:38px 30px;text-align:center;background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.05)}.view-connectivity .hub-lock-card{margin:70px auto}.hub-lock-icon{font-size:30px;margin-bottom:10px}.hub-lock-card h2{margin:0 0 10px;font-size:22px}.hub-lock-card>p{color:var(--muted);font-size:14px;line-height:1.7;margin:0 0 20px}.hub-lock-card .hub-signin-button{font-size:15px;padding:11px 22px}.hub-lock-message{margin:14px 0 0!important;font-size:13px;color:var(--muted)}.hub-lock-message.error{color:var(--danger-text,var(--accent))}
     .primary-bar{position:sticky;top:0;z-index:30;background:var(--bar);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}.primary-tabs{display:flex;flex-wrap:wrap;gap:8px;padding:10px 0}.primary-tabs a{flex:0 0 auto;color:var(--muted);font-weight:650;text-decoration:none;padding:9px 14px;border-radius:10px}.primary-tabs a:hover{color:var(--text);background:var(--card)}.primary-tabs a[aria-selected="true"]{color:var(--accent);background:var(--card);box-shadow:inset 0 0 0 1px var(--line)}
     .view{padding:28px 0 70px}.view[hidden]{display:none!important}.view-summary{height:25px;line-height:25px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color:var(--muted);font-size:16px;margin:0 0 20px}.view-toolbar{position:sticky;top:59px;z-index:20;padding:9px 0 12px;background:var(--bar);backdrop-filter:blur(12px)}.search input,.view-toolbar>input{width:100%;padding:13px 15px;border-radius:13px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:15px;outline:none}.search input:focus,.view-toolbar>input:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 15%,transparent)}
     .subnav{display:flex;flex-wrap:wrap;gap:8px;padding:10px 0 0}.subnav a{flex:0 0 auto;white-space:nowrap;text-decoration:none;color:var(--text);border:1px solid var(--line);background:var(--card);padding:7px 10px;border-radius:999px;font-size:13px}.subnav a:hover,.subnav a.active{border-color:var(--accent);color:var(--accent)}.subnav em{font-style:normal;color:var(--muted)}
@@ -24,12 +25,12 @@
 
     .view-api h1{margin:0;font-size:30px}.view-api section{margin-top:34px}.view-api h2{margin:0 0 14px;font-size:22px}.view-api .subnav a{width:120px;box-sizing:border-box;text-align:center}.view-api .table-wrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.05)}.view-api table{width:100%;min-width:1000px;border-collapse:collapse;table-layout:fixed;font-size:14px}.view-api col.col-star{width:2.5rem}.view-api col.col-platform{width:17%}.view-api col.col-key,.view-api col.col-usage,.view-api col.col-billing{width:22%}.view-api col.col-docs{width:13%}.view-api th,.view-api td{padding:12px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);line-height:1.45;overflow-wrap:break-word;word-break:keep-all}.view-api th.col-star,.view-api td.col-star{text-align:center;padding-inline:6px;font-weight:600;font-size:15px;line-height:1.2}.view-api th.col-star{color:var(--text)}.view-api td.col-star{color:var(--accent)}.view-api th{background:color-mix(in srgb,var(--card) 78%,var(--soft));font-size:14px}.view-api tr:last-child td{border-bottom:0}.view-api td:nth-child(2){font-weight:700}.view-api td a{font-weight:600;text-decoration:none}.view-api td a:hover{text-decoration:underline}.view-api .arrow{color:var(--muted);font-size:13px;margin-left:4px}.view-api .api-resource-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.view-api .api-resource-link{display:flex;flex-direction:column;gap:6px;min-width:0;min-height:94px;padding:18px 20px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--text);text-decoration:none;transition:.15s}.view-api .api-resource-link:hover{transform:translateY(-2px);border-color:var(--accent)}.view-api .api-resource-link strong{font-size:16px}.view-api .api-resource-link span{color:var(--muted);font-size:14px;overflow-wrap:anywhere}.view-api .api-resource-link[hidden]{display:none}
 
-    .view-agents .view-intro{margin:0 0 18px}.view-agents .tagline{font-size:16px;color:var(--muted);margin:0 0 12px}.view-agents .meta{display:flex;gap:9px;flex-wrap:wrap;color:var(--muted);font-size:13px}.view-agents .badge{border:1px solid var(--line);background:var(--card);padding:4px 9px;border-radius:999px}.view-agents .intro{max-width:1100px;color:var(--muted);margin:14px 0 4px}.view-agents section{margin:34px 0 44px}.view-agents .section-title{display:flex;align-items:center;gap:10px;margin-bottom:12px}.view-agents h2{font-size:23px;margin:0}.view-agents h3{font-size:16px;margin:20px 0 10px;color:var(--muted)}.view-agents .table-intro{max-width:1100px;margin:0 0 12px;color:var(--muted);font-size:14px}.view-agents .table-wrap{overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:14px}.view-agents table{border-collapse:collapse;width:100%;min-width:860px}.view-agents th,.view-agents td{padding:12px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}.view-agents th{background:color-mix(in srgb,var(--card) 78%,var(--soft));font-size:13px;white-space:nowrap}.view-agents td{font-size:13.5px}.view-agents tr:last-child td{border-bottom:0}.view-agents td:first-child{font-weight:650;white-space:nowrap}.view-agents .lead-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.view-agents .lead-grid.five{grid-template-columns:repeat(5,1fr)}.view-agents .mini{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px;display:flex;flex-direction:column;gap:6px}.view-agents .mini span{font-size:13px;color:var(--muted)}.view-agents .concepts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.view-agents .concepts span{font-size:13px;border:1px solid var(--line);background:var(--card);padding:7px 10px;border-radius:10px}.view-agents .architecture{max-width:1050px;margin:auto;text-align:center}.view-agents .node{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:12px 16px;margin:auto;max-width:650px}.view-agents .node.strong{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 15%,transparent)}.view-agents .node small{color:var(--muted)}.view-agents .arrow{color:var(--muted);font-size:22px;height:28px}.view-agents .branch{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.view-agents .branch .node{width:100%}.view-agents .fuel{margin-top:12px;color:var(--muted);font-size:13px}.view-agents .note{margin-top:12px;border:1px solid var(--line);background:var(--soft);border-radius:12px;padding:12px 14px;font-size:13px}.view-agents .note.warn{background:var(--warn)}.view-agents .steps{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 18px 15px 40px}.view-agents .steps li{margin:5px 0}
+    .view-agents .view-intro{margin:0 0 18px}.view-agents .tagline{font-size:16px;color:var(--muted);margin:0 0 12px}.view-agents .meta{display:flex;gap:9px;flex-wrap:wrap;color:var(--muted);font-size:13px}.view-agents .badge{border:1px solid var(--line);background:var(--card);padding:4px 9px;border-radius:999px}.view-agents .intro{max-width:1100px;color:var(--muted);margin:14px 0 4px}.view-agents section{margin:34px 0 44px}.view-agents .section-title{display:flex;align-items:center;gap:10px;margin-bottom:12px}.view-agents h2{font-size:23px;margin:0}.view-agents h3{font-size:16px;margin:20px 0 10px;color:var(--muted)}.view-agents .table-intro{max-width:1100px;margin:0 0 12px;color:var(--muted);font-size:14px}.view-agents .table-wrap{overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:14px}.view-agents table{border-collapse:collapse;width:100%;min-width:860px}.view-agents th,.view-agents td{padding:12px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}.view-agents th{background:color-mix(in srgb,var(--card) 78%,var(--soft));font-size:13px;white-space:nowrap}.view-agents td{font-size:13.5px}.view-agents tr:last-child td{border-bottom:0}.view-agents td:first-child{font-weight:650;white-space:nowrap}.view-agents .lead-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.view-agents .lead-grid.five{grid-template-columns:repeat(5,1fr)}.view-agents .mini{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px;display:flex;flex-direction:column;gap:6px}.view-agents .mini span{font-size:13px;color:var(--muted)}.view-agents .concepts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.view-agents .concepts span{font-size:13px;border:1px solid var(--line);background:var(--card);padding:7px 10px;border-radius:10px}.view-agents .architecture{max-width:1280px;margin:auto;text-align:center;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px}.view-agents .node{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:12px 16px;margin:0;max-width:none;flex:0 1 auto;min-width:0;overflow-wrap:anywhere}.view-agents .node.strong{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 15%,transparent)}.view-agents .node small{color:var(--muted)}.view-agents .arrow{color:var(--muted);font-size:22px;line-height:1;flex:0 0 auto}.view-agents .branch{display:flex;flex-direction:column;gap:8px;margin-top:0;min-width:0;flex:0 1 auto}.view-agents .branch .node{width:100%}.view-agents .fuel{margin:0 0 14px;color:var(--muted);font-size:14px}.view-agents .note{margin-top:12px;border:1px solid var(--line);background:var(--soft);border-radius:12px;padding:12px 14px;font-size:13px}.view-agents .note.warn{background:var(--warn)}.view-agents .steps{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 18px 15px 40px}.view-agents .steps li{margin:5px 0}
     .view-agents .agent-resource-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.view-agents .agent-resource-link{display:flex;flex-direction:column;gap:6px;min-width:0;min-height:94px;padding:18px 20px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--text);text-decoration:none;transition:.15s}.view-agents .agent-resource-link:hover{transform:translateY(-2px);border-color:var(--accent)}.view-agents .agent-resource-link strong{font-size:16px}.view-agents .agent-resource-link span{color:var(--muted);font-size:14px;overflow-wrap:anywhere}
     @media(max-width:900px){.view-agents .lead-grid,.view-agents .lead-grid.five,.view-research .lead-grid{grid-template-columns:repeat(2,1fr)}.view-api .api-resource-links{grid-template-columns:repeat(2,minmax(0,1fr))}.view-agents .agent-resource-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.view-agents .branch,.view-research .branch{grid-template-columns:1fr}.view-connectivity .providers-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.view-agents h1{font-size:30px}}
     @media(max-width:650px){.app-shell{width:calc(100% - 28px)}.site-header{padding:22px 0 14px}.site-header h1{font-size:29px}.primary-tabs a{padding:8px 11px}.view{padding-top:22px}.view-summary{height:3.1em;line-height:1.55;white-space:normal;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}.view-toolbar{top:55px}.view-tools .grid{grid-template-columns:repeat(2,minmax(0,1fr))}.view-api .api-resource-links{grid-template-columns:1fr}.view-agents .lead-grid,.view-agents .lead-grid.five,.view-research .lead-grid,.view-agents .agent-resource-grid,.view-connectivity .providers-grid{grid-template-columns:1fr}}
   
-    .view-research .view-intro{margin:0 0 18px}.view-research .tagline{font-size:16px;color:var(--muted);margin:0 0 12px}.view-research .meta{display:flex;gap:9px;flex-wrap:wrap;color:var(--muted);font-size:13px}.view-research .badge{border:1px solid var(--line);background:var(--card);padding:4px 9px;border-radius:999px}.view-research .intro{max-width:1100px;color:var(--muted);margin:14px 0 4px}.view-research section{margin:34px 0 44px}.view-research .section-title{display:flex;align-items:center;gap:10px;margin-bottom:12px}.view-research h2{font-size:23px;margin:0}.view-research h3{font-size:16px;margin:20px 0 10px;color:var(--muted)}.view-research .table-intro{max-width:none;margin:0 0 12px;color:var(--muted);font-size:14px}.view-research .table-wrap{overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:14px}.view-research table{border-collapse:collapse;width:100%;min-width:960px;table-layout:auto}.view-research th,.view-research td{padding:12px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}.view-research th{background:color-mix(in srgb,var(--card) 78%,var(--soft));font-size:13px;white-space:nowrap}.view-research td{font-size:13.5px}.view-research tr:last-child td{border-bottom:0}.view-research td:first-child,.view-research th:first-child{white-space:nowrap;width:1%}.view-research td:first-child{font-weight:650}.view-research td:nth-child(2),.view-research th:nth-child(2){white-space:nowrap;width:1%}.view-research td:last-child,.view-research th:last-child{width:auto}.view-research .lead-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.view-research .mini{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px;display:flex;flex-direction:column;gap:6px}.view-research .mini span{font-size:13px;color:var(--muted)}.view-research .concepts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.view-research .concepts span{font-size:13px;border:1px solid var(--line);background:var(--card);padding:7px 10px;border-radius:10px}.view-research .architecture{max-width:1050px;margin:auto;text-align:center}.view-research .node{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:12px 16px;margin:auto;max-width:650px}.view-research .node.strong{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 15%,transparent)}.view-research .node small{color:var(--muted)}.view-research .arrow{color:var(--muted);font-size:22px;height:28px}.view-research .branch{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.view-research .branch .node{width:100%}.view-research .fuel{margin-top:12px;color:var(--muted);font-size:13px}.view-research .note{margin-top:12px;border:1px solid var(--line);background:var(--soft);border-radius:12px;padding:12px 14px;font-size:13px}.view-research .note.warn{background:var(--warn)}.view-research .steps{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 18px 15px 40px}.view-research .steps li{margin:5px 0}
+    .view-research .view-intro{margin:0 0 18px}.view-research .tagline{font-size:16px;color:var(--muted);margin:0 0 12px}.view-research .meta{display:flex;gap:9px;flex-wrap:wrap;color:var(--muted);font-size:13px}.view-research .badge{border:1px solid var(--line);background:var(--card);padding:4px 9px;border-radius:999px}.view-research .intro{max-width:1100px;color:var(--muted);margin:14px 0 4px}.view-research section{margin:34px 0 44px}.view-research .section-title{display:flex;align-items:center;gap:10px;margin-bottom:12px}.view-research h2{font-size:23px;margin:0}.view-research h3{font-size:16px;margin:20px 0 10px;color:var(--muted)}.view-research .table-intro{max-width:none;margin:0 0 12px;color:var(--muted);font-size:14px}.view-research .table-wrap{overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:14px}.view-research table{border-collapse:collapse;width:100%;min-width:960px;table-layout:auto}.view-research th,.view-research td{padding:12px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}.view-research th{background:color-mix(in srgb,var(--card) 78%,var(--soft));font-size:13px;white-space:nowrap}.view-research td{font-size:13.5px}.view-research tr:last-child td{border-bottom:0}.view-research td:first-child,.view-research th:first-child{white-space:nowrap;width:1%}.view-research td:first-child{font-weight:650}.view-research td:nth-child(2),.view-research th:nth-child(2){white-space:nowrap;width:1%}.view-research td:last-child,.view-research th:last-child{width:auto}.view-research .lead-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.view-research .mini{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px;display:flex;flex-direction:column;gap:6px}.view-research .mini span{font-size:13px;color:var(--muted)}.view-research .concepts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.view-research .concepts span{font-size:13px;border:1px solid var(--line);background:var(--card);padding:7px 10px;border-radius:10px}.view-research .architecture{max-width:1280px;margin:auto;text-align:center;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px}.view-research .node{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:12px 16px;margin:0;max-width:none;flex:0 1 auto;min-width:0;overflow-wrap:anywhere}.view-research .node.strong{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 15%,transparent)}.view-research .node small{color:var(--muted)}.view-research .arrow{color:var(--muted);font-size:22px;line-height:1;flex:0 0 auto}.view-research .branch{display:flex;flex-direction:column;gap:8px;margin-top:0;min-width:0;flex:0 1 auto}.view-research .branch .node{width:100%}.view-research .fuel{margin:0 0 14px;color:var(--muted);font-size:14px}.view-research .note{margin-top:12px;border:1px solid var(--line);background:var(--soft);border-radius:12px;padding:12px 14px;font-size:13px}.view-research .note.warn{background:var(--warn)}.view-research .steps{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 18px 15px 40px}.view-research .steps li{margin:5px 0}
 
     .view-connectivity{--success-text:#10b981;--warning-text:#f59e0b;--danger-text:#ef4444;--purple:#a855f7;--amber:#f97316;--cyan:#06b6d4}
     @media(prefers-color-scheme:dark){.view-connectivity{--success-text:#34d399;--warning-text:#fbbf24;--danger-text:#f87171;--purple:#c084fc;--amber:#fb923c;--cyan:#22d3ee}}
@@ -48,7 +49,6 @@
     .view-connectivity .provider-card.selected{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 18%,transparent);background:color-mix(in srgb,var(--card) 85%,var(--soft))}
     .view-connectivity .provider-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem}
     .view-connectivity .provider-name{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;background:none;border:none;padding:0;cursor:pointer;text-align:left}
-    .view-connectivity .provider-state{font-size:12px;color:var(--muted);margin-bottom:10px;overflow-wrap:anywhere}
     .view-connectivity .url-box{display:flex;align-items:center;margin-bottom:10px;gap:6px}
     .view-connectivity .provider-url{flex:1;font-size:12px;color:var(--accent);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .view-connectivity .copy-btn{background:transparent;border:1px solid var(--line);color:var(--muted);width:28px;height:28px;padding:4px;border-radius:7px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;transition:.15s}
@@ -114,9 +114,6 @@
     .view-connectivity .provider-card.conn-archived{opacity:.45;filter:grayscale(.5)}
     .view-connectivity .provider-card.conn-archived:hover{opacity:.75;filter:grayscale(.2)}
     .view-connectivity .provider-card[data-conn-hidden]{display:none}
-    .view-connectivity .conn-archive-btn{border:0;background:transparent;padding:4px 6px;border-radius:6px;cursor:pointer;color:var(--muted);font-size:11px;font-weight:500;line-height:1;transition:all .15s;flex-shrink:0;white-space:nowrap}
-    .view-connectivity .conn-archive-btn:hover{color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,transparent)}
-    .view-connectivity .provider-card.conn-archived .conn-archive-btn{color:var(--accent)}
 
   </style>
 </head>
@@ -159,9 +156,9 @@
       <a id="tab-api" role="tab" href="#api" aria-controls="view-api">控制台</a>
       <a id="tab-agents" role="tab" href="#agents" aria-controls="view-agents">生态图</a>
       <a id="tab-research" role="tab" href="#research" aria-controls="view-research">科研自动化</a>
-      <a id="tab-inbox" role="tab" href="#inbox" aria-controls="view-inbox">笔记</a>
-      <a id="tab-connectivity" role="tab" href="#connectivity" aria-controls="view-connectivity">连通性</a>
-      <a id="tab-manage" role="tab" href="#manage" aria-controls="view-manage">Plan 管理</a>
+      <a id="tab-notes" class="hub-gated-tab" role="tab" href="#notes" aria-controls="view-notes">笔记</a>
+      <a id="tab-connectivity" class="hub-gated-tab" role="tab" href="#connectivity" aria-controls="view-connectivity">连通性</a>
+      <a id="tab-manage" class="hub-gated-tab" role="tab" href="#manage" aria-controls="view-manage">Plan 管理</a>
     </nav>
   </div>
   <main class="app-shell">
@@ -862,7 +859,7 @@
         <div class="search"><input id="connectivity-search" type="search" placeholder="搜索服务商、模型名称或协议…（按 / 聚焦）"></div>
         <nav class="subnav">
           <a href="#connectivity/conn-stats">整体统计</a>
-          <a href="#connectivity/conn-providers">服务商与端点</a>
+          <a href="#connectivity/conn-providers">供应商 <em id="connProvidersCount">16</em></a>
           <a href="#connectivity/conn-models">模型实测明细 <em>202</em></a>
           <button type="button" id="connShowArchivedToggle" class="conn-archive-toggle-btn" title="显示已归档的服务商">显示归档</button>
         </nav>
@@ -892,15 +889,14 @@
 </div>
 </div>
       </section>
-      <section id="conn-providers" data-title="服务商与端点">
+      <section id="conn-providers" data-title="供应商">
         <div class="section-title">
-          <h2>服务商与端点</h2>
+          <h2>供应商</h2>
           <small>点击服务商卡片可筛选模型；复制按钮复制 Base URL</small>
         </div>
         <div class="providers-grid">
 <div class="provider-card" data-provider="AMD Radeon Cloud API">
 <div class="provider-card-head"><button aria-label="筛选 AMD Radeon Cloud API" aria-pressed="false" class="provider-name provider-select" data-provider="AMD Radeon Cloud API" type="button">AMD Radeon Cloud API</button></div>
-<p class="provider-state" title="目录获取成功；1 个指定模型已完成三协议定向测试">目录获取成功 · 目录获取成功；1 个指定模型已完成三协议定向测试</p>
 <div class="url-box">
 <span class="provider-url" title="https://developer.amd.com.cn/radeon/api/v1">https://developer.amd.com.cn/radeon/api/v1</span>
 <button aria-label="复制 AMD Radeon Cloud API 的 Base URL" class="copy-btn" data-copy-url="https://developer.amd.com.cn/radeon/api/v1" title="复制 Base URL">
@@ -915,7 +911,6 @@
 </div>
 <div class="provider-card" data-provider="B.AI API">
 <div class="provider-card-head"><button aria-label="筛选 B.AI API" aria-pressed="false" class="provider-name provider-select" data-provider="B.AI API" type="button">B.AI API</button></div>
-<p class="provider-state" title="目录获取成功；5 个指定模型已完成三协议定向测试">目录获取成功 · 目录获取成功；5 个指定模型已完成三协议定向测试</p>
 <div class="url-box">
 <span class="provider-url" title="https://api.b.ai/v1">https://api.b.ai/v1</span>
 <button aria-label="复制 B.AI API 的 Base URL" class="copy-btn" data-copy-url="https://api.b.ai/v1" title="复制 Base URL">
@@ -930,7 +925,6 @@
 </div>
 <div class="provider-card" data-provider="DeepSeek API">
 <div class="provider-card-head"><button aria-label="筛选 DeepSeek API" aria-pressed="false" class="provider-name provider-select" data-provider="DeepSeek API" type="button">DeepSeek API</button></div>
-<p class="provider-state" title="目录获取成功；可用性以模型实测为准">目录获取成功 · 目录获取成功；可用性以模型实测为准</p>
 <div class="url-box">
 <span class="provider-url" title="https://api.deepseek.com/v1">https://api.deepseek.com/v1</span>
 <button aria-label="复制 DeepSeek API 的 Base URL" class="copy-btn" data-copy-url="https://api.deepseek.com/v1" title="复制 Base URL">
@@ -944,7 +938,6 @@
 </div>
 <div class="provider-card" data-provider="Flatkey API">
 <div class="provider-card-head"><button aria-label="筛选 Flatkey API" aria-pressed="false" class="provider-name provider-select" data-provider="Flatkey API" type="button">Flatkey API</button></div>
-<p class="provider-state" title="目录获取成功；1 个指定模型已完成三协议定向测试">目录获取成功 · 目录获取成功；1 个指定模型已完成三协议定向测试</p>
 <div class="url-box">
 <span class="provider-url" title="https://router.flatkey.ai/v1">https://router.flatkey.ai/v1</span>
 <button aria-label="复制 Flatkey API 的 Base URL" class="copy-btn" data-copy-url="https://router.flatkey.ai/v1" title="复制 Base URL">
@@ -959,7 +952,6 @@
 </div>
 <div class="provider-card" data-provider="Gemini API">
 <div class="provider-card-head"><button aria-label="筛选 Gemini API" aria-pressed="false" class="provider-name provider-select" data-provider="Gemini API" type="button">Gemini API</button></div>
-<p class="provider-state" title="目录获取成功；可用性以模型实测为准">目录获取成功 · 目录获取成功；可用性以模型实测为准</p>
 <div class="url-box">
 <span class="provider-url" title="https://generativelanguage.googleapis.com/v1beta/openai">https://generativelanguage.googleapis.com/v1beta/openai</span>
 <button aria-label="复制 Gemini API 的 Base URL" class="copy-btn" data-copy-url="https://generativelanguage.googleapis.com/v1beta/openai" title="复制 Base URL">
@@ -974,7 +966,6 @@
 </div>
 <div class="provider-card" data-provider="GLM API">
 <div class="provider-card-head"><button aria-label="筛选 GLM API" aria-pressed="false" class="provider-name provider-select" data-provider="GLM API" type="button">GLM API</button></div>
-<p class="provider-state" title="目录获取成功；可用性以模型实测为准">目录获取成功 · 目录获取成功；可用性以模型实测为准</p>
 <div class="url-box">
 <span class="provider-url" title="https://open.bigmodel.cn/api/paas/v4">https://open.bigmodel.cn/api/paas/v4</span>
 <button aria-label="复制 GLM API 的 Base URL" class="copy-btn" data-copy-url="https://open.bigmodel.cn/api/paas/v4" title="复制 Base URL">
@@ -989,7 +980,6 @@
 </div>
 <div class="provider-card" data-provider="GPTs API">
 <div class="provider-card-head"><button aria-label="筛选 GPTs API" aria-pressed="false" class="provider-name provider-select" data-provider="GPTs API" type="button">GPTs API</button></div>
-<p class="provider-state" title="目录获取成功；可用性以模型实测为准">目录获取成功 · 目录获取成功；可用性以模型实测为准</p>
 <div class="url-box">
 <span class="provider-url" title="https://api.gptsapi.net/v1">https://api.gptsapi.net/v1</span>
 <button aria-label="复制 GPTs API 的 Base URL" class="copy-btn" data-copy-url="https://api.gptsapi.net/v1" title="复制 Base URL">
@@ -1004,7 +994,6 @@
 </div>
 <div class="provider-card" data-provider="Kimi API">
 <div class="provider-card-head"><button aria-label="筛选 Kimi API" aria-pressed="false" class="provider-name provider-select" data-provider="Kimi API" type="button">Kimi API</button></div>
-<p class="provider-state" title="目录获取成功；可用性以模型实测为准">目录获取成功 · 目录获取成功；可用性以模型实测为准</p>
 <div class="url-box">
 <span class="provider-url" title="https://api.moonshot.cn/v1">https://api.moonshot.cn/v1</span>
 <button aria-label="复制 Kimi API 的 Base URL" class="copy-btn" data-copy-url="https://api.moonshot.cn/v1" title="复制 Base URL">
@@ -1019,7 +1008,6 @@
 </div>
 <div class="provider-card" data-provider="NVIDIA NIM API">
 <div class="provider-card-head"><button aria-label="筛选 NVIDIA NIM API" aria-pressed="false" class="provider-name provider-select" data-provider="NVIDIA NIM API" type="button">NVIDIA NIM API</button></div>
-<p class="provider-state" title="目录获取成功；3 个指定模型已完成三协议定向测试">目录获取成功 · 目录获取成功；3 个指定模型已完成三协议定向测试</p>
 <div class="url-box">
 <span class="provider-url" title="https://integrate.api.nvidia.com/v1">https://integrate.api.nvidia.com/v1</span>
 <button aria-label="复制 NVIDIA NIM API 的 Base URL" class="copy-btn" data-copy-url="https://integrate.api.nvidia.com/v1" title="复制 Base URL">
@@ -1034,7 +1022,6 @@
 </div>
 <div class="provider-card" data-provider="Ollama Cloud API">
 <div class="provider-card-head"><button aria-label="筛选 Ollama Cloud API" aria-pressed="false" class="provider-name provider-select" data-provider="Ollama Cloud API" type="button">Ollama Cloud API</button></div>
-<p class="provider-state" title="目录获取成功；可用性以模型实测为准">目录获取成功 · 目录获取成功；可用性以模型实测为准</p>
 <div class="url-box">
 <span class="provider-url" title="https://ollama.com/v1">https://ollama.com/v1</span>
 <button aria-label="复制 Ollama Cloud API 的 Base URL" class="copy-btn" data-copy-url="https://ollama.com/v1" title="复制 Base URL">
@@ -1049,7 +1036,6 @@
 </div>
 <div class="provider-card" data-provider="OpenCode Go">
 <div class="provider-card-head"><button aria-label="筛选 OpenCode Go" aria-pressed="false" class="provider-name provider-select" data-provider="OpenCode Go" type="button">OpenCode Go</button></div>
-<p class="provider-state" title="目录获取成功；可用性以模型实测为准">目录获取成功 · 目录获取成功；可用性以模型实测为准</p>
 <div class="url-box">
 <span class="provider-url" title="https://opencode.ai/zen/go/v1">https://opencode.ai/zen/go/v1</span>
 <button aria-label="复制 OpenCode Go 的 Base URL" class="copy-btn" data-copy-url="https://opencode.ai/zen/go/v1" title="复制 Base URL">
@@ -1064,7 +1050,6 @@
 </div>
 <div class="provider-card" data-provider="OpenRouter API">
 <div class="provider-card-head"><button aria-label="筛选 OpenRouter API" aria-pressed="false" class="provider-name provider-select" data-provider="OpenRouter API" type="button">OpenRouter API</button></div>
-<p class="provider-state" title="目录获取成功；可用性以模型实测为准">目录获取成功 · 目录获取成功；可用性以模型实测为准</p>
 <div class="url-box">
 <span class="provider-url" title="https://openrouter.ai/api/v1">https://openrouter.ai/api/v1</span>
 <button aria-label="复制 OpenRouter API 的 Base URL" class="copy-btn" data-copy-url="https://openrouter.ai/api/v1" title="复制 Base URL">
@@ -1079,7 +1064,6 @@
 </div>
 <div class="provider-card" data-provider="Qwen API">
 <div class="provider-card-head"><button aria-label="筛选 Qwen API" aria-pressed="false" class="provider-name provider-select" data-provider="Qwen API" type="button">Qwen API</button></div>
-<p class="provider-state" title="目录获取成功；可用性以模型实测为准">目录获取成功 · 目录获取成功；可用性以模型实测为准</p>
 <div class="url-box">
 <span class="provider-url" title="https://dashscope.aliyuncs.com/compatible-mode/v1">https://dashscope.aliyuncs.com/compatible-mode/v1</span>
 <button aria-label="复制 Qwen API 的 Base URL" class="copy-btn" data-copy-url="https://dashscope.aliyuncs.com/compatible-mode/v1" title="复制 Base URL">
@@ -1094,7 +1078,6 @@
 </div>
 <div class="provider-card" data-provider="Qwen Token Plan">
 <div class="provider-card-head"><button aria-label="筛选 Qwen Token Plan" aria-pressed="false" class="provider-name provider-select" data-provider="Qwen Token Plan" type="button">Qwen Token Plan</button></div>
-<p class="provider-state" title="目录获取成功；可用性以模型实测为准">目录获取成功 · 目录获取成功；可用性以模型实测为准</p>
 <div class="url-box">
 <span class="provider-url" title="https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1">https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1</span>
 <button aria-label="复制 Qwen Token Plan 的 Base URL" class="copy-btn" data-copy-url="https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1" title="复制 Base URL">
@@ -1108,7 +1091,6 @@
 </div>
 <div class="provider-card" data-provider="SiliconFlow API">
 <div class="provider-card-head"><button aria-label="筛选 SiliconFlow API" aria-pressed="false" class="provider-name provider-select" data-provider="SiliconFlow API" type="button">SiliconFlow API</button></div>
-<p class="provider-state" title="目录获取成功；可用性以模型实测为准">目录获取成功 · 目录获取成功；可用性以模型实测为准</p>
 <div class="url-box">
 <span class="provider-url" title="https://api.siliconflow.cn/v1">https://api.siliconflow.cn/v1</span>
 <button aria-label="复制 SiliconFlow API 的 Base URL" class="copy-btn" data-copy-url="https://api.siliconflow.cn/v1" title="复制 Base URL">
@@ -1122,7 +1104,6 @@
 </div>
 <div class="provider-card" data-provider="TokenRhythm API">
 <div class="provider-card-head"><button aria-label="筛选 TokenRhythm API" aria-pressed="false" class="provider-name provider-select" data-provider="TokenRhythm API" type="button">TokenRhythm API</button></div>
-<p class="provider-state" title="目录获取成功；可用性以模型实测为准">目录获取成功 · 目录获取成功；可用性以模型实测为准</p>
 <div class="url-box">
 <span class="provider-url" title="https://tokenrhythm.studio/v1">https://tokenrhythm.studio/v1</span>
 <button aria-label="复制 TokenRhythm API 的 Base URL" class="copy-btn" data-copy-url="https://tokenrhythm.studio/v1" title="复制 Base URL">
@@ -10621,8 +10602,6 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
 <div class="section-title"><h2>Agent 生态地图资源</h2></div>
 <div class="agent-resource-grid">
 <a class="agent-resource-link" href="https://github.com/yuzhounh/ai-agent-landscape" target="_blank" rel="noopener"><strong>AI Agent Landscape</strong><span>yuzhounh/ai-agent-landscape</span></a>
-<a class="agent-resource-link" href="#research"><strong>AI 科研自动化全景图</strong><span>站内全景 · 端到端 / Skills</span></a>
-<a class="agent-resource-link" href="#connectivity"><strong>模型 API 连通性报告</strong><span>站内实测 · 16 服务商快照</span></a>
 </div>
 </section>
 
@@ -10633,12 +10612,12 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
 <div class="mini"><b>自治方式</b><span>同步协作、后台异步、定时、常驻、PR / 文件 / 报告交付</span></div>
 </div>
 <div class="concepts"><span><b>Model</b> = 理解与生成</span><span><b>Harness</b> = 上下文、工具循环、权限、验证</span><span><b>Surface</b> = IDE / CLI / Web / Desktop</span><span><b>Plan / API</b> = 模型与产品额度</span></div></section>
-<section id="architecture" data-title="分层架构"><div class="section-title"><h2>分层架构</h2></div><div class="architecture">
-<div class="node top">用户与团队</div><div class="arrow">↓</div>
-<div class="node">产品入口 / Surface<br><small>IDE · CLI · Web · Desktop · GitHub · IM</small></div><div class="arrow">↓</div>
-<div class="node strong">Agent Harness / 编排层<br><small>规划 · 上下文 · 记忆 · 多 Agent · 验证 · 权限</small></div>
+<section id="architecture" data-title="分层架构"><div class="section-title"><h2>分层架构</h2></div><div class="fuel">订阅 · Coding Plan · Token Plan · 按量 API → 为 Surface / Model 提供额度</div><div class="architecture">
+<div class="node top">用户与团队</div><div class="arrow">→</div>
+<div class="node">产品入口 / Surface<br><small>IDE · CLI · Web · Desktop · GitHub · IM</small></div><div class="arrow">→</div>
+<div class="node strong">Agent Harness / 编排层<br><small>规划 · 上下文 · 记忆 · 多 Agent · 验证 · 权限</small></div><div class="arrow">→</div>
 <div class="branch"><div class="node">工具与连接<br><small>文件 · Shell · Git · Browser · GUI · MCP · SaaS</small></div><div class="node">运行环境<br><small>本机 · 沙箱 · 云 VM · CI · 常驻主机</small></div><div class="node">基础模型<br><small>GPT · Claude · Gemini · Grok · Qwen · DeepSeek · GLM · Kimi</small></div></div>
-<div class="fuel">订阅 · Coding Plan · Token Plan · 按量 API → 为 Surface / Model 提供额度</div></div></section>
+</div></section>
 <section id="families" data-title="重点产品家族"><div class="section-title"><h2>重点产品家族</h2></div><p class="table-intro">同一品牌往往同时提供模型、编程入口、通用工作产品与云端能力，因此会在多个分类中重复出现。本表用于快速理解各产品生态的主要关系，而不代表法律实体之间的控制关系。</p>
 <div class="table-wrap"><table class="data-table"><thead><tr><th>生态 / 厂商</th><th>模型与 API</th><th>编程入口</th><th>通用工作 / 个人入口</th><th>云端或其他形态</th></tr></thead><tbody><tr><td>OpenAI</td><td>GPT、OpenAI API</td><td>Codex CLI、IDE、Desktop</td><td>ChatGPT、ChatGPT agent</td><td>Codex cloud、GitHub Action</td></tr><tr><td>Anthropic</td><td>Claude、Claude API</td><td>Claude Code CLI、IDE、Desktop</td><td>Claude、Claude Cowork、Computer Use</td><td>Claude Code Web、GitHub</td></tr><tr><td>Google</td><td>Gemini、Gemini API</td><td>Antigravity、Gemini CLI、Jules</td><td>Gemini</td><td>—</td></tr><tr><td>AWS</td><td>Bedrock</td><td>Kiro IDE、Kiro CLI</td><td>—</td><td>Kiro Web / autonomous agent</td></tr><tr><td>xAI</td><td>Grok、xAI API</td><td>Grok Build</td><td>Grok</td><td>Build 无头 / 自动化形态</td></tr><tr><td>Meta</td><td>Llama、Muse</td><td>Muse Code</td><td>Meta AI</td><td>开源权重与开发者生态</td></tr><tr><td>阿里 / Qoder</td><td>多模型</td><td>Qoder IDE、Qoder CLI</td><td>QoderWork、QoderWake</td><td>Cloud Agents、Mobile</td></tr><tr><td>字节跳动</td><td>豆包 / Seed、火山方舟</td><td>TRAE IDE、SOLO</td><td>TRAE Work</td><td>Work Web / Mobile、云端任务</td></tr><tr><td>腾讯</td><td>混元、腾讯云模型服务</td><td>CodeBuddy IDE、CodeBuddy Code</td><td>WorkBuddy、QClaw、Marvis</td><td>Token Plan、TokenHub</td></tr><tr><td>智谱</td><td>GLM、BigModel API、Coding Plan</td><td>ZCode</td><td>AutoGLM、AutoClaw</td><td>AutoGLM-OpenClaw 云机</td></tr><tr><td>月之暗面</td><td>Kimi、Moonshot API、Kimi Code API</td><td>Kimi Code CLI、VS Code</td><td>Kimi、Kimi Work、WebBridge</td><td>在线 Agent 与会员额度</td></tr><tr><td>阿里 / Qwen</td><td>Qwen、百炼 Model Studio</td><td>Qwen Code、Lingma</td><td>QwenPaw、Qwen Chat</td><td>百炼 Coding Plan、ModelScope</td></tr><tr><td>DeepSeek</td><td>DeepSeek 模型与 API</td><td>DeepSeek Harness</td><td>DeepSeek Chat</td><td>Harness 开发者预览</td></tr><tr><td>MiniMax</td><td>MiniMax 模型与 API</td><td>MiniMax Code</td><td>MiniMax 产品入口</td><td>Token Plan</td></tr></tbody></table></div></section>
 <section id="ide" data-title="ai ide / agent ide"><div class="section-title"><h2>AI IDE / Agent IDE</h2></div><p class="table-intro">这类产品以编辑器、独立 IDE 或 IDE 扩展为主要入口，通常整合代码库理解、补全、文件编辑、终端和 Agent 模式。选型时还应区分原生 IDE、插件与通过协议接入的外部 Agent。</p>
@@ -10689,17 +10668,6 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
           <a href="#research/res-quick">选型速查</a>
         </nav>
       </div>
-      <section id="res-intro" data-title="AI 科研自动化全景图概述">
-        <div class="view-intro">
-          <p class="tagline">科研正在从“Copilot 辅助”走向“Autonomous Research”。</p>
-          <div class="meta">
-            <span class="badge">v0.1.0</span>
-            <span class="badge">Last verified: 2026-09-03</span>
-            <span class="badge">MIT</span>
-          </div>
-          <p class="intro">本全景图覆盖端到端研究系统、Deep Research 与文献综述、Agent Skills 技能库、Awesome 合集，以及讨论、教程与延伸阅读。它是一张地图，不是排行榜；收录数字多为发布口径，使用前请以官方页面为准。</p>
-        </div>
-      </section>
 <section data-title="如何理解这张地图" id="res-overview"><div class="section-title"><h2>如何理解这张地图</h2></div><div class="lead-grid">
 <div class="mini"><b>科研环节</b><span>想法生成 · 文献检索 · 实验设计 / 执行 · 数据分析 · 写作 · 评审 · 基金申请</span></div>
 <div class="mini"><b>自动化程度</b><span>交互辅助 → 分步半自动 → 端到端自动（autopilot）</span></div>
@@ -10707,12 +10675,12 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
 <div class="mini"><b>承载环境</b><span>独立平台 · 编程 Agent 内 · 本机脚本 · 云端沙箱</span></div>
 </div>
 <div class="concepts"><span><b>Research Agent</b> = 面向科研任务的多步智能体</span><span><b>Skill</b> = 装进编程 Agent 的可复用能力包</span><span><b>Workflow</b> = 固定顺序的可复现流水线</span><span><b>End-to-End</b> = 从想法到论文初稿的自动化系统</span><span><b>Copilot / Autopilot</b> = 辅助 / 主导的自动化程度</span></div></section>
-<section data-title="分层架构" id="res-architecture"><div class="section-title"><h2>分层架构</h2></div><div class="architecture">
-<div class="node top">研究者</div><div class="arrow">↓</div>
-<div class="node">入口 / Surface<br/><small>Web 平台 · Chat / Deep Research · IDE / CLI · 本地技能目录</small></div><div class="arrow">↓</div>
-<div class="node strong">编排层 / 研究 Agent 与工作流<br/><small>规划 · 文献检索 · 实验编排 · 写作 · 评审 · 记忆</small></div>
+<section data-title="分层架构" id="res-architecture"><div class="section-title"><h2>分层架构</h2></div><div class="fuel">交付 → 综述 · 数据与图表 · 实验记录 · 论文初稿 · 基金本子 → 研究者审查、修订与负责</div><div class="architecture">
+<div class="node top">研究者</div><div class="arrow">→</div>
+<div class="node">入口 / Surface<br/><small>Web 平台 · Chat / Deep Research · IDE / CLI · 本地技能目录</small></div><div class="arrow">→</div>
+<div class="node strong">编排层 / 研究 Agent 与工作流<br/><small>规划 · 文献检索 · 实验编排 · 写作 · 评审 · 记忆</small></div><div class="arrow">→</div>
 <div class="branch"><div class="node">科研技能与工具层<br/><small>Crossref / OpenAlex · 代码 · 数据 · LaTeX · 图表 · 政策</small></div><div class="node">执行环境<br/><small>本机 · 云沙箱 · 托管环境</small></div><div class="node">基础模型<br/><small>GPT · Claude · Gemini · DeepSeek · Qwen · 开源模型</small></div></div>
-<div class="fuel">交付 → 综述 · 数据与图表 · 实验记录 · 论文初稿 · 基金本子 → 研究者审查、修订与负责</div></div></section>
+</div></section>
 <section data-title="科研 agent 平台与端到端研究系统" id="res-e2e"><div class="section-title"><h2>科研 Agent 平台与端到端研究系统</h2></div><p class="table-intro">这一类包含两种形态：科研 Agent 平台 / 工作台（如 Claude Science、FutureOS）提供接近 IDE 的一体化科研环境，研究者与 AI 协作推进从数据、图表到稿件的完整流程，强调可复现与人工把关；端到端流水线（如 Spark-to-Paper、The AI Scientist）则尝试把“从想法到论文”做成尽量自动的流程。自动化程度差异很大，需要分别核验“自动到什么程度、谁来把关”。</p>
 <div class="table-wrap"><table class="data-table"><thead><tr><th>项目 / 系统</th><th>形态</th><th>定位与特点</th></tr></thead><tbody><tr><td><a href="https://claude.com/science" rel="noopener" target="_blank">Claude Science</a></td><td>科研桌面应用（beta）</td><td>Anthropic 官方：集 Python/R kernel、科学渲染器、60+ 数据库连接、文献查阅、图表迭代与稿件撰写于一体；可扩展 skills；面向学术界有免费/折扣计划</td></tr><tr><td><a href="https://future-os.cn/" rel="noopener" target="_blank">FutureOS</a></td><td>科研平台（开源 Agent）</td><td>“科研人员的智能工作伙伴”，内置 100+ 科研 Skills；用 Rust 开发</td></tr><tr><td><a href="https://github.com/Spark-To-Paper-Skills/spark-to-paper-skills" rel="noopener" target="_blank">Spark-to-Paper</a></td><td>Claude Code 技能集</td><td>一句话想法 → 可编译 LaTeX 论文；1 个编排器 + 13 个可组合技能，约 $10 API 成本/篇</td></tr><tr><td><a href="https://github.com/SakanaAI/AI-Scientist" rel="noopener" target="_blank">The AI Scientist</a></td><td>开源端到端 Agent</td><td>Sakana AI 提出的端到端科研流程示例：想法 → 实验 → 论文草稿</td></tr></tbody></table></div>
 <div class="note warn"><b>关于自动化的“度”：</b>成本口径（如“$10/篇”）是作者公布的典型值；可复现不等于真实，自动流水线可能产出有说服力但错误的结论；平台型产品要区分「模型能力」与「产品功能」（如 Claude Science 底层仍是现有 Claude 模型，新增的是科学渲染、数据库与计算集成）；自动或半自动内容应被视为初稿，责任仍在研究者。</div></section>
@@ -10738,7 +10706,7 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
 <h3>一个负责任的科研自动化使用顺序</h3><ol class="steps"><li>先明确你要的是“辅助检索/写作”还是“自动出稿”：前者风险低，后者必须有人工审查。</li><li>选择与你既有工具链（编辑器、模型、文献库、统计软件）兼容的方案，而不是追最新的。</li><li>审查 Skills / 脚本来源，只装可信、活跃维护的内容。</li><li>对自动产出的引用、数据与结论做人工核验，保留中间步骤与可复现记录。</li><li>投稿或申报前，确认期刊 / 机构 / 基金对 AI 使用与署名的规定。</li><li>把成本（API 费用、时间、出错返工）计入真实收益后再扩大使用范围。</li></ol></section>
       <footer>内容依据 AI Research Automation Landscape 当前 README（v0.1.0，2026-09-03 核验）整理。项目能力、收录规模、许可证与链接变化很快；如与官方页面冲突，以官方最新说明为准。</footer>
     </div>
-    <div id="view-inbox" class="view view-inbox" role="tabpanel" aria-labelledby="tab-inbox" hidden data-hub-locked>
+    <div id="view-notes" class="view view-notes" role="tabpanel" aria-labelledby="tab-notes" hidden data-hub-locked>
       <section class="hub-lock-card">
         <div class="hub-lock-icon" aria-hidden="true">🔒</div>
         <h2>登录 Google 账号查看笔记</h2>
@@ -10746,23 +10714,17 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
         <button type="button" class="hub-signin-button" data-hub-signin>使用 Google 登录</button>
         <p class="hub-lock-message" data-hub-message hidden></p>
       </section>
-      <div class="manager-heading" style="margin-bottom:14px;">
-        <div>
-          <p class="manager-eyebrow">RESOURCE INBOX</p>
-          <h1>笔记</h1>
-          <p class="view-summary" style="margin:4px 0 0;max-width:860px;">快速采集日常浏览到的 AI 工具、模型、开源项目或 API 控制台链接。在此积累灵感与备忘，随时一键生成结构化提示词复制给 AI 合并入库。</p>
-        </div>
+      <p class="view-summary">快速采集日常浏览到的 AI 工具、模型、开源项目或 API 控制台链接。在此积累灵感与备忘，随时一键生成结构化提示词复制给 AI 合并入库。</p>
+      <div class="view-toolbar">
+        <div class="search"><input id="notes-search" type="search" placeholder="搜索已存笔记…（按 / 聚焦）"></div>
       </div>
 
       <!-- 快速录入卡片（单输入框极速整理） -->
-      <section class="inbox-input-card">
-        <div class="inbox-input-heading">
-          <h2><span>⚡ 随手记</span></h2>
-        </div>
-        <form id="inbox-form" class="inbox-form">
-          <div class="inbox-input-wrapper">
-            <textarea id="inbox-raw-input" class="inbox-textarea" rows="7" placeholder="整体粘贴内容，例如：&#10;网页标题&#10;https://example.com&#10;备注（可选）&#10;&#10;直接按 Enter 即可完成整理并添加具体时间&#10;（支持单条或多条批量粘贴）"></textarea>
-            <button id="inbox-btn-save" class="inbox-circle-submit" type="submit" title="整理录入（快捷键：Enter）" aria-label="整理录入">
+      <section class="notes-input-card">
+        <form id="notes-form" class="notes-form">
+          <div class="notes-input-wrapper">
+            <textarea id="notes-raw-input" class="notes-textarea" rows="7" placeholder="整体粘贴内容，例如：&#10;网页标题&#10;https://example.com&#10;备注（可选）&#10;&#10;直接按 Enter 即可完成整理并添加具体时间&#10;（支持单条或多条批量粘贴）"></textarea>
+            <button id="notes-btn-save" class="notes-circle-submit" type="submit" title="整理录入（快捷键：Enter）" aria-label="整理录入">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="12" y1="19" x2="12" y2="5"></line>
                 <polyline points="5 12 12 5 19 12"></polyline>
@@ -10773,43 +10735,40 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
       </section>
 
       <!-- 操作与筛选工具栏 -->
-      <div class="inbox-toolbar">
-        <div class="inbox-toolbar-left">
-          <div id="inbox-filter-tabs" class="inbox-tab-pills">
-            <button type="button" class="inbox-tab-pill active" data-filter="pending">待整理 <span id="inbox-count-pending" class="inbox-tab-count">0</span></button>
-            <button type="button" class="inbox-tab-pill" data-filter="archived">已收录 <span id="inbox-count-archived" class="inbox-tab-count">0</span></button>
-            <button type="button" class="inbox-tab-pill" data-filter="all">全部 <span id="inbox-count-all" class="inbox-tab-count">0</span></button>
-          </div>
-          <div class="inbox-search">
-            <input id="inbox-search" type="search" placeholder="搜索已存笔记…">
+      <div class="notes-toolbar">
+        <div class="notes-toolbar-left">
+          <div id="notes-filter-tabs" class="notes-tab-pills">
+            <button type="button" class="notes-tab-pill active" data-filter="pending">待整理 <span id="notes-count-pending" class="notes-tab-count">0</span></button>
+            <button type="button" class="notes-tab-pill" data-filter="archived">已收录 <span id="notes-count-archived" class="notes-tab-count">0</span></button>
+            <button type="button" class="notes-tab-pill" data-filter="all">全部 <span id="notes-count-all" class="notes-tab-count">0</span></button>
           </div>
         </div>
-        <div class="inbox-toolbar-right">
-          <label class="inbox-select-all-label" id="inbox-select-all-wrap" title="全选或取消全选所有笔记" hidden>
-            <input type="checkbox" id="inbox-global-select-all">
+        <div class="notes-toolbar-right">
+          <label class="notes-select-all-label" id="notes-select-all-wrap" title="全选或取消全选所有笔记" hidden>
+            <input type="checkbox" id="notes-global-select-all">
             <span>全选</span>
           </label>
-          <span id="inbox-global-selected-count" class="inbox-selected-count" hidden>已选 0 条</span>
-          <button id="inbox-btn-select-mode" class="inbox-button" type="button" title="开启多选批量操作">
+          <span id="notes-global-selected-count" class="notes-selected-count" hidden>已选 0 条</span>
+          <button id="notes-btn-select-mode" class="notes-button" type="button" title="开启多选批量操作">
             选择
           </button>
-          <button id="inbox-btn-batch-copy" class="inbox-button" type="button" title="复制笔记内容，可直接发给 AI（未勾选时复制全部）">
+          <button id="notes-btn-batch-copy" class="notes-button" type="button" title="复制笔记内容，可直接发给 AI（未勾选时复制全部）">
             复制
           </button>
-          <button id="inbox-btn-batch-status" class="inbox-button" type="button" title="收录笔记或还原">
+          <button id="notes-btn-batch-status" class="notes-button" type="button" title="收录笔记或还原">
             收录
           </button>
-          <button id="inbox-btn-batch-delete" class="inbox-button danger" type="button" title="删除选中的笔记">
+          <button id="notes-btn-batch-delete" class="notes-button danger" type="button" title="删除选中的笔记">
             删除
           </button>
-          <button id="inbox-btn-batch-edit" class="inbox-button" type="button" title="编辑选中的笔记">
+          <button id="notes-btn-batch-edit" class="notes-button" type="button" title="编辑选中的笔记">
             编辑
           </button>
         </div>
       </div>
 
       <!-- 笔记列表 -->
-      <div id="inbox-list" class="inbox-list"></div>
+      <div id="notes-list" class="notes-list"></div>
     </div>
     <div id="view-manage" class="view view-manager" role="tabpanel" aria-labelledby="tab-manage" hidden data-hub-locked>
       <section class="hub-lock-card">
@@ -10867,7 +10826,7 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
             </div>
           </div>
           <section class="manager-promotions-section">
-            <div class="manager-plan-subheading"><h3>限时优惠</h3><button class="manager-button" type="button" data-add="plans" data-plan-type="限时优惠">新增限时优惠</button></div>
+            <div class="manager-plan-subheading"><h3>限时优惠</h3><button id="manager-add-promotion" class="manager-button" type="button" data-add="plans" data-plan-type="限时优惠">新增限时优惠</button></div>
             <div id="manager-promotions-list" class="manager-list"></div>
           </section>
           <div id="manager-plans-list" class="manager-list"></div>
@@ -10914,11 +10873,12 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
     </div>
   </main>
   <script>
-    const viewNames=['tools','api','agents','research','inbox','connectivity','manage'];
+    const viewNames=['tools','api','agents','research','notes','connectivity','manage'];
     let activeView=null;
 
     function hashParts(){
       const parts=location.hash.slice(1).split('/').filter(Boolean);
+      if(parts[0]==='inbox'){location.replace('#notes');return {view:'notes',section:parts[1]||null};}
       return {view:viewNames.includes(parts[0])?parts[0]:'tools',section:parts[1]||null};
     }
     function activateView(view,section){
@@ -11028,7 +10988,7 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
     });
 
     document.addEventListener('keydown',event=>{
-      const input={tools:toolsSearch,api:apiSearch,connectivity:connectivitySearch,agents:agentsSearch,research:researchSearch,manage:document.getElementById('manager-search')}[activeView];
+      const input={tools:toolsSearch,api:apiSearch,connectivity:connectivitySearch,agents:agentsSearch,research:researchSearch,notes:document.getElementById('notes-search'),manage:document.getElementById('manager-search')}[activeView];
       if(event.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){
         if(input){event.preventDefault();input.focus()}
       }
@@ -11094,42 +11054,19 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
     let connCurrentPage=1;
     let connMatchedRows=[];
 
-    // 归档功能：本地手动归档 + Plan 管理归档自动同步（派生）；状态保存在 Google 账户（Firestore）
-    const CONN_ARCHIVE_KEY='conn_archived_providers';
-    let connArchivedSet=new Set();
-    try{ const raw=localStorage.getItem(CONN_ARCHIVE_KEY); if(raw) connArchivedSet=new Set(JSON.parse(raw)); }catch{}
+    // 归档状态完全由 Plan 管理驱动：Plan 中归档的服务商，在连通性页自动归档
     let connShowArchived=false;
-    let connHubArchivedSet=new Set();
-    let connEffectiveSet=new Set(connArchivedSet);
-    let connUid=null;
+    let connEffectiveSet=new Set();
 
-    function connRecomputeEffective(){
-      connEffectiveSet=new Set(connArchivedSet);
-      connHubArchivedSet.forEach(p=>connEffectiveSet.add(p));
-    }
-
-    function connNormName(s){
-      return String(s||'').toLowerCase().replace(/[^a-z0-9一-鿿]/g,'').replace(/(api|cloud|token|plan|platform|console)$/,'');
-    }
-
-    // Plan 管理归档的服务商 → 匹配连通性服务商卡片
+    // Plan 管理归档的服务商 → 与连通性卡片名称精确匹配（名称已统一）
     function connMatchPlanProviders(planProviders){
-      const keys=(planProviders||[]).map(connNormName).filter(k=>k.length>=2);
+      const keys=new Set((planProviders||[]).map(s=>String(s).trim().toLowerCase()).filter(Boolean));
       const out=new Set();
       connCards.forEach(card=>{
-        const name=card.dataset.provider;
-        const n=connNormName(name);
-        if(!n) return;
-        if(keys.some(k=>k===n||n.includes(k)||k.includes(n))) out.add(name);
+        const name=String(card.dataset.provider||'').trim();
+        if(name&&keys.has(name.toLowerCase())) out.add(name);
       });
       return out;
-    }
-
-    function saveConnArchived(){
-      try{ localStorage.setItem(CONN_ARCHIVE_KEY,JSON.stringify([...connArchivedSet])); }catch{}
-      if(connUid&&window.HubAuth){
-        HubAuth.saveUserData(['users',connUid,'connectivitySettings','archive'],{providers:[...connArchivedSet],updatedAt:Date.now()}).catch(()=>{});
-      }
     }
 
     function applyConnArchiveVisibility(){
@@ -11139,40 +11076,17 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
         card.classList.toggle('conn-archived',archived);
         if(archived&&!connShowArchived){ card.setAttribute('data-conn-hidden','1'); }
         else{ card.removeAttribute('data-conn-hidden'); }
-        const btn=card.querySelector('.conn-archive-btn');
-        if(btn) btn.textContent=archived?'取消归档':'归档';
       });
+      const providersCountEl=document.getElementById('connProvidersCount');
+      if(providersCountEl) providersCountEl.textContent=connCards.filter(card=>!card.hasAttribute('data-conn-hidden')).length;
       const toggleBtn=document.getElementById('connShowArchivedToggle');
       if(toggleBtn){
         const count=connEffectiveSet.size;
-        toggleBtn.textContent=connShowArchived?`隐藏归档 (${count})`:`显示归档 (${count})`;
+        toggleBtn.innerHTML=connShowArchived?`隐藏归档 <em>${count}</em>`:`显示归档 <em>${count}</em>`;
         toggleBtn.classList.toggle('active',connShowArchived);
         toggleBtn.hidden=count===0&&!connShowArchived;
       }
     }
-
-    // 向每个服务商卡片注入"归档"按钮
-    connCards.forEach(card=>{
-      const head=card.querySelector('.provider-card-head');
-      if(!head) return;
-      const archBtn=document.createElement('button');
-      archBtn.type='button';
-      archBtn.className='conn-archive-btn';
-      archBtn.textContent='归档';
-      archBtn.title='归档后该服务商将从主视图隐藏';
-      archBtn.addEventListener('click',e=>{
-        e.stopPropagation();
-        const p=card.dataset.provider;
-        if(connArchivedSet.has(p)){ connArchivedSet.delete(p); }
-        else{ connArchivedSet.add(p); if(connProviderFilter===p){ connProviderFilter='ALL'; } }
-        saveConnArchived();
-        connRecomputeEffective();
-        applyConnArchiveVisibility();
-        updateConnDetailControls();
-        applyConnFilters(true);
-      });
-      head.appendChild(archBtn);
-    });
 
     // "显示归档"切换按钮
     const connShowArchivedToggle=document.getElementById('connShowArchivedToggle');
@@ -11180,35 +11094,23 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
       connShowArchived=!connShowArchived;
       applyConnArchiveVisibility();
       applyConnFilters(true);
+      updateConnDetailControls();
     });
 
-    // 接入 hub-auth：登录后拉取云端归档状态；Plan 管理归档 → 本页自动归档
+    // 接入 hub-auth：监听 Plan 管理归档变化 → 本页对应服务商自动归档
     function connSyncFromHub(){
-      connHubArchivedSet=window.HubAuth?connMatchPlanProviders(HubAuth.getArchivedPlanProviders()):new Set();
-      connRecomputeEffective();
+      connEffectiveSet=window.HubAuth?connMatchPlanProviders(HubAuth.getArchivedPlanProviders()):new Set();
       applyConnArchiveVisibility();
       applyConnFilters(true);
+      updateConnDetailControls();
     }
     function connBindHub(){
       if(!window.HubAuth) return;
-      HubAuth.onChange(async user=>{
-        connUid=user?user.uid:null;
-        if(connUid){
-          try{
-            const data=await HubAuth.loadUserData(['users',connUid,'connectivitySettings','archive']);
-            if(data&&Array.isArray(data.providers)){
-              connArchivedSet=new Set(data.providers);
-              try{ localStorage.setItem(CONN_ARCHIVE_KEY,JSON.stringify(data.providers)); }catch{}
-            }
-          }catch{}
-        }
-        connSyncFromHub();
-      });
+      HubAuth.onChange(connSyncFromHub);
       document.addEventListener('hub-archived-plans',connSyncFromHub);
     }
     if(document.readyState==='loading') addEventListener('DOMContentLoaded',connBindHub); else connBindHub();
 
-    connRecomputeEffective();
     applyConnArchiveVisibility();
 
     function renderConnPagination(){
@@ -11260,7 +11162,7 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
         &&(connStatusFilter==='ALL'||row.status===connStatusFilter)&&row.search.includes(query)
         &&(connShowArchived||!connEffectiveSet.has(row.provider)));
       applyConnPaging();
-      const scopeCount=connProviderFilter==='ALL'?connRows.length:connRows.filter(r=>r.provider===connProviderFilter).length;
+      const scopeCount=connRows.filter(r=>(connProviderFilter==='ALL'||r.provider===connProviderFilter)&&(connShowArchived||!connEffectiveSet.has(r.provider))).length;
       const resCountEl=document.getElementById('resultCount');
       if(resCountEl) resCountEl.textContent=`显示 ${connMatchedRows.length} / ${scopeCount} 个模型`;
     }
@@ -11294,13 +11196,18 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
 
     function updateConnDetailControls(){
       const selected=connProviderFilter==='ALL'?null:connProviderFilter;
-      const scopedRows=connRows.filter(r=>!selected||r.provider===selected);
+      const rowVisible=r=>connShowArchived||!connEffectiveSet.has(r.provider);
+      const scopedRows=connRows.filter(r=>selected?r.provider===selected:rowVisible(r));
       const counts={ALL:scopedRows.length,SUCCESS:0,BATCH:0,SKIPPED:0,FAILED:0};
       const successLatencies=[];
+      const successProto={chat:0,resp:0,anth:0};
       scopedRows.forEach(r=>{
         if(r.status==='SUCCESS'){
           counts.SUCCESS++;
           if(r.latency>0) successLatencies.push(r.latency);
+          if(r.protocol.includes('chat')) successProto.chat++;
+          if(r.protocol.includes('responses')) successProto.resp++;
+          if(r.protocol.includes('anthropic')) successProto.anth++;
         }else if(r.status==='BATCH'){
           counts.BATCH++;
         }else if(r.status==='FAILED'){
@@ -11346,15 +11253,17 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
         if(lVal) lVal.textContent=avgLat;
         if(lSub) lSub.textContent=successLatencies.length?`基于 ${successLatencies.length} 个成功模型响应`:'暂无成功样本';
       }else{
+        const visibleProviders=connCards.filter(c=>connShowArchived||!connEffectiveSet.has(c.dataset.provider)).length;
         if(pLabel) pLabel.textContent=initialConnStats.providerLabel;
-        if(pVal) pVal.textContent=initialConnStats.providerValue;
+        if(pVal) pVal.textContent=`${visibleProviders} / ${visibleProviders}`;
         if(pSub) pSub.textContent=initialConnStats.providerSub;
         if(sLabel) sLabel.textContent=initialConnStats.successLabel;
-        if(sVal) sVal.textContent=initialConnStats.successValue;
-        if(sSub) sSub.textContent=initialConnStats.successSub;
-        if(skVal) skVal.textContent=initialConnStats.skippedValue;
-        if(skSub) skSub.textContent=initialConnStats.skippedSub;
-        if(lVal) lVal.textContent=initialConnStats.latencyValue;
+        if(sVal) sVal.textContent=String(counts.SUCCESS);
+        if(sSub) sSub.textContent=`Chat: ${successProto.chat} | Resp: ${successProto.resp} | Anth: ${successProto.anth}`;
+        if(skVal) skVal.textContent=String(counts.BATCH+counts.SKIPPED);
+        if(skSub) skSub.textContent=`${counts.BATCH} Batch推断 / ${counts.SKIPPED} 跳过或未测试`;
+        const avgLat=successLatencies.length?Math.round(successLatencies.reduce((a,b)=>a+b,0)/successLatencies.length)+' ms':'-';
+        if(lVal) lVal.textContent=avgLat;
         if(lSub) lSub.textContent=initialConnStats.latencySub;
       }
     }
@@ -11446,6 +11355,6 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
     });
   </script>
   <script type="module" src="./manager.js?v=20260904a"></script>
-  <script type="module" src="./inbox.js?v=20260904a"></script>
+  <script type="module" src="./notes.js?v=20260904b"></script>
 </body>
 </html>

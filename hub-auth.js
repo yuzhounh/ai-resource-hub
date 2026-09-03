@@ -1,10 +1,10 @@
 // ============================================================
 // hub-auth.js — Google 账户统一入口
 // 职责：
-//   1. 初始化 Firebase（Auth + Firestore），供 manager.js / inbox.js 复用
+//   1. 初始化 Firebase（Auth + Firestore），供 manager.js / notes.js 复用
 //   2. 页面右上角的全局登录入口与用户菜单
 //   3. 笔记 / 连通性 / Plan 管理三个视图的登录门控
-//   4. 订阅 Plan 管理归档状态，向连通性页面广播（hub-archived-plans 事件）
+//   4. 订阅 Plan 管理归档记录名称（Plan 名称 / 优惠名称），向连通性页面广播（hub-archived-plans 事件）
 // 内联脚本通过 window.HubAuth 访问本模块能力。
 // ============================================================
 
@@ -43,7 +43,7 @@ const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: "select_account" });
 
 // 需要登录 Google 账号才能查看内容的视图
-const GATED_VIEWS = ["inbox", "connectivity", "manage"];
+const GATED_VIEWS = ["notes", "connectivity", "manage"];
 
 const els = {
   account: document.getElementById("hub-account"),
@@ -95,7 +95,11 @@ async function signInWithGoogle() {
 }
 
 // ---- Plan 管理归档 → 连通性页面广播 ----
+// 匹配对象是已归档记录的名称（Plan 名称 / 优惠名称），与提供方字段无关。
 let plansUnsubscribe = null;
+let promotionsUnsubscribe = null;
+let archivedPlanNames = [];
+let archivedPromotionNames = [];
 const archivedPlanProviders = new Set();
 
 function broadcastArchivedPlans() {
@@ -104,20 +108,34 @@ function broadcastArchivedPlans() {
   }));
 }
 
-function subscribePlans(uid) {
-  if (plansUnsubscribe) { plansUnsubscribe(); plansUnsubscribe = null; }
+function rebuildArchivedNames() {
   archivedPlanProviders.clear();
-  if (!uid) { broadcastArchivedPlans(); return; }
+  [...archivedPlanNames, ...archivedPromotionNames].forEach(text => {
+    if (text) archivedPlanProviders.add(text);
+  });
+  broadcastArchivedPlans();
+}
+
+function subscribeArchivedNames(uid) {
+  if (plansUnsubscribe) { plansUnsubscribe(); plansUnsubscribe = null; }
+  if (promotionsUnsubscribe) { promotionsUnsubscribe(); promotionsUnsubscribe = null; }
+  archivedPlanNames = [];
+  archivedPromotionNames = [];
+  if (!uid) { rebuildArchivedNames(); return; }
   plansUnsubscribe = onSnapshot(collection(db, "users", uid, "plans"), snapshot => {
-    archivedPlanProviders.clear();
-    snapshot.docs.forEach(entry => {
-      const data = entry.data();
-      if (!data.archived) return;
-      const provider = String(data.provider || data.name || "").trim();
-      if (provider) archivedPlanProviders.add(provider);
-    });
-    broadcastArchivedPlans();
-  }, () => broadcastArchivedPlans());
+    archivedPlanNames = snapshot.docs
+      .filter(entry => entry.data().archived)
+      .map(entry => String(entry.data().name || "").trim())
+      .filter(Boolean);
+    rebuildArchivedNames();
+  }, rebuildArchivedNames);
+  promotionsUnsubscribe = onSnapshot(collection(db, "users", uid, "promotions"), snapshot => {
+    archivedPromotionNames = snapshot.docs
+      .filter(entry => entry.data().archived)
+      .map(entry => String(entry.data().title || "").trim())
+      .filter(Boolean);
+    rebuildArchivedNames();
+  }, rebuildArchivedNames);
 }
 
 // ---- 通用用户数据读写（供内联脚本经 window.HubAuth 调用）----
@@ -135,6 +153,7 @@ let latestUser = null;
 
 onAuthStateChanged(auth, user => {
   latestUser = user;
+  document.body.classList.toggle("hub-signed-in", Boolean(user));
   GATED_VIEWS.forEach(name => {
     const view = document.getElementById(`view-${name}`);
     if (view) view.toggleAttribute("data-hub-locked", !user);
@@ -165,7 +184,7 @@ onAuthStateChanged(auth, user => {
     els.menuButton.setAttribute("aria-expanded", "false");
   }
 
-  subscribePlans(user?.uid || null);
+  subscribeArchivedNames(user?.uid || null);
 
   document.dispatchEvent(new CustomEvent("hub-auth-change", {
     detail: { signedIn: Boolean(user), uid: user?.uid || null }

@@ -1,5 +1,5 @@
 // ============================================================
-// Inbox / 笔记板块核心逻辑（全公共按钮操作 + 单栏月度卡片）
+// Notes / 笔记板块核心逻辑（全公共按钮操作 + 单栏月度卡片）
 // 数据保存在登录用户的 Google 账户（Firestore）中；
 // localStorage 仅作本地缓存与首次登录迁移来源。
 // ============================================================
@@ -50,11 +50,11 @@ function formatExactTime(d = new Date()) {
 }
 
 function showToast(message) {
-  let toast = document.getElementById("inbox-toast");
+  let toast = document.getElementById("notes-toast");
   if (!toast) {
     toast = document.createElement("div");
-    toast.id = "inbox-toast";
-    toast.className = "inbox-toast";
+    toast.id = "notes-toast";
+    toast.className = "notes-toast";
     document.body.appendChild(toast);
   }
   toast.textContent = message;
@@ -232,7 +232,7 @@ function finalizeItem(titleLines, url, remarkLines) {
   return { title, url: cleanedUrl, notes };
 }
 
-// 云端存储（Firestore: users/{uid}/inbox/notes）
+// 云端存储（Firestore: users/{uid}/notes/notes）
 let currentUid = null;
 let cloudUnsubscribe = null;
 let saveTimer = null;
@@ -264,18 +264,18 @@ function attachCloud(uid) {
         // 首次登录：把本地已有笔记上传到 Google 账户
         setDoc(ref, { notes: local, updatedAt: Date.now() }).catch(() => {
           notesState.notes = local;
-          renderInbox();
+          renderNotes();
           showToast("笔记已载入本地缓存，云同步暂不可用。");
         });
       } else {
         notesState.notes = [];
-        renderInbox();
+        renderNotes();
       }
       return;
     }
     notesState.notes = Array.isArray(snapshot.data().notes) ? snapshot.data().notes : [];
     writeLocalCache();
-    renderInbox();
+    renderNotes();
   }, () => {
     showToast("无法从 Google 账户加载笔记，请检查网络或登录状态。");
   });
@@ -286,7 +286,7 @@ function detachCloud() {
   clearTimeout(saveTimer);
   if (cloudUnsubscribe) { cloudUnsubscribe(); cloudUnsubscribe = null; }
   notesState.notes = [];
-  renderInbox();
+  renderNotes();
 }
 
 function saveNotes() {
@@ -305,7 +305,7 @@ function saveNotes() {
 }
 
 function updateNavBadge() {
-  const badge = document.getElementById("inbox-nav-badge");
+  const badge = document.getElementById("notes-nav-badge");
   if (badge) badge.remove();
 }
 
@@ -325,8 +325,8 @@ function generateAiMarkdown(notesToExport) {
 }
 
 // 渲染核心：单栏月度卡片，支持纯净阅读模式与选择模式切换
-function renderInbox() {
-  const listEl = document.getElementById("inbox-list");
+function renderNotes() {
+  const listEl = document.getElementById("notes-list");
   if (!listEl) return;
 
   // 模式切换控制：只有在 selectMode 下才为列表赋予选择样式
@@ -336,9 +336,9 @@ function renderInbox() {
     listEl.classList.remove("select-mode");
   }
 
-  const countPendingEl = document.getElementById("inbox-count-pending");
-  const countArchivedEl = document.getElementById("inbox-count-archived");
-  const countAllEl = document.getElementById("inbox-count-all");
+  const countPendingEl = document.getElementById("notes-count-pending");
+  const countArchivedEl = document.getElementById("notes-count-archived");
+  const countAllEl = document.getElementById("notes-count-all");
 
   const pendingNotes = notesState.notes.filter(n => n.status !== "archived");
   const archivedNotes = notesState.notes.filter(n => n.status === "archived");
@@ -364,11 +364,11 @@ function renderInbox() {
   filtered.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
   // 更新顶部公共操作按钮的状态与文字
-  const selectModeBtn = document.getElementById("inbox-btn-select-mode");
-  const selectAllWrap = document.getElementById("inbox-select-all-wrap");
-  const globalSelectAll = document.getElementById("inbox-global-select-all");
-  const globalCountEl = document.getElementById("inbox-global-selected-count");
-  const batchStatusBtn = document.getElementById("inbox-btn-batch-status");
+  const selectModeBtn = document.getElementById("notes-btn-select-mode");
+  const selectAllWrap = document.getElementById("notes-select-all-wrap");
+  const globalSelectAll = document.getElementById("notes-global-select-all");
+  const globalCountEl = document.getElementById("notes-global-selected-count");
+  const batchStatusBtn = document.getElementById("notes-btn-batch-status");
 
   if (selectModeBtn) {
     selectModeBtn.textContent = notesState.selectMode ? "取消" : "选择";
@@ -406,7 +406,7 @@ function renderInbox() {
     if (notesState.filter === "archived") emptyMsg = "暂无已收录的归档笔记。";
     if (notesState.query) emptyMsg = `没有找到包含“${escapeHtml(notesState.query)}”的笔记。`;
 
-    listEl.innerHTML = `<div class="inbox-empty"><strong>空空如也</strong><p>${emptyMsg}</p></div>`;
+    listEl.innerHTML = `<div class="notes-empty"><strong>空空如也</strong><p>${emptyMsg}</p></div>`;
     return;
   }
 
@@ -447,14 +447,14 @@ function renderInbox() {
 
       if (isEditing) {
         return `
-          <div class="inbox-item-row editing" data-id="${escapeHtml(note.id)}">
+          <div class="notes-item-row editing" data-id="${escapeHtml(note.id)}">
             <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
-              <input class="inbox-input edit-title" type="text" value="${escapeHtml(note.title)}" placeholder="网站标题">
-              <input class="inbox-input edit-url" type="url" value="${escapeHtml(note.url)}" placeholder="网站链接">
-              <textarea class="inbox-input edit-notes" style="resize:vertical;min-height:60px;" placeholder="备注内容">${escapeHtml(note.notes || "")}</textarea>
+              <input class="notes-input edit-title" type="text" value="${escapeHtml(note.title)}" placeholder="网站标题">
+              <input class="notes-input edit-url" type="url" value="${escapeHtml(note.url)}" placeholder="网站链接">
+              <textarea class="notes-input edit-notes" style="resize:vertical;min-height:60px;" placeholder="备注内容">${escapeHtml(note.notes || "")}</textarea>
               <div style="display:flex;gap:6px;margin-top:4px;">
-                <button type="button" data-action="save-edit" class="inbox-button primary" style="padding:4px 10px;font-size:12px;min-width:auto;">保存</button>
-                <button type="button" data-action="cancel-edit" class="inbox-button ghost" style="padding:4px 10px;font-size:12px;min-width:auto;">取消</button>
+                <button type="button" data-action="save-edit" class="notes-button primary" style="padding:4px 10px;font-size:12px;min-width:auto;">保存</button>
+                <button type="button" data-action="cancel-edit" class="notes-button ghost" style="padding:4px 10px;font-size:12px;min-width:auto;">取消</button>
               </div>
             </div>
           </div>
@@ -462,40 +462,40 @@ function renderInbox() {
       }
 
       return `
-        <div class="inbox-item-row${isArchived ? " archived" : ""}${isChecked ? " selected" : ""}" data-id="${escapeHtml(note.id)}">
-          <label class="inbox-checkbox-wrap" title="选中此条笔记">
-            <input type="checkbox" class="inbox-item-check" data-id="${escapeHtml(note.id)}" ${isChecked ? "checked" : ""}>
+        <div class="notes-item-row${isArchived ? " archived" : ""}${isChecked ? " selected" : ""}" data-id="${escapeHtml(note.id)}">
+          <label class="notes-checkbox-wrap" title="选中此条笔记">
+            <input type="checkbox" class="notes-item-check" data-id="${escapeHtml(note.id)}" ${isChecked ? "checked" : ""}>
           </label>
-          <div class="inbox-item-content">
-            <div class="inbox-item-header">
-              <div class="inbox-item-title-group">
-                <a class="inbox-item-title" href="${escapeHtml(validUrl)}" target="_blank" rel="noopener" title="${escapeHtml(note.title || '未命名网页')}">
+          <div class="notes-item-content">
+            <div class="notes-item-header">
+              <div class="notes-item-title-group">
+                <a class="notes-item-title" href="${escapeHtml(validUrl)}" target="_blank" rel="noopener" title="${escapeHtml(note.title || '未命名网页')}">
                   ${escapeHtml(note.title || "未命名网页")}
                 </a>
-                ${isArchived ? '<span class="inbox-status-tag archived">已收录</span>' : ""}
+                ${isArchived ? '<span class="notes-status-tag archived">已收录</span>' : ""}
               </div>
-              <div class="inbox-item-meta">
-                <span class="inbox-time">${escapeHtml(note.createdAt || "刚刚")}</span>
+              <div class="notes-item-meta">
+                <span class="notes-time">${escapeHtml(note.createdAt || "刚刚")}</span>
               </div>
             </div>
-            <a class="inbox-card-url" href="${escapeHtml(validUrl)}" target="_blank" rel="noopener" title="${escapeHtml(note.url)}">${escapeHtml(note.url)}</a>
-            ${note.notes ? `<div class="inbox-card-notes">${escapeHtml(note.notes)}</div>` : ""}
+            <a class="notes-card-url" href="${escapeHtml(validUrl)}" target="_blank" rel="noopener" title="${escapeHtml(note.url)}">${escapeHtml(note.url)}</a>
+            ${note.notes ? `<div class="notes-card-notes">${escapeHtml(note.notes)}</div>` : ""}
           </div>
         </div>
       `;
     }).join("");
 
     return `
-      <section class="inbox-month-card" data-month="${escapeHtml(monthKey)}">
-        <aside class="inbox-month-aside">
-          <div class="inbox-month-label">
-            ${yearText ? `<span class="inbox-month-year">${escapeHtml(yearText)}</span>` : ""}
-            <span class="inbox-month-num">${escapeHtml(monthText)}</span>
+      <section class="notes-month-card" data-month="${escapeHtml(monthKey)}">
+        <aside class="notes-month-aside">
+          <div class="notes-month-label">
+            ${yearText ? `<span class="notes-month-year">${escapeHtml(yearText)}</span>` : ""}
+            <span class="notes-month-num">${escapeHtml(monthText)}</span>
           </div>
-          <span class="inbox-month-count">共 ${items.length} 条</span>
+          <span class="notes-month-count">共 ${items.length} 条</span>
         </aside>
-        <div class="inbox-month-body">
-          <div class="inbox-month-items">
+        <div class="notes-month-body">
+          <div class="notes-month-items">
             ${itemsHtml}
           </div>
         </div>
@@ -505,18 +505,18 @@ function renderInbox() {
 }
 
 // 事件绑定
-function initInboxEvents() {
-  const form = document.getElementById("inbox-form");
-  const rawInput = document.getElementById("inbox-raw-input");
-  const searchInput = document.getElementById("inbox-search");
+function initNotesEvents() {
+  const form = document.getElementById("notes-form");
+  const rawInput = document.getElementById("notes-raw-input");
+  const searchInput = document.getElementById("notes-search");
 
   // 顶部公共操作按钮
-  const selectModeBtn = document.getElementById("inbox-btn-select-mode");
-  const globalSelectAll = document.getElementById("inbox-global-select-all");
-  const batchCopyBtn = document.getElementById("inbox-btn-batch-copy");
-  const batchStatusBtn = document.getElementById("inbox-btn-batch-status");
-  const batchDeleteBtn = document.getElementById("inbox-btn-batch-delete");
-  const batchEditBtn = document.getElementById("inbox-btn-batch-edit");
+  const selectModeBtn = document.getElementById("notes-btn-select-mode");
+  const globalSelectAll = document.getElementById("notes-global-select-all");
+  const batchCopyBtn = document.getElementById("notes-btn-batch-copy");
+  const batchStatusBtn = document.getElementById("notes-btn-batch-status");
+  const batchDeleteBtn = document.getElementById("notes-btn-batch-delete");
+  const batchEditBtn = document.getElementById("notes-btn-batch-edit");
 
   // 单框回车直接保存录入（Shift + Enter 允许常规换行）
   rawInput?.addEventListener("keydown", event => {
@@ -555,7 +555,7 @@ function initInboxEvents() {
 
     notesState.notes.unshift(...newNotes);
     saveNotes();
-    renderInbox();
+    renderNotes();
 
     if (rawInput) rawInput.value = "";
     showToast(items.length === 1 ? "已成功整理并记录 1 条笔记！" : `已成功批量整理并录入 ${items.length} 条笔记！`);
@@ -567,7 +567,7 @@ function initInboxEvents() {
     if (!notesState.selectMode) {
       notesState.selectedIds.clear();
     }
-    renderInbox();
+    renderNotes();
   });
 
   // 公共功能 1：全选 / 取消全选（跨越所有月份）
@@ -591,7 +591,7 @@ function initInboxEvents() {
     } else {
       notesState.selectedIds.clear();
     }
-    renderInbox();
+    renderNotes();
   });
 
   // 公共功能 2：复制笔记（阅读模式直接复制全部未归档；选择模式下复制勾选项）
@@ -642,7 +642,7 @@ function initInboxEvents() {
     targetNotes.forEach(n => { n.status = newStatus; });
     notesState.selectedIds.clear();
     saveNotes();
-    renderInbox();
+    renderNotes();
     showToast(`已将 ${targetNotes.length} 条笔记${actionDesc}。`);
   });
 
@@ -650,7 +650,7 @@ function initInboxEvents() {
   batchDeleteBtn?.addEventListener("click", () => {
     if (!notesState.selectMode) {
       notesState.selectMode = true;
-      renderInbox();
+      renderNotes();
       showToast("已开启选择模式，请勾选需要删除的笔记！");
       return;
     }
@@ -665,7 +665,7 @@ function initInboxEvents() {
     notesState.notes = notesState.notes.filter(n => !notesState.selectedIds.has(n.id));
     notesState.selectedIds.clear();
     saveNotes();
-    renderInbox();
+    renderNotes();
     showToast(`已删除 ${count} 条笔记。`);
   });
 
@@ -673,7 +673,7 @@ function initInboxEvents() {
   batchEditBtn?.addEventListener("click", () => {
     if (!notesState.selectMode) {
       notesState.selectMode = true;
-      renderInbox();
+      renderNotes();
       showToast("已开启选择模式，请勾选需要编辑的笔记！");
       return;
     }
@@ -684,9 +684,9 @@ function initInboxEvents() {
     }
     const targetId = [...notesState.selectedIds][0];
     notesState.editingId = targetId;
-    renderInbox();
+    renderNotes();
     setTimeout(() => {
-      const row = document.querySelector(`.inbox-item-row.editing[data-id="${targetId}"]`);
+      const row = document.querySelector(`.notes-item-row.editing[data-id="${targetId}"]`);
       row?.scrollIntoView({ behavior: "smooth", block: "center" });
       row?.querySelector(".edit-title")?.focus();
     }, 60);
@@ -695,35 +695,35 @@ function initInboxEvents() {
   // 搜索过滤
   searchInput?.addEventListener("input", () => {
     notesState.query = searchInput.value.trim();
-    renderInbox();
+    renderNotes();
   });
 
   // 筛选 Tab
-  document.getElementById("inbox-filter-tabs")?.addEventListener("click", event => {
+  document.getElementById("notes-filter-tabs")?.addEventListener("click", event => {
     const btn = event.target.closest("[data-filter]");
     if (!btn) return;
     notesState.filter = btn.dataset.filter;
     notesState.selectedIds.clear();
-    document.querySelectorAll("#inbox-filter-tabs .inbox-tab-pill").forEach(p => {
+    document.querySelectorAll("#notes-filter-tabs .notes-tab-pill").forEach(p => {
       p.classList.toggle("active", p === btn);
     });
-    renderInbox();
+    renderNotes();
   });
 
   // 列表事件委托（单选复选框 & 保存/取消行编辑）
-  document.getElementById("inbox-list")?.addEventListener("click", async event => {
+  document.getElementById("notes-list")?.addEventListener("click", async event => {
     // 1. 复选框勾选
-    const itemCheck = event.target.closest(".inbox-item-check");
+    const itemCheck = event.target.closest(".notes-item-check");
     if (itemCheck) {
       const id = itemCheck.dataset.id;
       if (itemCheck.checked) notesState.selectedIds.add(id);
       else notesState.selectedIds.delete(id);
-      renderInbox();
+      renderNotes();
       return;
     }
 
     // 2. 行内编辑表单保存 / 取消
-    const card = event.target.closest(".inbox-item-row");
+    const card = event.target.closest(".notes-item-row");
     if (!card) return;
     const noteId = card.dataset.id;
     const note = notesState.notes.find(n => n.id === noteId);
@@ -734,7 +734,7 @@ function initInboxEvents() {
 
     if (action === "cancel-edit") {
       notesState.editingId = null;
-      renderInbox();
+      renderNotes();
     } else if (action === "save-edit") {
       const newTitle = card.querySelector(".edit-title")?.value.trim();
       const newUrl = card.querySelector(".edit-url")?.value.trim();
@@ -748,15 +748,15 @@ function initInboxEvents() {
       note.notes = newNotes;
       notesState.editingId = null;
       saveNotes();
-      renderInbox();
+      renderNotes();
       showToast("修改已保存。");
     }
   });
 }
 
 function init() {
-  initInboxEvents();
-  renderInbox();
+  initNotesEvents();
+  renderNotes();
   HubAuth.onChange(user => {
     if (user) attachCloud(user.uid);
     else detachCloud();
