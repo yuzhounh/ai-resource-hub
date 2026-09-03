@@ -1,42 +1,19 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-import {
-  getAuth,
-  GoogleAuthProvider,
-  browserLocalPersistence,
-  onAuthStateChanged,
-  setPersistence,
-  signInWithPopup,
-  signOut
-} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 import {
   addDoc,
   collection,
   deleteDoc,
   doc,
-  getFirestore,
   onSnapshot,
   setDoc
 } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCb2KYknXU04OxEpFIVbmCFXRoHNJ2cA5g",
-  authDomain: "ai-resource-hub-manager.firebaseapp.com",
-  projectId: "ai-resource-hub-manager",
-  storageBucket: "ai-resource-hub-manager.firebasestorage.app",
-  messagingSenderId: "926784069813",
-  appId: "1:926784069813:web:41b8bd97dd1cfd102c5efc"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const googleProvider = new GoogleAuthProvider();
-googleProvider.setCustomParameters({ prompt: "select_account" });
+import { auth, db } from "./hub-auth.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
 const collectionNames = ["plans", "promotions", "transactions", "models", "compatibilityTests", "usageSnapshots", "notes"];
 const state = {
   user: null,
   activePanel: "plans",
+  planTab: "active",
   query: "",
   editing: null,
   unsubscribers: [],
@@ -54,7 +31,7 @@ const schemas = {
     fields: [
       { name: "name", label: "Plan 名称", required: true, full: true },
       { name: "provider", label: "提供方", required: true },
-      { name: "type", label: "类型", type: "select", options: ["Coding Plan", "Token Plan", "按量 API", "会员权益", "Credits 套餐", "其他"] },
+      { name: "type", label: "类型", type: "select", options: ["Coding Plan", "Token Plan", "按量 API", "限时优惠", "会员权益", "Credits 套餐", "其他"] },
       { name: "region", label: "地区", type: "select", options: ["国内", "国外", "全球"] },
       { name: "status", label: "状态", type: "select", options: statusOptions },
       { name: "purchaseAmount", label: "购买 / 充值金额", type: "number", step: "0.01" },
@@ -63,7 +40,7 @@ const schemas = {
       { name: "quotaDisplayMode", label: "额度显示方式", type: "select", options: ["剩余", "已用"], defaultValue: "剩余" },
       { name: "remainingValue", label: "当前剩余", type: "number", step: "0.01", min: "0", defaultValue: 100, help: "百分比模式填写 0–100；金额模式填写实际数值。" },
       { name: "quotaPeriodDays", label: "额度周期（天）", type: "number", step: "1", min: "1", defaultValue: 7, help: "默认按 7 天额度周期记录。" },
-      { name: "nextResetAt", label: "下次重置时间", type: "datetime-local", step: "1", help: "可填写具体时间，或输入 27 days 4 hours / 27天4小时；按当前设备本地时间换算。" },
+      { name: "nextResetAt", label: "下次重置时间 / 优惠截止", type: "datetime-local", step: "1", help: "可填写具体时间，或输入 27 days 4 hours / 27天4小时；按当前设备本地时间换算。" },
       { name: "quotaTotal", label: "套餐标称总额度（可选）", type: "number", step: "any" },
       { name: "quotaUnit", label: "额度单位", type: "select", options: ["Tokens", "Credits", "CNY", "USD", "请求", "其他"] },
       { name: "startDate", label: "开始日期", type: "date" },
@@ -72,8 +49,8 @@ const schemas = {
       { name: "anthropicBaseUrl", label: "Anthropic Base URL", type: "url", full: true, help: "用于 Anthropic Messages 兼容接口。只记录服务地址，不记录认证信息。" },
       { name: "consoleUrl", label: "控制台 / Usage 链接", type: "url" },
       { name: "docsUrl", label: "官方文档链接", type: "url" },
-      { name: "credentialLabel", label: "凭证别名", help: "例如“个人主账号”；不要填写真实 Key。" },
-      { name: "notes", label: "注意事项", type: "textarea", full: true }
+      { name: "credentialLabel", label: "凭证别名 / 适用模型", help: "例如“个人主账号”或适用模型名称；不要填写真实 Key。" },
+      { name: "notes", label: "注意事项 / 优惠说明", type: "textarea", full: true }
     ]
   },
   promotions: {
@@ -164,21 +141,10 @@ const schemas = {
 };
 
 const els = {
-  login: document.getElementById("manager-login"),
   app: document.getElementById("manager-app"),
-  account: document.getElementById("manager-account"),
-  userMenuButton: document.getElementById("manager-user-menu-button"),
-  userMenu: document.getElementById("manager-user-menu"),
-  userName: document.getElementById("manager-user-name"),
-  userEmail: document.getElementById("manager-user-email"),
-  userAvatar: document.getElementById("manager-user-avatar"),
-  userAvatarFallback: document.getElementById("manager-user-avatar-fallback"),
-  menuAvatar: document.getElementById("manager-menu-avatar"),
-  menuAvatarFallback: document.getElementById("manager-menu-avatar-fallback"),
   addButton: document.getElementById("manager-add-button"),
   addMenu: document.getElementById("manager-add-menu"),
   uid: document.getElementById("manager-uid"),
-  authMessage: document.getElementById("manager-auth-message"),
   syncMessage: document.getElementById("manager-sync-message"),
   search: document.getElementById("manager-search"),
   dialog: document.getElementById("manager-dialog"),
@@ -458,56 +424,126 @@ function empty(message) {
   return `<div class="manager-empty">${escapeHtml(message)}</div>`;
 }
 
-function actionButtons(collectionName, id) {
-  return `<div class="manager-list-actions"><button type="button" data-edit="${collectionName}" data-id="${escapeHtml(id)}">编辑</button><button type="button" data-delete="${collectionName}" data-id="${escapeHtml(id)}">删除</button></div>`;
+function actionButtons(collectionName, id, isArchived = false) {
+  const archiveBtn = ["plans", "promotions"].includes(collectionName)
+    ? (isArchived
+        ? `<button type="button" data-unarchive="${collectionName}" data-id="${escapeHtml(id)}">还原</button>`
+        : `<button type="button" data-archive="${collectionName}" data-id="${escapeHtml(id)}">归档</button>`)
+    : "";
+  return `<div class="manager-list-actions">${archiveBtn}<button type="button" data-edit="${collectionName}" data-id="${escapeHtml(id)}">编辑</button><button type="button" data-delete="${collectionName}" data-id="${escapeHtml(id)}">删除</button></div>`;
+}
+
+function renderMasonryCols(cardHtmlArray) {
+  if (!cardHtmlArray || !cardHtmlArray.length) return "";
+  if (cardHtmlArray.length === 1) {
+    const ordered = cardHtmlArray[0].replace('class="manager-list-item', 'style="order:0;" class="manager-list-item');
+    return `<div class="manager-masonry-col">${ordered}</div><div class="manager-masonry-col"></div>`;
+  }
+  const left = [];
+  const right = [];
+  cardHtmlArray.forEach((html, i) => {
+    const ordered = html.replace('class="manager-list-item', `style="order:${i};" class="manager-list-item`);
+    if (i % 2 === 0) left.push(ordered);
+    else right.push(ordered);
+  });
+  return `<div class="manager-masonry-col">${left.join("")}</div><div class="manager-masonry-col">${right.join("")}</div>`;
 }
 
 function renderPromotions() {
-  const items = byTitle(state.data.promotions).filter(matchesQuery);
-  document.getElementById("manager-promotions-list").innerHTML = items.length ? items.map(item => {
-    const plan = findPlan(item.planId);
+  const isArchivedView = state.planTab === "archived";
+  const promoFromPlans = (state.data.plans || []).filter(item => item.type === "限时优惠").map(item => {
+    const startsAt = item.startDate ? `${item.startDate}T00:00:00` : "";
+    const expiresAt = item.expiresAt ? `${item.expiresAt}T23:59:59` : (item.nextResetAt || "");
+    return {
+      id: item.id,
+      title: item.name,
+      provider: item.provider,
+      offerType: "限时优惠",
+      status: item.status || "进行中",
+      benefit: item.notes || "限时免费 / 体验额度",
+      models: item.credentialLabel || item.name,
+      startsAt,
+      expiresAt,
+      consoleUrl: item.consoleUrl,
+      docsUrl: item.docsUrl,
+      notes: item.notes,
+      archived: Boolean(item.archived),
+      _source: "plans"
+    };
+  });
+  const rawPromos = (state.data.promotions || []).map(p => ({ ...p, archived: Boolean(p.archived), _source: "promotions" }));
+  const allPromos = [...rawPromos, ...promoFromPlans];
+  const filtered = allPromos.filter(item => isArchivedView ? Boolean(item.archived) : !item.archived);
+  const items = byTitle(filtered).filter(matchesQuery);
+
+  const sectionEl = document.querySelector(".manager-promotions-section");
+  if (isArchivedView && !items.length) {
+    if (sectionEl) sectionEl.hidden = true;
+    return;
+  }
+  if (sectionEl) sectionEl.hidden = false;
+
+  const cardHtmls = items.map(item => {
+    const plan = item.planId ? findPlan(item.planId) : null;
     const consoleLink = externalLink(item.consoleUrl, "活动 / 控制台");
     const docsLink = externalLink(item.docsUrl, "说明文档");
     const startsAt = item.startsAt || (item.startDate ? `${item.startDate}T00:00:00` : "");
     const distance = item.expiresAt ? formatResetDistance(item.expiresAt) : "未设置结束时间";
     const tone = countdownTone(item.expiresAt);
     const periodStart = startsAt ? formatDateTime(startsAt) : "未设置开始时间";
-    return `<article class="manager-list-item manager-promotion-card"><div class="manager-list-main"><div class="manager-record-header"><div class="manager-list-title"><strong>${escapeHtml(item.title)}</strong>${badge(item.status)}</div>${actionButtons("promotions", item.id)}</div><div class="manager-promotion-overview"><div class="manager-plan-fact manager-plan-provider"><div class="manager-plan-provider-info"><span>提供方</span><strong>${escapeHtml(item.provider || "未填写")}</strong><small>${escapeHtml(item.offerType || "其他")}${plan ? ` · ${escapeHtml(plan.name)}` : ""}</small></div>${consoleLink || docsLink ? `<div class="manager-plan-card-links">${consoleLink}${docsLink}</div>` : ""}</div><div class="manager-plan-fact"><span>优惠内容</span><strong class="manager-promotion-benefit-value">${linkifyText(item.benefit || "未填写")}</strong></div><div class="manager-plan-fact"><span>适用模型 / 资源</span><strong class="manager-promotion-model-value">${escapeHtml(item.models || "未填写")}</strong></div><div class="manager-plan-fact manager-promotion-time"><span>剩余</span><strong class="manager-promotion-countdown${tone ? ` ${tone}` : ""}">${escapeHtml(distance)}</strong><small><span class="manager-promotion-period-label">活动时间</span><span class="manager-promotion-period-value"><span>${escapeHtml(periodStart)}${item.expiresAt ? " —" : ""}</span>${item.expiresAt ? `<span>${escapeHtml(formatDateTime(item.expiresAt))}</span>` : ""}</span></small></div></div>${item.notes ? `<div class="manager-record-note"><span>注意事项</span><p>${linkifyText(item.notes)}</p></div>` : ""}</div></article>`;
-  }).join("") : empty("还没有限时优惠记录。");
+    const archivedBadge = item.archived ? `<span class="manager-badge" style="background:var(--soft);color:var(--muted)">已归档</span>` : "";
+    return `<article class="manager-list-item manager-promotion-card"><div class="manager-list-main"><div class="manager-record-header"><div class="manager-list-title"><strong>${escapeHtml(item.title)}</strong>${badge(item.status)}${archivedBadge}</div>${actionButtons(item._source || "promotions", item.id, item.archived)}</div><div class="manager-promotion-overview"><div class="manager-plan-fact manager-plan-provider"><div class="manager-plan-provider-info"><span>提供方</span><strong>${escapeHtml(item.provider || "未填写")}</strong><small>${escapeHtml(item.offerType || "其他")}${plan ? ` · ${escapeHtml(plan.name)}` : ""}</small></div>${consoleLink || docsLink ? `<div class="manager-plan-card-links">${consoleLink}${docsLink}</div>` : ""}</div><div class="manager-plan-fact"><span>优惠内容</span><strong class="manager-promotion-benefit-value">${linkifyText(item.benefit || "未填写")}</strong></div><div class="manager-plan-fact"><span>适用模型 / 资源</span><strong class="manager-promotion-model-value">${escapeHtml(item.models || "未填写")}</strong></div><div class="manager-plan-fact manager-promotion-time"><span>剩余</span><strong class="manager-promotion-countdown${tone ? ` ${tone}` : ""}">${escapeHtml(distance)}</strong><small><span class="manager-promotion-period-label">活动时间</span><span class="manager-promotion-period-value"><span>${escapeHtml(periodStart)}${item.expiresAt ? " —" : ""}</span>${item.expiresAt ? `<span>${escapeHtml(formatDateTime(item.expiresAt))}</span>` : ""}</span></small></div></div>${item.notes ? `<div class="manager-record-note"><span>注意事项</span><p>${linkifyText(item.notes)}</p></div>` : ""}</div></article>`;
+  });
+  document.getElementById("manager-promotions-list").innerHTML = items.length ? renderMasonryCols(cardHtmls) : empty(isArchivedView ? "没有已归档的限时优惠。" : "还没有限时优惠记录。");
 }
 
 function renderPlans() {
-  const items = byTitle(state.data.plans).filter(matchesQuery);
-  const otherItems = items.filter(item => item.type !== "按量 API");
+  const isArchivedView = state.planTab === "archived";
+  const allPlans = state.data.plans || [];
+  const rawPromos = state.data.promotions || [];
+
+  const activeCount = allPlans.filter(item => !item.archived).length + rawPromos.filter(item => !item.archived).length;
+  const archivedCount = allPlans.filter(item => Boolean(item.archived)).length + rawPromos.filter(item => Boolean(item.archived)).length;
+
+  const countActiveEl = document.getElementById("manager-count-active");
+  const countArchivedEl = document.getElementById("manager-count-archived");
+  if (countActiveEl) countActiveEl.textContent = activeCount;
+  if (countArchivedEl) countArchivedEl.textContent = archivedCount;
+
+  const filteredPlans = allPlans.filter(item => isArchivedView ? Boolean(item.archived) : !item.archived);
+  const items = byTitle(filteredPlans).filter(matchesQuery);
+  const otherItems = items.filter(item => item.type !== "按量 API" && item.type !== "限时优惠");
   const apiItems = items.filter(item => item.type === "按量 API");
-  const displayedItems = [...otherItems, ...apiItems];
-  const renderPlanCards = planItems => planItems.map(item => {
-    const percent = remainingPercent(item);
-    const periodDays = Number(item.quotaPeriodDays) > 0 ? Number(item.quotaPeriodDays) : 7;
-    const isApi = item.type === "按量 API";
-    const isAmount = item.remainingMode === "金额";
-    const isUsed = item.quotaDisplayMode === "已用";
-    const remainingValue = Number(item.remainingValue);
-    const declaredTotal = item.quotaTotal === null || item.quotaTotal === "" || item.quotaTotal === undefined ? null : Number(item.quotaTotal);
-    const purchaseTotal = item.purchaseAmount === null || item.purchaseAmount === "" || item.purchaseAmount === undefined ? null : Number(item.purchaseAmount);
-    const amountTotal = Number.isFinite(declaredTotal) ? declaredTotal : Number.isFinite(purchaseTotal) ? purchaseTotal : null;
-    const displayedAmount = Number.isFinite(remainingValue)
-      ? isUsed ? amountTotal !== null ? Math.max(0, amountTotal - remainingValue) : null : remainingValue
-      : null;
-    const consoleUrl = safeUrl(item.consoleUrl);
-    const docsUrl = safeUrl(item.docsUrl);
-    const openaiBaseUrl = item.openaiBaseUrl || item.baseUrl || "";
-    const resetDistance = formatResetDistance(item.nextResetAt);
-    const resetTone = countdownTone(item.nextResetAt);
-    return `<article class="manager-list-item manager-plan-card"><div class="manager-list-main"><div class="manager-record-header"><div class="manager-list-title"><strong>${escapeHtml(item.name)}</strong>${badge(item.status)}${item.credentialLabel ? `<span class="manager-credential">凭证 · ${escapeHtml(item.credentialLabel)}</span>` : ""}</div>${actionButtons("plans", item.id)}</div><div class="manager-plan-overview${isApi ? " api-plan" : ""}"><div class="manager-plan-fact manager-plan-provider"><div class="manager-plan-provider-info"><span>提供方</span><strong>${escapeHtml(item.provider || "未填写")}</strong><small>${escapeHtml(item.type || "其他")}</small></div>${consoleUrl || docsUrl ? `<div class="manager-plan-card-links">${consoleUrl ? `<a href="${escapeHtml(consoleUrl)}" target="_blank" rel="noopener">控制台</a>` : ""}${docsUrl ? `<a href="${escapeHtml(docsUrl)}" target="_blank" rel="noopener">官方文档</a>` : ""}</div>` : ""}</div><div class="manager-plan-fact"><span>投入</span><strong>${formatMoney(item.purchaseAmount, item.currency)}</strong><small>${escapeHtml(item.region || "未设置地区")}</small></div><div class="manager-plan-fact manager-plan-quota">${isAmount ? `<span>${isApi ? "账户余额" : "剩余金额"}</span><strong>${displayedAmount === null ? "—" : formatMoney(displayedAmount, item.currency || "CNY")}</strong><small>${isApi ? "长期有效" : "金额余额"}</small>` : `<span>${isApi ? "剩余额度" : `${periodDays} 天额度剩余`}</span><strong>${percent === null ? "—" : `${formatNumber(percent)}%`}</strong><div class="manager-progress" aria-label="额度剩余百分比"><i style="width:${percent === null ? 0 : percent}%"></i></div>`}</div>${isApi ? "" : `<div class="manager-plan-fact manager-plan-reset"><span>距离重置</span><strong class="manager-reset-value${resetTone ? ` ${resetTone}` : ""}">${escapeHtml(resetDistance)}</strong><small>下次重置 ${escapeHtml(formatDateTime(item.nextResetAt))}</small></div><div class="manager-plan-fact"><span>有效期</span><strong>${formatDate(item.expiresAt)}</strong><small>${item.startDate ? `开始于 ${formatDate(item.startDate)}` : "未填写开始日期"}</small></div>`}</div>${openaiBaseUrl || item.anthropicBaseUrl ? `<div class="manager-endpoints">${openaiBaseUrl ? `<div><div class="manager-endpoint-value"><span>OpenAI Base URL</span><code>${escapeHtml(openaiBaseUrl)}</code></div><button type="button" data-copy-plan="${escapeHtml(item.id)}" data-copy-field="openaiBaseUrl">复制</button></div>` : ""}${item.anthropicBaseUrl ? `<div><div class="manager-endpoint-value"><span>Anthropic Base URL</span><code>${escapeHtml(item.anthropicBaseUrl)}</code></div><button type="button" data-copy-plan="${escapeHtml(item.id)}" data-copy-field="anthropicBaseUrl">复制</button></div>` : ""}</div>` : ""}${item.notes ? `<div class="manager-record-note"><span>注意事项</span><p>${linkifyText(item.notes)}</p></div>` : ""}</div></article>`;
-  }).join("");
+  const renderPlanCards = planItems => {
+    const cardHtmls = planItems.map(item => {
+      const percent = remainingPercent(item);
+      const periodDays = Number(item.quotaPeriodDays) > 0 ? Number(item.quotaPeriodDays) : 7;
+      const isApi = item.type === "按量 API";
+      const isAmount = item.remainingMode === "金额";
+      const isUsed = item.quotaDisplayMode === "已用";
+      const remainingValue = Number(item.remainingValue);
+      const declaredTotal = item.quotaTotal === null || item.quotaTotal === "" || item.quotaTotal === undefined ? null : Number(item.quotaTotal);
+      const purchaseTotal = item.purchaseAmount === null || item.purchaseAmount === "" || item.purchaseAmount === undefined ? null : Number(item.purchaseAmount);
+      const amountTotal = Number.isFinite(declaredTotal) ? declaredTotal : Number.isFinite(purchaseTotal) ? purchaseTotal : null;
+      const displayedAmount = Number.isFinite(remainingValue)
+        ? isUsed ? amountTotal !== null ? Math.max(0, amountTotal - remainingValue) : null : remainingValue
+        : null;
+      const consoleUrl = safeUrl(item.consoleUrl);
+      const docsUrl = safeUrl(item.docsUrl);
+      const openaiBaseUrl = item.openaiBaseUrl || item.baseUrl || "";
+      const resetDistance = formatResetDistance(item.nextResetAt);
+      const resetTone = countdownTone(item.nextResetAt);
+      const archivedBadge = item.archived ? `<span class="manager-badge" style="background:var(--soft);color:var(--muted)">已归档</span>` : "";
+      return `<article class="manager-list-item manager-plan-card${isApi ? "" : " manager-plan-card-highlight"}"><div class="manager-list-main"><div class="manager-record-header"><div class="manager-list-title"><strong>${escapeHtml(item.name)}</strong>${badge(item.status)}${archivedBadge}${item.credentialLabel ? `<span class="manager-credential">凭证 · ${escapeHtml(item.credentialLabel)}</span>` : ""}</div>${actionButtons("plans", item.id, item.archived)}</div><div class="manager-plan-overview${isApi ? " api-plan" : ""}"><div class="manager-plan-fact manager-plan-provider"><div class="manager-plan-provider-info"><span>提供方</span><strong>${escapeHtml(item.provider || "未填写")}</strong><small>${escapeHtml(item.type || "其他")}</small></div>${consoleUrl || docsUrl ? `<div class="manager-plan-card-links">${consoleUrl ? `<a href="${escapeHtml(consoleUrl)}" target="_blank" rel="noopener">控制台</a>` : ""}${docsUrl ? `<a href="${escapeHtml(docsUrl)}" target="_blank" rel="noopener">官方文档</a>` : ""}</div>` : ""}</div><div class="manager-plan-fact"><span>投入</span><strong>${formatMoney(item.purchaseAmount, item.currency)}</strong><small>${escapeHtml(item.region || "未设置地区")}</small></div><div class="manager-plan-fact manager-plan-quota">${isAmount ? `<span>${isApi ? "账户余额" : "剩余金额"}</span><strong>${displayedAmount === null ? "—" : formatMoney(displayedAmount, item.currency || "CNY")}</strong><small>${isApi ? "长期有效" : "金额余额"}</small>` : `<span>${isApi ? "剩余额度" : `${periodDays} 天额度剩余`}</span><strong>${percent === null ? "—" : `${formatNumber(percent)}%`}</strong><div class="manager-progress" aria-label="额度剩余百分比"><i style="width:${percent === null ? 0 : percent}%"></i></div>`}</div>${isApi ? "" : `<div class="manager-plan-fact manager-plan-reset"><span>距离重置</span><strong class="manager-reset-value${resetTone ? ` ${resetTone}` : ""}">${escapeHtml(resetDistance)}</strong><small>下次重置 ${escapeHtml(formatDateTime(item.nextResetAt))}</small></div><div class="manager-plan-fact"><span>有效期</span><strong>${formatDate(item.expiresAt)}</strong><small>${item.startDate ? `开始于 ${formatDate(item.startDate)}` : "未填写开始日期"}</small></div>`}</div>${openaiBaseUrl || item.anthropicBaseUrl ? `<div class="manager-endpoints">${openaiBaseUrl ? `<div><div class="manager-endpoint-value"><span>OpenAI Base URL</span><code>${escapeHtml(openaiBaseUrl)}</code></div><button type="button" data-copy-plan="${escapeHtml(item.id)}" data-copy-field="openaiBaseUrl">复制</button></div>` : ""}${item.anthropicBaseUrl ? `<div><div class="manager-endpoint-value"><span>Anthropic Base URL</span><code>${escapeHtml(item.anthropicBaseUrl)}</code></div><button type="button" data-copy-plan="${escapeHtml(item.id)}" data-copy-field="anthropicBaseUrl">复制</button></div>` : ""}</div>` : ""}${item.notes ? `<div class="manager-record-note"><span>注意事项</span><p>${linkifyText(item.notes)}</p></div>` : ""}</div></article>`;
+    });
+    return renderMasonryCols(cardHtmls);
+  };
   const groups = [
-    { title: "会员权益、Token Plan、Coding Plan 等", items: otherItems, className: "other", addLabel: "新增 Plan", emptyText: "还没有会员权益、Token Plan 或 Coding Plan。" },
-    { title: "按量 API", items: apiItems, className: "api", addLabel: "新增按量 API", planType: "按量 API", emptyText: "还没有按量 API。" }
+    { title: "会员权益、Token Plan、Coding Plan 等", items: otherItems, className: "other", addLabel: "新增 Plan", planType: "Coding Plan", emptyText: isArchivedView ? "没有已归档的会员权益、Token Plan 或 Coding Plan。" : "还没有会员权益、Token Plan 或 Coding Plan。" },
+    { title: "按量 API", items: apiItems, className: "api", addLabel: "新增按量 API", planType: "按量 API", emptyText: isArchivedView ? "没有已归档的按量 API。" : "还没有按量 API。" }
   ];
-  document.getElementById("manager-plans-list").innerHTML = groups.map(group => `<section class="manager-plan-group manager-plan-group-${group.className}"><div class="manager-plan-subheading"><h3>${group.title}</h3><button class="manager-button" type="button" data-add="plans"${group.planType ? ` data-plan-type="${group.planType}"` : ""}>${group.addLabel}</button></div>${group.items.length ? `<div class="manager-plan-group-grid">${renderPlanCards(group.items)}</div>` : empty(group.emptyText)}</section>`).join("");
-  document.querySelectorAll("#manager-plans-list .manager-plan-card").forEach((card, index) => {
-    card.classList.toggle("manager-plan-card-highlight", displayedItems[index]?.type !== "按量 API");
+  document.getElementById("manager-plans-list").innerHTML = groups.map(group => `<section class="manager-plan-group manager-plan-group-${group.className}"><div class="manager-plan-subheading"><h3>${group.title}</h3>${isArchivedView ? "" : `<button class="manager-button" type="button" data-add="plans"${group.planType ? ` data-plan-type="${group.planType}"` : ""}>${group.addLabel}</button>`}</div>${group.items.length ? `<div class="manager-plan-group-grid">${renderPlanCards(group.items)}</div>` : empty(group.emptyText)}</section>`).join("");
+  document.querySelectorAll("#manager-plans-list .manager-plan-card").forEach(card => {
     const validityHint = [...card.querySelectorAll(".manager-plan-fact>small")].find(element => /^(开始于|未填写开始日期)/.test(element.textContent));
     if (validityHint) validityHint.parentElement.classList.add("manager-plan-validity");
   });
@@ -563,7 +599,7 @@ function renderNotes() {
 }
 
 function renderDashboard() {
-  const activePlans = state.data.plans.filter(item => !["已到期", "已用尽"].includes(item.status));
+  const activePlans = state.data.plans.filter(item => !item.archived && !["已到期", "已用尽"].includes(item.status));
   const hasTransactionRecords = state.data.transactions.length > 0;
   const investmentRecords = hasTransactionRecords
     ? state.data.transactions
@@ -653,23 +689,58 @@ function fieldHtml(field, value = "") {
 
 function updatePlanFieldVisibility() {
   if (state.editing?.collectionName !== "plans") return;
-  const isApi = els.form.elements.type?.value === "按量 API";
+  const type = els.form.elements.type?.value;
+  const isApi = type === "按量 API";
+  const isPromo = type === "限时优惠";
   const isAmount = els.form.elements.remainingMode?.value === "金额";
   const isUsed = els.form.elements.quotaDisplayMode?.value === "已用";
-  ["quotaPeriodDays", "nextResetAt", "startDate", "expiresAt"].forEach(name => {
+
+  const hideMap = {
+    quotaPeriodDays: isApi || isPromo,
+    quotaTotal: isPromo,
+    quotaUnit: isPromo,
+    nextResetAt: isApi,
+    startDate: isApi,
+    expiresAt: isApi
+  };
+  Object.entries(hideMap).forEach(([name, hidden]) => {
     const field = els.fields.querySelector(`[data-field-name="${name}"]`);
-    if (field) field.hidden = isApi;
+    if (field) field.hidden = hidden;
   });
+
   const valueLabel = els.fields.querySelector('[data-field-name="remainingValue"] label');
-  if (valueLabel) valueLabel.textContent = isAmount ? `当前${isUsed ? "已用" : "剩余"}金额` : `当前${isUsed ? "已用" : "剩余"}（%）`;
+  if (valueLabel) {
+    if (isPromo) {
+      valueLabel.textContent = isAmount ? "体验额度剩余金额" : "剩余体验额度（%）";
+    } else if (isApi) {
+      valueLabel.textContent = "当前账户余额";
+    } else {
+      valueLabel.textContent = isAmount ? `当前${isUsed ? "已用" : "剩余"}金额` : `当前${isUsed ? "已用" : "剩余"}（%）`;
+    }
+  }
+
+  const resetLabel = els.fields.querySelector('[data-field-name="nextResetAt"] label');
+  if (resetLabel) resetLabel.textContent = isPromo ? "优惠截止时间" : "下次重置时间";
+
+  const amountLabel = els.fields.querySelector('[data-field-name="purchaseAmount"] label');
+  if (amountLabel) amountLabel.textContent = isPromo ? "购买金额（免费填 0）" : (isApi ? "充值金额" : "购买金额");
+
+  const nameLabel = els.fields.querySelector('[data-field-name="name"] label');
+  if (nameLabel) nameLabel.textContent = isPromo ? "优惠活动 / 体验名称" : (isApi ? "API / 渠道名称" : "Plan 名称");
+
+  const credLabel = els.fields.querySelector('[data-field-name="credentialLabel"] label');
+  if (credLabel) credLabel.textContent = isPromo ? "适用模型 / 资源说明" : "凭证别名";
 }
 
 function openEditor(collectionName, id = null, defaults = {}) {
   const schema = schemas[collectionName];
   const item = id ? state.data[collectionName].find(entry => entry.id === id) : null;
   state.editing = { collectionName, id };
-  els.dialogEyebrow.textContent = schema.eyebrow;
-  els.dialogTitle.textContent = `${item ? "编辑" : "新增"}${schema.title}`;
+  const currentType = item?.type || defaults.type || "";
+  const isPromo = currentType === "限时优惠";
+  const isApi = currentType === "按量 API";
+  els.dialogEyebrow.textContent = isPromo ? "LIMITED OFFER" : (isApi ? "API RESOURCE" : schema.eyebrow);
+  els.dialogTitle.textContent = `${item ? "编辑" : "新增"}${isPromo ? "限时优惠" : (isApi ? "按量 API" : schema.title)}`;
   els.fields.innerHTML = schema.fields.map(field => {
     const legacyValue = collectionName === "plans" && field.name === "openaiBaseUrl" ? item?.baseUrl : undefined;
     const legacyPromotionStart = collectionName === "promotions" && field.name === "startsAt" && item?.startDate ? `${item.startDate}T00:00:00` : undefined;
@@ -735,6 +806,11 @@ async function saveEditor(event) {
       value.nextResetAt = "";
       value.startDate = "";
       value.expiresAt = "";
+    } else if (value.type === "限时优惠") {
+      value.quotaPeriodDays = null;
+      if (value.purchaseAmount === null || value.purchaseAmount === undefined || isNaN(value.purchaseAmount)) {
+        value.purchaseAmount = 0;
+      }
     }
     if (value.remainingMode === "百分比" && Number(value.remainingValue) > 100) {
       showFieldErrors([{ fieldName: "remainingValue", message: "百分比不能大于 100。" }]);
@@ -754,7 +830,7 @@ async function saveEditor(event) {
   }
   const now = Date.now();
   const existing = id ? state.data[collectionName].find(item => item.id === id) : null;
-  const payload = { ...value, createdAt: existing?.createdAt || now, updatedAt: now };
+  const payload = { ...value, archived: Boolean(existing?.archived), createdAt: existing?.createdAt || now, updatedAt: now };
   try {
     setMessage(els.formMessage, "正在保存…");
     const base = collection(db, "users", state.user.uid, collectionName);
@@ -766,6 +842,23 @@ async function saveEditor(event) {
     setMessage(els.syncMessage, "已保存到 Firestore。", "success");
   } catch (error) {
     setMessage(els.formMessage, friendlyError(error), "error");
+  }
+}
+
+async function toggleArchive(collectionName, id, archived = true) {
+  if (!state.user) return;
+  const item = state.data[collectionName]?.find(entry => entry.id === id);
+  if (!item) return;
+  const now = Date.now();
+  const payload = { ...item, archived, updatedAt: now };
+  const label = item.name || item.title || "Plan";
+  try {
+    setMessage(els.syncMessage, archived ? "正在移入存档…" : "正在还原…");
+    const base = collection(db, "users", state.user.uid, collectionName);
+    await setDoc(doc(base, id), payload);
+    setMessage(els.syncMessage, archived ? `已将“${label}”移入存档。` : `已恢复“${label}”至进行中。`, "success");
+  } catch (error) {
+    setMessage(els.syncMessage, friendlyError(error), "error");
   }
 }
 
@@ -860,7 +953,7 @@ async function importData(file) {
     const total = collectionNames.reduce((sum, name) => sum + (Array.isArray(payload.data[name]) ? payload.data[name].length : 0), 0);
     if (!window.confirm(`即将向当前账号新增 ${total} 条记录。现有数据不会被删除，是否继续？`)) return;
     for (const name of collectionNames) {
-      const allowed = new Set(schemas[name].fields.map(field => field.name));
+      const allowed = new Set([...schemas[name].fields.map(field => field.name), "archived"]);
       for (const source of Array.isArray(payload.data[name]) ? payload.data[name] : []) {
         const clean = Object.fromEntries(Object.entries(source).filter(([key]) => allowed.has(key)));
         await addDoc(collection(db, "users", state.user.uid, name), { ...clean, createdAt: Date.now(), updatedAt: Date.now() });
@@ -874,37 +967,14 @@ async function importData(file) {
   }
 }
 
-document.getElementById("manager-signin").addEventListener("click", async () => {
-  try {
-    setMessage(els.authMessage, "正在打开 Google 登录…");
-    await setPersistence(auth, browserLocalPersistence);
-    await signInWithPopup(auth, googleProvider);
-  } catch (error) {
-    setMessage(els.authMessage, friendlyError(error), "error");
-  }
-});
-
-document.getElementById("manager-signout").addEventListener("click", () => signOut(auth));
-els.addButton.addEventListener("click", event => {
-  event.stopPropagation();
-  const open = els.addMenu.hidden;
-  els.addMenu.hidden = !open;
-  els.addButton.setAttribute("aria-expanded", String(open));
-});
-els.userMenuButton.addEventListener("click", event => {
-  event.stopPropagation();
-  const open = els.userMenu.hidden;
-  els.userMenu.hidden = !open;
-  els.userMenuButton.setAttribute("aria-expanded", String(open));
+// 登录 / 退出与账号菜单已统一移至页面右上角（hub-auth.js），此处仅保留数据面板逻辑。
+els.addButton?.addEventListener("click", () => {
+  openEditor("plans");
 });
 document.addEventListener("click", event => {
-  if (!els.account.contains(event.target)) {
-    els.userMenu.hidden = true;
-    els.userMenuButton.setAttribute("aria-expanded", "false");
-  }
-  if (!event.target.closest(".manager-add-control")) {
+  if (els.addMenu && !event.target.closest(".manager-add-control")) {
     els.addMenu.hidden = true;
-    els.addButton.setAttribute("aria-expanded", "false");
+    els.addButton?.setAttribute("aria-expanded", "false");
   }
 });
 document.getElementById("manager-export").addEventListener("click", exportData);
@@ -919,7 +989,7 @@ els.form.addEventListener("change", event => {
   if (["type", "remainingMode", "quotaDisplayMode"].includes(event.target.name)) updatePlanFieldVisibility();
 });
 document.querySelectorAll("[data-dialog-close]").forEach(button => button.addEventListener("click", () => els.dialog.close()));
-document.querySelector(".manager-nav").addEventListener("click", event => {
+document.querySelector(".manager-nav")?.addEventListener("click", event => {
   const button = event.target.closest("[data-manager-view]");
   if (button) showPanel(button.dataset.managerView);
 });
@@ -928,14 +998,25 @@ document.getElementById("manager-app").addEventListener("click", event => {
   const edit = event.target.closest("[data-edit]");
   const remove = event.target.closest("[data-delete]");
   const copy = event.target.closest("[data-copy-plan]");
+  const archive = event.target.closest("[data-archive]");
+  const unarchive = event.target.closest("[data-unarchive]");
+  const planTabBtn = event.target.closest("[data-plan-tab]");
   if (add) openEditor(add.dataset.add, null, add.dataset.planType ? { type: add.dataset.planType } : {});
-  if (add) {
+  if (add && els.addMenu) {
     els.addMenu.hidden = true;
-    els.addButton.setAttribute("aria-expanded", "false");
+    els.addButton?.setAttribute("aria-expanded", "false");
   }
   if (edit) openEditor(edit.dataset.edit, edit.dataset.id);
   if (remove) removeItem(remove.dataset.delete, remove.dataset.id);
   if (copy) copyPlanEndpoint(copy);
+  if (archive) toggleArchive(archive.dataset.archive, archive.dataset.id, true);
+  if (unarchive) toggleArchive(unarchive.dataset.unarchive, unarchive.dataset.id, false);
+  if (planTabBtn) {
+    state.planTab = planTabBtn.dataset.planTab;
+    document.querySelectorAll("[data-plan-tab]").forEach(btn => btn.classList.toggle("active", btn.dataset.planTab === state.planTab));
+    renderPromotions();
+    renderPlans();
+  }
 });
 els.search.addEventListener("input", () => {
   state.query = els.search.value.trim().toLowerCase();
@@ -944,32 +1025,12 @@ els.search.addEventListener("input", () => {
 
 onAuthStateChanged(auth, user => {
   state.user = user;
-  els.login.hidden = Boolean(user);
   els.app.hidden = !user;
-  els.account.hidden = !user;
-  els.account.style.display = user ? "flex" : "none";
   if (user) {
     showPanel("plans");
-    els.userName.textContent = user.displayName || "Google 用户";
-    els.userEmail.textContent = user.email || "";
-    const avatarUrl = safeUrl(user.photoURL);
-    els.userAvatar.hidden = !avatarUrl;
-    els.userAvatarFallback.hidden = Boolean(avatarUrl);
-    els.menuAvatar.hidden = !avatarUrl;
-    els.menuAvatarFallback.hidden = Boolean(avatarUrl);
-    const initial = (user.displayName || user.email || "U").trim().slice(0, 1).toUpperCase();
-    els.userAvatarFallback.textContent = initial;
-    els.menuAvatarFallback.textContent = initial;
-    if (avatarUrl) {
-      els.userAvatar.src = avatarUrl;
-      els.menuAvatar.src = avatarUrl;
-    }
     els.uid.textContent = user.uid;
-    setMessage(els.authMessage);
     subscribeData(user);
   } else {
-    els.userMenu.hidden = true;
-    els.userMenuButton.setAttribute("aria-expanded", "false");
     state.unsubscribers.forEach(unsubscribe => unsubscribe());
     state.unsubscribers = [];
     state.data = Object.fromEntries(collectionNames.map(name => [name, []]));
