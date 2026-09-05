@@ -2,7 +2,7 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // 首次登录后，将下面的占位值替换为 Plan 管理页显示的 Firebase UID。
+    // 首次登录后，将下面的占位值替换为资源管理页显示的 Firebase UID。
     function isOwner(userId) {
       return request.auth != null
         && request.auth.uid == userId

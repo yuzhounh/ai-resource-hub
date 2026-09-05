@@ -11,11 +11,8 @@ const STORAGE_KEY = "ai_hub_inbox_notes";
 
 let notesState = {
   notes: [],
-  filter: "pending", // 'pending' | 'archived' | 'all'
   query: "",
-  editingId: null,
-  selectedIds: new Set(),
-  selectMode: false // 默认纯净阅读模式，不显示复选框
+  editingId: null
 };
 
 // 工具函数
@@ -324,33 +321,12 @@ function generateAiMarkdown(notesToExport) {
   return header + items + footer;
 }
 
-// 渲染核心：单栏月度卡片，支持纯净阅读模式与选择模式切换
+// 渲染核心：单栏月度卡片
 function renderNotes() {
   const listEl = document.getElementById("notes-list");
   if (!listEl) return;
 
-  // 模式切换控制：只有在 selectMode 下才为列表赋予选择样式
-  if (notesState.selectMode) {
-    listEl.classList.add("select-mode");
-  } else {
-    listEl.classList.remove("select-mode");
-  }
-
-  const countPendingEl = document.getElementById("notes-count-pending");
-  const countArchivedEl = document.getElementById("notes-count-archived");
-  const countAllEl = document.getElementById("notes-count-all");
-
-  const pendingNotes = notesState.notes.filter(n => n.status !== "archived");
-  const archivedNotes = notesState.notes.filter(n => n.status === "archived");
-
-  if (countPendingEl) countPendingEl.textContent = pendingNotes.length;
-  if (countArchivedEl) countArchivedEl.textContent = archivedNotes.length;
-  if (countAllEl) countAllEl.textContent = notesState.notes.length;
-
   let filtered = notesState.notes;
-  if (notesState.filter === "pending") filtered = pendingNotes;
-  else if (notesState.filter === "archived") filtered = archivedNotes;
-
   if (notesState.query) {
     const q = notesState.query.toLowerCase();
     filtered = filtered.filter(n =>
@@ -363,47 +339,8 @@ function renderNotes() {
   // 时间倒序
   filtered.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
-  // 更新顶部公共操作按钮的状态与文字
-  const selectModeBtn = document.getElementById("notes-btn-select-mode");
-  const selectAllWrap = document.getElementById("notes-select-all-wrap");
-  const globalSelectAll = document.getElementById("notes-global-select-all");
-  const globalCountEl = document.getElementById("notes-global-selected-count");
-  const batchStatusBtn = document.getElementById("notes-btn-batch-status");
-
-  if (selectModeBtn) {
-    selectModeBtn.textContent = notesState.selectMode ? "取消" : "选择";
-    selectModeBtn.classList.toggle("active", notesState.selectMode);
-    selectModeBtn.title = notesState.selectMode ? "退出选择模式" : "开启多选批量操作";
-  }
-
-  if (selectAllWrap) {
-    selectAllWrap.hidden = !notesState.selectMode;
-  }
-
-  if (batchStatusBtn) {
-    batchStatusBtn.textContent = notesState.filter === "archived" ? "还原" : "收录";
-  }
-
-  const visibleIds = filtered.map(n => n.id);
-  const selectedVisibleCount = visibleIds.filter(id => notesState.selectedIds.has(id)).length;
-
-  if (globalSelectAll) {
-    globalSelectAll.checked = visibleIds.length > 0 && selectedVisibleCount === visibleIds.length;
-    globalSelectAll.indeterminate = selectedVisibleCount > 0 && selectedVisibleCount < visibleIds.length;
-  }
-
-  if (globalCountEl) {
-    if (notesState.selectMode && selectedVisibleCount > 0) {
-      globalCountEl.textContent = `已选 ${selectedVisibleCount} 条`;
-      globalCountEl.hidden = false;
-    } else {
-      globalCountEl.hidden = true;
-    }
-  }
-
   if (!filtered.length) {
-    let emptyMsg = "当前没有笔记。在上方框内整体粘贴内容，按 Enter 即可直接完成整理！";
-    if (notesState.filter === "archived") emptyMsg = "暂无已收录的归档笔记。";
+    let emptyMsg = "当前没有笔记。点击上方“+ 笔记”按钮即可快速整理录入！";
     if (notesState.query) emptyMsg = `没有找到包含“${escapeHtml(notesState.query)}”的笔记。`;
 
     listEl.innerHTML = `<div class="notes-empty"><strong>空空如也</strong><p>${emptyMsg}</p></div>`;
@@ -440,10 +377,8 @@ function renderNotes() {
     }
 
     const itemsHtml = items.map(note => {
-      const isArchived = note.status === "archived";
       const validUrl = safeUrl(note.url) || note.url || "#";
       const isEditing = notesState.editingId === note.id;
-      const isChecked = notesState.selectedIds.has(note.id);
 
       if (isEditing) {
         return `
@@ -452,9 +387,9 @@ function renderNotes() {
               <input class="notes-input edit-title" type="text" value="${escapeHtml(note.title)}" placeholder="网站标题">
               <input class="notes-input edit-url" type="url" value="${escapeHtml(note.url)}" placeholder="网站链接">
               <textarea class="notes-input edit-notes" style="resize:vertical;min-height:60px;" placeholder="备注内容">${escapeHtml(note.notes || "")}</textarea>
-              <div style="display:flex;gap:6px;margin-top:4px;">
-                <button type="button" data-action="save-edit" class="notes-button primary" style="padding:4px 10px;font-size:12px;min-width:auto;">保存</button>
-                <button type="button" data-action="cancel-edit" class="notes-button ghost" style="padding:4px 10px;font-size:12px;min-width:auto;">取消</button>
+              <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:6px;">
+                <button type="button" data-action="cancel-edit" class="notes-button ghost" style="padding:5px 12px;font-size:12px;min-width:auto;">取消</button>
+                <button type="button" data-action="save-edit" class="notes-button primary" style="padding:5px 12px;font-size:12px;min-width:auto;">保存</button>
               </div>
             </div>
           </div>
@@ -462,24 +397,25 @@ function renderNotes() {
       }
 
       return `
-        <div class="notes-item-row${isArchived ? " archived" : ""}${isChecked ? " selected" : ""}" data-id="${escapeHtml(note.id)}">
-          <label class="notes-checkbox-wrap" title="选中此条笔记">
-            <input type="checkbox" class="notes-item-check" data-id="${escapeHtml(note.id)}" ${isChecked ? "checked" : ""}>
-          </label>
+        <div class="notes-item-row" data-id="${escapeHtml(note.id)}">
           <div class="notes-item-content">
             <div class="notes-item-header">
               <div class="notes-item-title-group">
                 <a class="notes-item-title" href="${escapeHtml(validUrl)}" target="_blank" rel="noopener" title="${escapeHtml(note.title || '未命名网页')}">
                   ${escapeHtml(note.title || "未命名网页")}
                 </a>
-                ${isArchived ? '<span class="notes-status-tag archived">已收录</span>' : ""}
               </div>
               <div class="notes-item-meta">
                 <span class="notes-time">${escapeHtml(note.createdAt || "刚刚")}</span>
               </div>
             </div>
-            <a class="notes-card-url" href="${escapeHtml(validUrl)}" target="_blank" rel="noopener" title="${escapeHtml(note.url)}">${escapeHtml(note.url)}</a>
-            ${note.notes ? `<div class="notes-card-notes">${escapeHtml(note.notes)}</div>` : ""}
+            <div class="notes-item-body">
+              <div class="notes-card-notes${note.notes ? "" : " empty"}">${escapeHtml(note.notes || "")}</div>
+              <div class="notes-item-actions">
+                <button type="button" class="notes-item-action-btn" data-action="edit-item" title="编辑此条笔记">编辑</button>
+                <button type="button" class="notes-item-action-btn danger" data-action="delete-item" title="删除此条笔记">删除</button>
+              </div>
+            </div>
           </div>
         </div>
       `;
@@ -506,17 +442,40 @@ function renderNotes() {
 
 // 事件绑定
 function initNotesEvents() {
+  const modal = document.getElementById("notes-modal");
+  const openModalBtn = document.getElementById("notes-btn-open-modal");
+  const closeModalBtn = document.getElementById("notes-modal-close");
   const form = document.getElementById("notes-form");
   const rawInput = document.getElementById("notes-raw-input");
   const searchInput = document.getElementById("notes-search");
 
-  // 顶部公共操作按钮
-  const selectModeBtn = document.getElementById("notes-btn-select-mode");
-  const globalSelectAll = document.getElementById("notes-global-select-all");
-  const batchCopyBtn = document.getElementById("notes-btn-batch-copy");
-  const batchStatusBtn = document.getElementById("notes-btn-batch-status");
-  const batchDeleteBtn = document.getElementById("notes-btn-batch-delete");
-  const batchEditBtn = document.getElementById("notes-btn-batch-edit");
+  function openModal() {
+    if (!modal) return;
+    if (typeof modal.showModal === "function") {
+      modal.showModal();
+    } else {
+      modal.setAttribute("open", "");
+    }
+    setTimeout(() => rawInput?.focus(), 50);
+  }
+
+  function closeModal() {
+    if (!modal) return;
+    if (typeof modal.close === "function") {
+      modal.close();
+    } else {
+      modal.removeAttribute("open");
+    }
+  }
+
+  openModalBtn?.addEventListener("click", openModal);
+  closeModalBtn?.addEventListener("click", closeModal);
+
+  modal?.addEventListener("click", event => {
+    if (event.target === modal) {
+      closeModal();
+    }
+  });
 
   // 单框回车直接保存录入（Shift + Enter 允许常规换行）
   rawInput?.addEventListener("keydown", event => {
@@ -549,8 +508,7 @@ function initNotesEvents() {
       url: item.url,
       notes: item.notes,
       createdAt: timeStr,
-      timestamp: now + idx,
-      status: "pending"
+      timestamp: now + idx
     }));
 
     notesState.notes.unshift(...newNotes);
@@ -558,138 +516,8 @@ function initNotesEvents() {
     renderNotes();
 
     if (rawInput) rawInput.value = "";
+    closeModal();
     showToast(items.length === 1 ? "已成功整理并记录 1 条笔记！" : `已成功批量整理并录入 ${items.length} 条笔记！`);
-  });
-
-  // 公共功能 0：切换多选模式 / 纯净阅读模式
-  selectModeBtn?.addEventListener("click", () => {
-    notesState.selectMode = !notesState.selectMode;
-    if (!notesState.selectMode) {
-      notesState.selectedIds.clear();
-    }
-    renderNotes();
-  });
-
-  // 公共功能 1：全选 / 取消全选（跨越所有月份）
-  globalSelectAll?.addEventListener("change", () => {
-    const isChecked = globalSelectAll.checked;
-    let filtered = notesState.notes;
-    if (notesState.filter === "pending") filtered = filtered.filter(n => n.status !== "archived");
-    else if (notesState.filter === "archived") filtered = filtered.filter(n => n.status === "archived");
-
-    if (notesState.query) {
-      const q = notesState.query.toLowerCase();
-      filtered = filtered.filter(n =>
-        (n.title && n.title.toLowerCase().includes(q)) ||
-        (n.url && n.url.toLowerCase().includes(q)) ||
-        (n.notes && n.notes.toLowerCase().includes(q))
-      );
-    }
-
-    if (isChecked) {
-      filtered.forEach(n => notesState.selectedIds.add(n.id));
-    } else {
-      notesState.selectedIds.clear();
-    }
-    renderNotes();
-  });
-
-  // 公共功能 2：复制笔记（阅读模式直接复制全部未归档；选择模式下复制勾选项）
-  batchCopyBtn?.addEventListener("click", async () => {
-    let targetNotes = [];
-    if (notesState.selectMode && notesState.selectedIds.size > 0) {
-      targetNotes = notesState.notes.filter(n => notesState.selectedIds.has(n.id));
-    } else {
-      targetNotes = notesState.notes.filter(n => n.status !== "archived");
-    }
-
-    if (!targetNotes.length) {
-      showToast("当前没有可复制的笔记！");
-      return;
-    }
-
-    const md = generateAiMarkdown(targetNotes);
-    const ok = await copyText(md);
-    if (ok) {
-      showToast(`已复制 ${targetNotes.length} 条笔记到剪贴板，可直接发给 AI！`);
-    } else {
-      showToast("复制失败，请检查浏览器权限。");
-    }
-  });
-
-  // 公共功能 3：标记已收录 / 还原
-  batchStatusBtn?.addEventListener("click", () => {
-    const isArchivedTab = notesState.filter === "archived";
-    const newStatus = isArchivedTab ? "pending" : "archived";
-
-    let targetNotes = [];
-    if (notesState.selectMode && notesState.selectedIds.size > 0) {
-      targetNotes = notesState.notes.filter(n => notesState.selectedIds.has(n.id));
-    } else {
-      targetNotes = notesState.notes.filter(n => isArchivedTab ? n.status === "archived" : n.status !== "archived");
-    }
-
-    if (!targetNotes.length) {
-      showToast("没有可操作的笔记。");
-      return;
-    }
-
-    const actionDesc = isArchivedTab ? "还原至待整理" : "收录";
-    if (notesState.selectedIds.size === 0) {
-      if (!window.confirm(`确定将全部 ${targetNotes.length} 条笔记${actionDesc}吗？`)) return;
-    }
-
-    targetNotes.forEach(n => { n.status = newStatus; });
-    notesState.selectedIds.clear();
-    saveNotes();
-    renderNotes();
-    showToast(`已将 ${targetNotes.length} 条笔记${actionDesc}。`);
-  });
-
-  // 公共功能 4：删除笔记
-  batchDeleteBtn?.addEventListener("click", () => {
-    if (!notesState.selectMode) {
-      notesState.selectMode = true;
-      renderNotes();
-      showToast("已开启选择模式，请勾选需要删除的笔记！");
-      return;
-    }
-
-    if (notesState.selectedIds.size === 0) {
-      showToast("请先勾选需要删除的笔记！");
-      return;
-    }
-    const count = notesState.selectedIds.size;
-    if (!window.confirm(`确定删除选中的 ${count} 条笔记吗？`)) return;
-
-    notesState.notes = notesState.notes.filter(n => !notesState.selectedIds.has(n.id));
-    notesState.selectedIds.clear();
-    saveNotes();
-    renderNotes();
-    showToast(`已删除 ${count} 条笔记。`);
-  });
-
-  // 公共功能 5：编辑笔记
-  batchEditBtn?.addEventListener("click", () => {
-    if (!notesState.selectMode) {
-      notesState.selectMode = true;
-      renderNotes();
-      showToast("已开启选择模式，请勾选需要编辑的笔记！");
-      return;
-    }
-
-    if (notesState.selectedIds.size === 0) {
-      showToast("请先勾选需要编辑的笔记！");
-      return;
-    }
-    const targetId = [...notesState.selectedIds][0];
-    notesState.editingId = targetId;
-    renderNotes();
-    setTimeout(() => {
-      const row = document.querySelector(`.notes-item-row.editing[data-id="${targetId}"]`);
-      row?.scrollIntoView({ behavior: "smooth", block: "center" });
-      row?.querySelector(".edit-title")?.focus();
-    }, 60);
   });
 
   // 搜索过滤
@@ -698,31 +526,20 @@ function initNotesEvents() {
     renderNotes();
   });
 
-  // 筛选 Tab
-  document.getElementById("notes-filter-tabs")?.addEventListener("click", event => {
-    const btn = event.target.closest("[data-filter]");
-    if (!btn) return;
-    notesState.filter = btn.dataset.filter;
-    notesState.selectedIds.clear();
-    document.querySelectorAll("#notes-filter-tabs .notes-tab-pill").forEach(p => {
-      p.classList.toggle("active", p === btn);
-    });
-    renderNotes();
+  // 快捷键支持：按 N 打开新建笔记弹窗（不在输入状态时）
+  window.addEventListener("keydown", event => {
+    const isInputActive = ["INPUT", "TEXTAREA"].includes(document.activeElement?.tagName);
+    if ((event.key === "n" || event.key === "N") && !isInputActive) {
+      const viewNotes = document.getElementById("view-notes");
+      if (viewNotes && !viewNotes.hidden) {
+        event.preventDefault();
+        openModal();
+      }
+    }
   });
 
-  // 列表事件委托（单选复选框 & 保存/取消行编辑）
+  // 列表事件委托（行内单条编辑 / 删除）
   document.getElementById("notes-list")?.addEventListener("click", async event => {
-    // 1. 复选框勾选
-    const itemCheck = event.target.closest(".notes-item-check");
-    if (itemCheck) {
-      const id = itemCheck.dataset.id;
-      if (itemCheck.checked) notesState.selectedIds.add(id);
-      else notesState.selectedIds.delete(id);
-      renderNotes();
-      return;
-    }
-
-    // 2. 行内编辑表单保存 / 取消
     const card = event.target.closest(".notes-item-row");
     if (!card) return;
     const noteId = card.dataset.id;
@@ -731,6 +548,32 @@ function initNotesEvents() {
 
     const action = event.target.closest("[data-action]")?.dataset.action;
     if (!action) return;
+
+    if (action === "edit-item") {
+      event.preventDefault();
+      event.stopPropagation();
+      notesState.editingId = noteId;
+      renderNotes();
+      setTimeout(() => {
+        const editRow = document.querySelector(`.notes-item-row.editing[data-id="${noteId}"]`);
+        editRow?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        editRow?.querySelector(".edit-title")?.focus();
+      }, 60);
+      return;
+    }
+
+    if (action === "delete-item") {
+      event.preventDefault();
+      event.stopPropagation();
+      const title = note.title || "此条笔记";
+      if (!window.confirm(`确定删除“${title}”吗？`)) return;
+      notesState.notes = notesState.notes.filter(n => n.id !== noteId);
+      if (notesState.editingId === noteId) notesState.editingId = null;
+      saveNotes();
+      renderNotes();
+      showToast("已删除 1 条笔记。");
+      return;
+    }
 
     if (action === "cancel-edit") {
       notesState.editingId = null;

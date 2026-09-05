@@ -7,13 +7,13 @@
 <p align="center"><strong>AI 工具集、API 控制台与 Agent 生态地图等的统一入口</strong></p>
 
 <p align="center">
-  <a href="https://github.com/yuzhounh/ai-resource-hub/releases"><img src="https://img.shields.io/badge/version-v2.0.0-8875DE" alt="version v2.0.0"></a>
+  <a href="https://github.com/yuzhounh/ai-resource-hub/releases"><img src="https://img.shields.io/badge/version-v2.1.0-8875DE" alt="version v2.1.0"></a>
   <a href="https://ai-resource-hub-manager.vercel.app/"><img src="https://img.shields.io/badge/Vercel-online-43A68F" alt="Vercel online"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-D39448" alt="MIT License"></a>
-  <img src="https://img.shields.io/badge/last%20updated-2026--09--03-668DD8" alt="last updated 2026-09-03">
+  <img src="https://img.shields.io/badge/last%20updated-2026--09--05-668DD8" alt="last updated 2026-09-05">
 </p>
 
-AI Resource Hub 将工具集、API 控制台、Agent 生态地图、科研自动化、笔记、连通性报告与 Plan 管理整合为一个统一入口，覆盖常用 AI 产品、模型与 API 控制台、AI Agent 产品和运行形态，并提供个人数据云同步能力。
+AI Resource Hub 将工具集、API 控制台、Agent 生态地图、科研自动化、笔记、连通性报告与资源管理整合为一个统一入口，覆盖常用 AI 产品、模型与 API 控制台、AI Agent 产品和运行形态，并提供个人数据云同步能力。
 
 ## 在线访问
 
@@ -24,17 +24,17 @@ AI Resource Hub 将工具集、API 控制台、Agent 生态地图、科研自动
 - **工具集 (`#tools`)**：AI 助手、搜索、科研、Coding / Agent、模型平台、榜单与创作工具导航。
 - **API 控制台 (`#api`)**：国内外模型厂商和 API Router 的 Key、Usage、充值、套餐与文档入口，集成 Coding Plan 对比与参考。
 - **笔记 (`#inbox`)**：随手采集 AI 工具、模型、开源项目与 API 链接，一键生成结构化提示词复制给 AI 合并入库；内容保存在 Google 账户。
-- **连通性报告 (`#connectivity`)**：Windows 凭据 API 密钥多协议（Chat / Responses / Anthropic Messages / Batch）连通性验证报告，含 16 服务商实测快照与模型级明细；服务商归档状态保存在 Google 账户，并自动同步 Plan 管理的归档。
+- **连通性报告 (`#connectivity`)**：Windows 凭据 API 密钥多协议（Chat / Responses / Anthropic Messages / Batch）连通性验证报告，含 16 服务商实测快照与模型级明细；服务商归档状态保存在 Google 账户，并自动同步资源管理的归档。
 - **Agent 生态地图 (`#agents`)**：AI 编程、知识工作、桌面和浏览器操作、常驻个人 Agent、Coding / Token Plan、API Router 与基础模型。
 - **科研全景图 (`#research`)**：端到端研究系统、Deep Research 与文献综述、Agent Skills 技能库、Awesome 合集、学术写作规范与选型速查。
-- **Plan 管理 (`#manage`)**：个人 Plan、限时优惠、模型、Harness 兼容性与用量记录管理区；数据保存在 Google 账户。
+- **资源管理 (`#manage`)**：个人 Plan、API、模型、Harness 兼容性与用量记录管理区；数据保存在 Google 账户。
 
 ## 功能
 
 - 七个并列的一级分类标签与各自的二级分类导航，全站单页无缝切换（无需跳转外部 HTML）。
 - 独立的行级/卡片级即时过滤搜索框，`/` 键快捷聚焦，`Esc` 清空。
-- 页面右上角 Google 账号入口：笔记、连通性与 Plan 管理三个页面需登录后才显示内容，数据保存在登录用户自己的 Firestore 路径中。
-- Plan 管理中归档的服务商，会在连通性页面自动归档（按服务商名称匹配）。
+- 页面右上角 Google 账号入口：笔记、连通性与资源管理三个页面需登录后才显示内容，数据保存在登录用户自己的 Firestore 路径中。
+- 资源管理中归档的服务商，会在连通性页面自动归档（按服务商名称匹配）。
 - 手动维护 Plan、限时优惠、模型、Harness 兼容性、用量快照和备注。
 - URL 哈希深链接、浏览器前进与后退，支持直接锚定任意二级分类。
 - 响应式布局、深色模式与键盘快捷键。

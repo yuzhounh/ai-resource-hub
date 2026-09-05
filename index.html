@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="AI 工具集、API 控制台与 Agent 生态地图的统一导航入口">
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
-  <link rel="stylesheet" href="./manager.css?v=20260903d">
-  <link rel="stylesheet" href="./notes.css?v=20260904b">
+  <link rel="stylesheet" href="./manager.css?v=20260905h">
+  <link rel="stylesheet" href="./notes.css?v=20260905d">
   <title>AI Resource Hub</title>
   <style>
     :root{color-scheme:light dark;--bg:#f6f7f9;--card:#fff;--text:#17191c;--muted:#69707c;--line:#e3e6ea;--accent:#2563eb;--soft:#eef4ff;--warn:#fff7e6;--bar:color-mix(in srgb,var(--bg) 91%,transparent)}
@@ -23,7 +23,7 @@
 
     .view-tools section{margin:26px 0 36px}.view-tools h1{margin:0;font-size:30px}.view-tools h2{font-size:21px;margin:0 0 12px}.view-tools h2 span{font-size:12px;font-weight:500;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 7px}.view-tools .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:10px}.view-tools .card{text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 14px;min-height:74px;display:flex;flex-direction:column;gap:6px;transition:.15s}.view-tools .card:hover{transform:translateY(-2px);border-color:var(--accent)}.view-tools .card b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.view-tools .card small{color:var(--muted)}
 
-    .view-api h1{margin:0;font-size:30px}.view-api section{margin-top:34px}.view-api h2{margin:0 0 14px;font-size:22px}.view-api .subnav a{width:120px;box-sizing:border-box;text-align:center}.view-api .table-wrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.05)}.view-api table{width:100%;min-width:1000px;border-collapse:collapse;table-layout:fixed;font-size:14px}.view-api col.col-star{width:2.5rem}.view-api col.col-platform{width:17%}.view-api col.col-key,.view-api col.col-usage,.view-api col.col-billing{width:22%}.view-api col.col-docs{width:13%}.view-api th,.view-api td{padding:12px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);line-height:1.45;overflow-wrap:break-word;word-break:keep-all}.view-api th.col-star,.view-api td.col-star{text-align:center;padding-inline:6px;font-weight:600;font-size:15px;line-height:1.2}.view-api th.col-star{color:var(--text)}.view-api td.col-star{color:var(--accent)}.view-api th{background:color-mix(in srgb,var(--card) 78%,var(--soft));font-size:14px}.view-api tr:last-child td{border-bottom:0}.view-api td:nth-child(2){font-weight:700}.view-api td a{font-weight:600;text-decoration:none}.view-api td a:hover{text-decoration:underline}.view-api .arrow{color:var(--muted);font-size:13px;margin-left:4px}.view-api .api-resource-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.view-api .api-resource-link{display:flex;flex-direction:column;gap:6px;min-width:0;min-height:94px;padding:18px 20px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--text);text-decoration:none;transition:.15s}.view-api .api-resource-link:hover{transform:translateY(-2px);border-color:var(--accent)}.view-api .api-resource-link strong{font-size:16px}.view-api .api-resource-link span{color:var(--muted);font-size:14px;overflow-wrap:anywhere}.view-api .api-resource-link[hidden]{display:none}
+    .view-api h1{margin:0;font-size:30px}.view-api section{margin-top:34px}.view-api h2{margin:0 0 14px;font-size:22px}.view-api .subnav a{width:120px;box-sizing:border-box;text-align:center}.view-api .table-wrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.05)}.view-api table{width:100%;min-width:1000px;border-collapse:collapse;table-layout:fixed;font-size:14px}.view-api col.col-star{width:2.5rem}.view-api col.col-platform{width:17%}.view-api col.col-key,.view-api col.col-usage,.view-api col.col-billing{width:22%}.view-api col.col-docs{width:13%}.view-api th,.view-api td{padding:12px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);line-height:1.45;overflow-wrap:break-word;word-break:keep-all}.view-api th.col-star,.view-api td.col-star{text-align:center;padding-inline:6px;font-weight:600;font-size:15px;line-height:1.2}.view-api th.col-star{color:var(--text)}.view-api td.col-star{color:var(--accent)}.view-api th{background:color-mix(in srgb,var(--card) 78%,var(--soft));font-size:14px}.view-api tr:last-child td{border-bottom:0}.view-api td:nth-child(2){font-weight:700}.view-api td a{font-weight:600;text-decoration:none}.view-api td a:hover{text-decoration:underline}.view-api .arrow{color:var(--muted);font-size:13px;margin-left:4px}.view-api .api-resource-links{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.view-api .api-resource-link{display:flex;flex-direction:column;gap:6px;min-width:0;min-height:94px;padding:18px 20px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--text);text-decoration:none;transition:.15s}.view-api .api-resource-link:hover{transform:translateY(-2px);border-color:var(--accent)}.view-api .api-resource-link strong{font-size:16px}.view-api .api-resource-link span{color:var(--muted);font-size:14px;overflow-wrap:anywhere}.view-api .api-resource-link[hidden]{display:none}
 
     .view-agents .view-intro{margin:0 0 18px}.view-agents .tagline{font-size:16px;color:var(--muted);margin:0 0 12px}.view-agents .meta{display:flex;gap:9px;flex-wrap:wrap;color:var(--muted);font-size:13px}.view-agents .badge{border:1px solid var(--line);background:var(--card);padding:4px 9px;border-radius:999px}.view-agents .intro{max-width:1100px;color:var(--muted);margin:14px 0 4px}.view-agents section{margin:34px 0 44px}.view-agents .section-title{display:flex;align-items:center;gap:10px;margin-bottom:12px}.view-agents h2{font-size:23px;margin:0}.view-agents h3{font-size:16px;margin:20px 0 10px;color:var(--muted)}.view-agents .table-intro{max-width:1100px;margin:0 0 12px;color:var(--muted);font-size:14px}.view-agents .table-wrap{overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:14px}.view-agents table{border-collapse:collapse;width:100%;min-width:860px}.view-agents th,.view-agents td{padding:12px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}.view-agents th{background:color-mix(in srgb,var(--card) 78%,var(--soft));font-size:13px;white-space:nowrap}.view-agents td{font-size:13.5px}.view-agents tr:last-child td{border-bottom:0}.view-agents td:first-child{font-weight:650;white-space:nowrap}.view-agents .lead-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.view-agents .lead-grid.five{grid-template-columns:repeat(5,1fr)}.view-agents .mini{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px;display:flex;flex-direction:column;gap:6px}.view-agents .mini span{font-size:13px;color:var(--muted)}.view-agents .concepts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.view-agents .concepts span{font-size:13px;border:1px solid var(--line);background:var(--card);padding:7px 10px;border-radius:10px}.view-agents .architecture{max-width:1280px;margin:auto;text-align:center;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px}.view-agents .node{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:12px 16px;margin:0;max-width:none;flex:0 1 auto;min-width:0;overflow-wrap:anywhere}.view-agents .node.strong{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 15%,transparent)}.view-agents .node small{color:var(--muted)}.view-agents .arrow{color:var(--muted);font-size:22px;line-height:1;flex:0 0 auto}.view-agents .branch{display:flex;flex-direction:column;gap:8px;margin-top:0;min-width:0;flex:0 1 auto}.view-agents .branch .node{width:100%}.view-agents .fuel{margin:0 0 14px;color:var(--muted);font-size:14px}.view-agents .note{margin-top:12px;border:1px solid var(--line);background:var(--soft);border-radius:12px;padding:12px 14px;font-size:13px}.view-agents .note.warn{background:var(--warn)}.view-agents .steps{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 18px 15px 40px}.view-agents .steps li{margin:5px 0}
     .view-agents .agent-resource-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.view-agents .agent-resource-link{display:flex;flex-direction:column;gap:6px;min-width:0;min-height:94px;padding:18px 20px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--text);text-decoration:none;transition:.15s}.view-agents .agent-resource-link:hover{transform:translateY(-2px);border-color:var(--accent)}.view-agents .agent-resource-link strong{font-size:16px}.view-agents .agent-resource-link span{color:var(--muted);font-size:14px;overflow-wrap:anywhere}
@@ -158,7 +158,7 @@
       <a id="tab-research" role="tab" href="#research" aria-controls="view-research">科研自动化</a>
       <a id="tab-notes" class="hub-gated-tab" role="tab" href="#notes" aria-controls="view-notes">笔记</a>
       <a id="tab-connectivity" class="hub-gated-tab" role="tab" href="#connectivity" aria-controls="view-connectivity">连通性</a>
-      <a id="tab-manage" class="hub-gated-tab" role="tab" href="#manage" aria-controls="view-manage">Plan 管理</a>
+      <a id="tab-manage" class="hub-gated-tab" role="tab" href="#manage" aria-controls="view-manage">资源管理</a>
     </nav>
   </div>
   <main class="app-shell">
@@ -10596,28 +10596,8 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
     </div>
     <div id="view-agents" class="view view-agents" role="tabpanel" aria-labelledby="tab-agents" hidden>
 <p class="view-summary">Agent 生态地图，覆盖 AI 编程、知识工作、桌面 / 浏览器操作、常驻个人 Agent，以及 Coding / Token Plan、API Router、基础模型与 Chat 产品。</p>
-<div class="view-toolbar"><input id="agents-search" type="search" placeholder="搜索分类、产品或关键词…（按 / 聚焦）"><nav class="subnav"><a href="#agents/overview">如何理解这张地图</a><a href="#agents/architecture">分层架构</a><a href="#agents/families">重点产品家族</a><a href="#agents/ide">AI IDE / Agent IDE</a><a href="#agents/cli">CLI / Terminal Coding Agent</a><a href="#agents/cloud">Cloud / Background Coding Agent</a><a href="#agents/repo">GitHub / Repository-native Agent</a><a href="#agents/work">通用 Work / Desktop Agent</a><a href="#agents/always">Personal / Always-on Agent</a><a href="#agents/computer">Computer-Use / Browser-Use Agent</a><a href="#agents/framework">Agent Framework / Workflow Platform</a><a href="#agents/plans">Coding Plan / Token Plan</a><a href="#agents/routers">API Router / 聚合平台</a><a href="#agents/models">基础模型 / Chat 产品</a><a href="#agents/quick">选型速查</a></nav></div>
+<div class="view-toolbar"><input id="agents-search" type="search" placeholder="搜索分类、产品或关键词…（按 / 聚焦）"><nav class="subnav"><a href="#agents/families">重点产品家族</a><a href="#agents/ide">AI IDE / Agent IDE</a><a href="#agents/cli">CLI / Terminal Coding Agent</a><a href="#agents/cloud">Cloud / Background Coding Agent</a><a href="#agents/repo">GitHub / Repository-native Agent</a><a href="#agents/work">通用 Work / Desktop Agent</a><a href="#agents/always">Personal / Always-on Agent</a><a href="#agents/computer">Computer-Use / Browser-Use Agent</a><a href="#agents/framework">Agent Framework / Workflow Platform</a><a href="#agents/plans">Coding Plan / Token Plan</a><a href="#agents/routers">API Router / 聚合平台</a><a href="#agents/models">基础模型 / Chat 产品</a><a href="#agents/quick">选型速查</a><a href="#agents/architecture">分层架构</a><a href="#agents/overview">如何理解这张地图</a></nav></div>
 
-<section id="agent-landscape-resource" data-title="Agent 生态地图资源">
-<div class="section-title"><h2>Agent 生态地图资源</h2></div>
-<div class="agent-resource-grid">
-<a class="agent-resource-link" href="https://github.com/yuzhounh/ai-agent-landscape" target="_blank" rel="noopener"><strong>AI Agent Landscape</strong><span>yuzhounh/ai-agent-landscape</span></a>
-</div>
-</section>
-
-<section id="overview" data-title="如何理解这张地图"><div class="section-title"><h2>如何理解这张地图</h2></div><div class="lead-grid">
-<div class="mini"><b>交互入口</b><span>IDE、终端、网页、桌面、GitHub、聊天工具</span></div>
-<div class="mini"><b>执行位置</b><span>本机、隔离沙箱、云 VM、CI / Actions、移动设备</span></div>
-<div class="mini"><b>工作对象</b><span>代码仓库、网页、桌面 GUI、本地文件、文档、SaaS</span></div>
-<div class="mini"><b>自治方式</b><span>同步协作、后台异步、定时、常驻、PR / 文件 / 报告交付</span></div>
-</div>
-<div class="concepts"><span><b>Model</b> = 理解与生成</span><span><b>Harness</b> = 上下文、工具循环、权限、验证</span><span><b>Surface</b> = IDE / CLI / Web / Desktop</span><span><b>Plan / API</b> = 模型与产品额度</span></div></section>
-<section id="architecture" data-title="分层架构"><div class="section-title"><h2>分层架构</h2></div><div class="fuel">订阅 · Coding Plan · Token Plan · 按量 API → 为 Surface / Model 提供额度</div><div class="architecture">
-<div class="node top">用户与团队</div><div class="arrow">→</div>
-<div class="node">产品入口 / Surface<br><small>IDE · CLI · Web · Desktop · GitHub · IM</small></div><div class="arrow">→</div>
-<div class="node strong">Agent Harness / 编排层<br><small>规划 · 上下文 · 记忆 · 多 Agent · 验证 · 权限</small></div><div class="arrow">→</div>
-<div class="branch"><div class="node">工具与连接<br><small>文件 · Shell · Git · Browser · GUI · MCP · SaaS</small></div><div class="node">运行环境<br><small>本机 · 沙箱 · 云 VM · CI · 常驻主机</small></div><div class="node">基础模型<br><small>GPT · Claude · Gemini · Grok · Qwen · DeepSeek · GLM · Kimi</small></div></div>
-</div></section>
 <section id="families" data-title="重点产品家族"><div class="section-title"><h2>重点产品家族</h2></div><p class="table-intro">同一品牌往往同时提供模型、编程入口、通用工作产品与云端能力，因此会在多个分类中重复出现。本表用于快速理解各产品生态的主要关系，而不代表法律实体之间的控制关系。</p>
 <div class="table-wrap"><table class="data-table"><thead><tr><th>生态 / 厂商</th><th>模型与 API</th><th>编程入口</th><th>通用工作 / 个人入口</th><th>云端或其他形态</th></tr></thead><tbody><tr><td>OpenAI</td><td>GPT、OpenAI API</td><td>Codex CLI、IDE、Desktop</td><td>ChatGPT、ChatGPT agent</td><td>Codex cloud、GitHub Action</td></tr><tr><td>Anthropic</td><td>Claude、Claude API</td><td>Claude Code CLI、IDE、Desktop</td><td>Claude、Claude Cowork、Computer Use</td><td>Claude Code Web、GitHub</td></tr><tr><td>Google</td><td>Gemini、Gemini API</td><td>Antigravity、Gemini CLI、Jules</td><td>Gemini</td><td>—</td></tr><tr><td>AWS</td><td>Bedrock</td><td>Kiro IDE、Kiro CLI</td><td>—</td><td>Kiro Web / autonomous agent</td></tr><tr><td>xAI</td><td>Grok、xAI API</td><td>Grok Build</td><td>Grok</td><td>Build 无头 / 自动化形态</td></tr><tr><td>Meta</td><td>Llama、Muse</td><td>Muse Code</td><td>Meta AI</td><td>开源权重与开发者生态</td></tr><tr><td>阿里 / Qoder</td><td>多模型</td><td>Qoder IDE、Qoder CLI</td><td>QoderWork、QoderWake</td><td>Cloud Agents、Mobile</td></tr><tr><td>字节跳动</td><td>豆包 / Seed、火山方舟</td><td>TRAE IDE、SOLO</td><td>TRAE Work</td><td>Work Web / Mobile、云端任务</td></tr><tr><td>腾讯</td><td>混元、腾讯云模型服务</td><td>CodeBuddy IDE、CodeBuddy Code</td><td>WorkBuddy、QClaw、Marvis</td><td>Token Plan、TokenHub</td></tr><tr><td>智谱</td><td>GLM、BigModel API、Coding Plan</td><td>ZCode</td><td>AutoGLM、AutoClaw</td><td>AutoGLM-OpenClaw 云机</td></tr><tr><td>月之暗面</td><td>Kimi、Moonshot API、Kimi Code API</td><td>Kimi Code CLI、VS Code</td><td>Kimi、Kimi Work、WebBridge</td><td>在线 Agent 与会员额度</td></tr><tr><td>阿里 / Qwen</td><td>Qwen、百炼 Model Studio</td><td>Qwen Code、Lingma</td><td>QwenPaw、Qwen Chat</td><td>百炼 Coding Plan、ModelScope</td></tr><tr><td>DeepSeek</td><td>DeepSeek 模型与 API</td><td>DeepSeek Harness</td><td>DeepSeek Chat</td><td>Harness 开发者预览</td></tr><tr><td>MiniMax</td><td>MiniMax 模型与 API</td><td>MiniMax Code</td><td>MiniMax 产品入口</td><td>Token Plan</td></tr></tbody></table></div></section>
 <section id="ide" data-title="ai ide / agent ide"><div class="section-title"><h2>AI IDE / Agent IDE</h2></div><p class="table-intro">这类产品以编辑器、独立 IDE 或 IDE 扩展为主要入口，通常整合代码库理解、补全、文件编辑、终端和 Agent 模式。选型时还应区分原生 IDE、插件与通过协议接入的外部 Agent。</p>
@@ -10650,6 +10630,19 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
 <div class="table-wrap"><table class="data-table"><thead><tr><th>体系</th><th>基础模型 / API</th><th>Chat / 入口</th><th>相关 Agent 产品</th></tr></thead><tbody><tr><td>OpenAI</td><td><a href="https://developers.openai.com/api/" target="_blank" rel="noopener">GPT / OpenAI API</a></td><td><a href="https://chatgpt.com/" target="_blank" rel="noopener">ChatGPT</a></td><td>Codex、ChatGPT agent</td></tr><tr><td>Anthropic</td><td><a href="https://docs.anthropic.com/" target="_blank" rel="noopener">Claude API</a></td><td><a href="https://claude.ai/" target="_blank" rel="noopener">Claude</a></td><td>Claude Code、Cowork、Computer Use</td></tr><tr><td>Google</td><td><a href="https://ai.google.dev/" target="_blank" rel="noopener">Gemini API</a></td><td><a href="https://gemini.google.com/" target="_blank" rel="noopener">Gemini</a></td><td>Antigravity、Gemini CLI、Jules</td></tr><tr><td>xAI</td><td><a href="https://docs.x.ai/" target="_blank" rel="noopener">Grok API</a></td><td><a href="https://grok.com/" target="_blank" rel="noopener">Grok</a></td><td>Grok Build</td></tr><tr><td>Mistral AI</td><td><a href="https://docs.mistral.ai/" target="_blank" rel="noopener">Mistral API</a></td><td><a href="https://chat.mistral.ai/" target="_blank" rel="noopener">Le Chat</a></td><td>可接多模型 Harness</td></tr><tr><td>DeepSeek</td><td><a href="https://api-docs.deepseek.com/" target="_blank" rel="noopener">DeepSeek API</a></td><td><a href="https://chat.deepseek.com/" target="_blank" rel="noopener">DeepSeek Chat</a></td><td>DeepSeek Harness</td></tr><tr><td>阿里 / Qwen</td><td><a href="https://www.aliyun.com/product/bailian" target="_blank" rel="noopener">Qwen / Model Studio</a></td><td><a href="https://chat.qwen.ai/" target="_blank" rel="noopener">Qwen Chat</a></td><td>Qwen Code、Qwen-Agent、QwenPaw、Qoder</td></tr><tr><td>智谱</td><td><a href="https://docs.bigmodel.cn/" target="_blank" rel="noopener">GLM API</a></td><td><a href="https://chat.z.ai/" target="_blank" rel="noopener">Z.ai</a></td><td>ZCode、AutoGLM、AutoClaw</td></tr><tr><td>月之暗面</td><td><a href="https://platform.moonshot.cn/" target="_blank" rel="noopener">Kimi API</a></td><td><a href="https://www.kimi.com/" target="_blank" rel="noopener">Kimi</a></td><td>Kimi Code、Kimi Work、WebBridge</td></tr><tr><td>MiniMax</td><td><a href="https://platform.minimaxi.com/" target="_blank" rel="noopener">MiniMax API</a></td><td><a href="https://www.minimaxi.com/" target="_blank" rel="noopener">MiniMax</a></td><td>MiniMax Code、Token Plan</td></tr><tr><td>字节跳动</td><td><a href="https://www.volcengine.com/product/doubao" target="_blank" rel="noopener">豆包 / Seed / 方舟</a></td><td><a href="https://www.doubao.com/" target="_blank" rel="noopener">豆包</a></td><td>TRAE、TRAE Work、UI-TARS</td></tr><tr><td>腾讯</td><td><a href="https://cloud.tencent.com/product/hunyuan" target="_blank" rel="noopener">混元</a></td><td><a href="https://yuanbao.tencent.com/" target="_blank" rel="noopener">腾讯元宝</a></td><td>CodeBuddy、WorkBuddy、QClaw、Marvis</td></tr></tbody></table></div></section>
 <section id="quick" data-title="选型速查"><div class="section-title"><h2>选型速查</h2></div><p class="table-intro">先根据工作对象、执行位置和期望交付物缩小产品类别，再比较权限、可靠性、成本与人工接管能力。下表把常见目标映射到优先考察的类别和关键问题。</p>
 <div class="table-wrap"><table class="data-table"><thead><tr><th>目标</th><th>优先考察的类别</th><th>关键问题</th></tr></thead><tbody><tr><td>在当前项目里边看边改</td><td>AI IDE / CLI Agent</td><td>大仓理解、测试、权限、diff、撤销</td></tr><tr><td>把 Issue 委派出去，回来审 PR</td><td>Cloud / Repository-native Agent</td><td>沙箱、并发、PR 质量、日志、凭据、成本</td></tr><tr><td>自动审查每个 Pull Request</td><td>Repository-native Review Agent</td><td>全仓上下文、误报、规则、修复闭环、数据范围</td></tr><tr><td>处理本地文档、表格和 PPT</td><td>Work / Desktop Agent</td><td>文件保真、隐私、可撤销性、交付质量</td></tr><tr><td>自动填写网页或跨应用操作</td><td>Browser / Computer Use</td><td>登录态隔离、确认、失败恢复、提示注入防护</td></tr><tr><td>让个人 Agent 定时或常驻工作</td><td>Personal / Always-on Agent</td><td>设备在线、远程入口、记忆、密钥、预算、审计</td></tr><tr><td>开发自己的 Agent 或工作流</td><td>Framework / Workflow Platform</td><td>Runtime、状态、工具、部署、观测、人工介入、许可证</td></tr><tr><td>给多个 Agent 统一购买模型额度</td><td>Coding / Token Plan 或 Router</td><td>客户端白名单、模型、速率、真实成本、数据条款</td></tr><tr><td>生产级模型托管与企业治理</td><td>Inference / Hyperscaler Platform</td><td>区域、SLA、网络、合规、专用部署、可观测性</td></tr></tbody></table></div><ol class="steps"><li>先确定工作对象：代码、仓库、网页、桌面还是办公文件。</li><li>再确定执行位置：本机、云沙箱、CI 还是常驻服务器。</li><li>选择 Harness / 产品入口。</li><li>最后比较模型和额度方案。</li><li>用真实任务测试成功率、人工接管、回滚与总成本，而不是只看模型榜单。</li></ol></section>
+<section id="architecture" data-title="分层架构"><div class="section-title"><h2>分层架构</h2></div><div class="fuel">订阅 · Coding Plan · Token Plan · 按量 API → 为 Surface / Model 提供额度</div><div class="architecture">
+<div class="node top">用户与团队</div><div class="arrow">→</div>
+<div class="node">产品入口 / Surface<br><small>IDE · CLI · Web · Desktop · GitHub · IM</small></div><div class="arrow">→</div>
+<div class="node strong">Agent Harness / 编排层<br><small>规划 · 上下文 · 记忆 · 多 Agent · 验证 · 权限</small></div><div class="arrow">→</div>
+<div class="branch"><div class="node">工具与连接<br><small>文件 · Shell · Git · Browser · GUI · MCP · SaaS</small></div><div class="node">运行环境<br><small>本机 · 沙箱 · 云 VM · CI · 常驻主机</small></div><div class="node">基础模型<br><small>GPT · Claude · Gemini · Grok · Qwen · DeepSeek · GLM · Kimi</small></div></div>
+</div></section>
+<section id="overview" data-title="如何理解这张地图"><div class="section-title"><h2>如何理解这张地图</h2></div><div class="lead-grid">
+<div class="mini"><b>交互入口</b><span>IDE、终端、网页、桌面、GitHub、聊天工具</span></div>
+<div class="mini"><b>执行位置</b><span>本机、隔离沙箱、云 VM、CI / Actions、移动设备</span></div>
+<div class="mini"><b>工作对象</b><span>代码仓库、网页、桌面 GUI、本地文件、文档、SaaS</span></div>
+<div class="mini"><b>自治方式</b><span>同步协作、后台异步、定时、常驻、PR / 文件 / 报告交付</span></div>
+</div>
+<div class="concepts"><span><b>Model</b> = 理解与生成</span><span><b>Harness</b> = 上下文、工具循环、权限、验证</span><span><b>Surface</b> = IDE / CLI / Web / Desktop</span><span><b>Plan / API</b> = 模型与产品额度</span></div></section>
 <footer>内容依据 <a href="https://github.com/yuzhounh/ai-agent-landscape" target="_blank" rel="noopener">yuzhounh/ai-agent-landscape</a> 当前 README（v0.2.0，2026-08-21 核验）整理。产品能力、价格、额度、地区可用性和名称变化很快；如与官方页面冲突，以官方最新说明为准。</footer>
 </div>
 
@@ -10658,29 +10651,16 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
       <div class="view-toolbar">
         <div class="search"><input id="research-search" type="search" placeholder="搜索分类、项目或关键词…（按 / 聚焦）"></div>
         <nav class="subnav">
-          <a href="#research/res-overview">如何理解这张地图</a>
-          <a href="#research/res-architecture">分层架构</a>
           <a href="#research/res-e2e">端到端研究系统</a>
           <a href="#research/res-deep">Deep Research 与文献综述</a>
           <a href="#research/res-skills">Agent Skills 技能库</a>
           <a href="#research/res-awesome">Awesome 合集</a>
           <a href="#research/res-discuss">讨论与教程</a>
           <a href="#research/res-quick">选型速查</a>
+          <a href="#research/res-architecture">分层架构</a>
+          <a href="#research/res-overview">如何理解这张地图</a>
         </nav>
       </div>
-<section data-title="如何理解这张地图" id="res-overview"><div class="section-title"><h2>如何理解这张地图</h2></div><div class="lead-grid">
-<div class="mini"><b>科研环节</b><span>想法生成 · 文献检索 · 实验设计 / 执行 · 数据分析 · 写作 · 评审 · 基金申请</span></div>
-<div class="mini"><b>自动化程度</b><span>交互辅助 → 分步半自动 → 端到端自动（autopilot）</span></div>
-<div class="mini"><b>交付形态</b><span>平台产品 · Agent Skills · 可运行流水线 · 教程 · 论文与合集</span></div>
-<div class="mini"><b>承载环境</b><span>独立平台 · 编程 Agent 内 · 本机脚本 · 云端沙箱</span></div>
-</div>
-<div class="concepts"><span><b>Research Agent</b> = 面向科研任务的多步智能体</span><span><b>Skill</b> = 装进编程 Agent 的可复用能力包</span><span><b>Workflow</b> = 固定顺序的可复现流水线</span><span><b>End-to-End</b> = 从想法到论文初稿的自动化系统</span><span><b>Copilot / Autopilot</b> = 辅助 / 主导的自动化程度</span></div></section>
-<section data-title="分层架构" id="res-architecture"><div class="section-title"><h2>分层架构</h2></div><div class="fuel">交付 → 综述 · 数据与图表 · 实验记录 · 论文初稿 · 基金本子 → 研究者审查、修订与负责</div><div class="architecture">
-<div class="node top">研究者</div><div class="arrow">→</div>
-<div class="node">入口 / Surface<br/><small>Web 平台 · Chat / Deep Research · IDE / CLI · 本地技能目录</small></div><div class="arrow">→</div>
-<div class="node strong">编排层 / 研究 Agent 与工作流<br/><small>规划 · 文献检索 · 实验编排 · 写作 · 评审 · 记忆</small></div><div class="arrow">→</div>
-<div class="branch"><div class="node">科研技能与工具层<br/><small>Crossref / OpenAlex · 代码 · 数据 · LaTeX · 图表 · 政策</small></div><div class="node">执行环境<br/><small>本机 · 云沙箱 · 托管环境</small></div><div class="node">基础模型<br/><small>GPT · Claude · Gemini · DeepSeek · Qwen · 开源模型</small></div></div>
-</div></section>
 <section data-title="科研 agent 平台与端到端研究系统" id="res-e2e"><div class="section-title"><h2>科研 Agent 平台与端到端研究系统</h2></div><p class="table-intro">这一类包含两种形态：科研 Agent 平台 / 工作台（如 Claude Science、FutureOS）提供接近 IDE 的一体化科研环境，研究者与 AI 协作推进从数据、图表到稿件的完整流程，强调可复现与人工把关；端到端流水线（如 Spark-to-Paper、The AI Scientist）则尝试把“从想法到论文”做成尽量自动的流程。自动化程度差异很大，需要分别核验“自动到什么程度、谁来把关”。</p>
 <div class="table-wrap"><table class="data-table"><thead><tr><th>项目 / 系统</th><th>形态</th><th>定位与特点</th></tr></thead><tbody><tr><td><a href="https://claude.com/science" rel="noopener" target="_blank">Claude Science</a></td><td>科研桌面应用（beta）</td><td>Anthropic 官方：集 Python/R kernel、科学渲染器、60+ 数据库连接、文献查阅、图表迭代与稿件撰写于一体；可扩展 skills；面向学术界有免费/折扣计划</td></tr><tr><td><a href="https://future-os.cn/" rel="noopener" target="_blank">FutureOS</a></td><td>科研平台（开源 Agent）</td><td>“科研人员的智能工作伙伴”，内置 100+ 科研 Skills；用 Rust 开发</td></tr><tr><td><a href="https://github.com/Spark-To-Paper-Skills/spark-to-paper-skills" rel="noopener" target="_blank">Spark-to-Paper</a></td><td>Claude Code 技能集</td><td>一句话想法 → 可编译 LaTeX 论文；1 个编排器 + 13 个可组合技能，约 $10 API 成本/篇</td></tr><tr><td><a href="https://github.com/SakanaAI/AI-Scientist" rel="noopener" target="_blank">The AI Scientist</a></td><td>开源端到端 Agent</td><td>Sakana AI 提出的端到端科研流程示例：想法 → 实验 → 论文草稿</td></tr></tbody></table></div>
 <div class="note warn"><b>关于自动化的“度”：</b>成本口径（如“$10/篇”）是作者公布的典型值；可复现不等于真实，自动流水线可能产出有说服力但错误的结论；平台型产品要区分「模型能力」与「产品功能」（如 Claude Science 底层仍是现有 Claude 模型，新增的是科学渲染、数据库与计算集成）；自动或半自动内容应被视为初稿，责任仍在研究者。</div></section>
@@ -10704,6 +10684,19 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
 <section data-title="选型速查" id="res-quick"><div class="section-title"><h2>选型速查</h2></div><p class="table-intro">先明确是“辅助检索 / 写作”还是“自动出稿”，再按目标缩小考察范围。下表把常见目标映射到优先考察的方向与关键问题。</p>
 <div class="table-wrap"><table class="data-table"><thead><tr><th>目标</th><th>优先考察的方向</th><th>关键问题</th></tr></thead><tbody><tr><td>快速了解一个陌生领域</td><td>Deep Research 功能 / 工具</td><td>报告引用可追溯吗？关键论断是否回到原始文献？</td></tr><tr><td>系统调研与综述</td><td>Deep Research + 文献问答工具</td><td>覆盖范围是否可控？能否导出引用与笔记？</td></tr><tr><td>从想法快速得到论文初稿</td><td>端到端系统（Spark-to-Paper 等）</td><td>自动到什么程度？图表与实验数据从哪来？检查查什么？</td></tr><tr><td>把重复工作标准化</td><td>Agent Skills 技能集</td><td>装进哪个编程 Agent？更新与维护？来源是否可信？</td></tr><tr><td>社科实证分析</td><td>实证研究技能库 + 计量工具链</td><td>数据是否可得？分析流程能否复现？是否匹配工具栈？</td></tr><tr><td>撰写基金申请书</td><td>NSFC 等基金写作技能</td><td>是否符合当年政策与 AI 使用规定？产出是素材还是终稿？</td></tr><tr><td>关注趋势与研究范式变化</td><td>综述、讨论与教程</td><td>一手来源是什么？哪些是宣传口径？</td></tr></tbody></table></div>
 <h3>一个负责任的科研自动化使用顺序</h3><ol class="steps"><li>先明确你要的是“辅助检索/写作”还是“自动出稿”：前者风险低，后者必须有人工审查。</li><li>选择与你既有工具链（编辑器、模型、文献库、统计软件）兼容的方案，而不是追最新的。</li><li>审查 Skills / 脚本来源，只装可信、活跃维护的内容。</li><li>对自动产出的引用、数据与结论做人工核验，保留中间步骤与可复现记录。</li><li>投稿或申报前，确认期刊 / 机构 / 基金对 AI 使用与署名的规定。</li><li>把成本（API 费用、时间、出错返工）计入真实收益后再扩大使用范围。</li></ol></section>
+<section data-title="分层架构" id="res-architecture"><div class="section-title"><h2>分层架构</h2></div><div class="fuel">交付 → 综述 · 数据与图表 · 实验记录 · 论文初稿 · 基金本子 → 研究者审查、修订与负责</div><div class="architecture">
+<div class="node top">研究者</div><div class="arrow">→</div>
+<div class="node">入口 / Surface<br/><small>Web 平台 · Chat / Deep Research · IDE / CLI · 本地技能目录</small></div><div class="arrow">→</div>
+<div class="node strong">编排层 / 研究 Agent 与工作流<br/><small>规划 · 文献检索 · 实验编排 · 写作 · 评审 · 记忆</small></div><div class="arrow">→</div>
+<div class="branch"><div class="node">科研技能与工具层<br/><small>Crossref / OpenAlex · 代码 · 数据 · LaTeX · 图表 · 政策</small></div><div class="node">执行环境<br/><small>本机 · 云沙箱 · 托管环境</small></div><div class="node">基础模型<br/><small>GPT · Claude · Gemini · DeepSeek · Qwen · 开源模型</small></div></div>
+</div></section>
+<section data-title="如何理解这张地图" id="res-overview"><div class="section-title"><h2>如何理解这张地图</h2></div><div class="lead-grid">
+<div class="mini"><b>科研环节</b><span>想法生成 · 文献检索 · 实验设计 / 执行 · 数据分析 · 写作 · 评审 · 基金申请</span></div>
+<div class="mini"><b>自动化程度</b><span>交互辅助 → 分步半自动 → 端到端自动（autopilot）</span></div>
+<div class="mini"><b>交付形态</b><span>平台产品 · Agent Skills · 可运行流水线 · 教程 · 论文与合集</span></div>
+<div class="mini"><b>承载环境</b><span>独立平台 · 编程 Agent 内 · 本机脚本 · 云端沙箱</span></div>
+</div>
+<div class="concepts"><span><b>Research Agent</b> = 面向科研任务的多步智能体</span><span><b>Skill</b> = 装进编程 Agent 的可复用能力包</span><span><b>Workflow</b> = 固定顺序的可复现流水线</span><span><b>End-to-End</b> = 从想法到论文初稿的自动化系统</span><span><b>Copilot / Autopilot</b> = 辅助 / 主导的自动化程度</span></div></section>
       <footer>内容依据 AI Research Automation Landscape 当前 README（v0.1.0，2026-09-03 核验）整理。项目能力、收录规模、许可证与链接变化很快；如与官方页面冲突，以官方最新说明为准。</footer>
     </div>
     <div id="view-notes" class="view view-notes" role="tabpanel" aria-labelledby="tab-notes" hidden data-hub-locked>
@@ -10715,78 +10708,61 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
         <p class="hub-lock-message" data-hub-message hidden></p>
       </section>
       <p class="view-summary">快速采集日常浏览到的 AI 工具、模型、开源项目或 API 控制台链接。在此积累灵感与备忘，随时一键生成结构化提示词复制给 AI 合并入库。</p>
-      <div class="view-toolbar">
+      <div class="view-toolbar notes-top-bar">
         <div class="search"><input id="notes-search" type="search" placeholder="搜索已存笔记…（按 / 聚焦）"></div>
-      </div>
-
-      <!-- 快速录入卡片（单输入框极速整理） -->
-      <section class="notes-input-card">
-        <form id="notes-form" class="notes-form">
-          <div class="notes-input-wrapper">
-            <textarea id="notes-raw-input" class="notes-textarea" rows="7" placeholder="整体粘贴内容，例如：&#10;网页标题&#10;https://example.com&#10;备注（可选）&#10;&#10;直接按 Enter 即可完成整理并添加具体时间&#10;（支持单条或多条批量粘贴）"></textarea>
-            <button id="notes-btn-save" class="notes-circle-submit" type="submit" title="整理录入（快捷键：Enter）" aria-label="整理录入">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="19" x2="12" y2="5"></line>
-                <polyline points="5 12 12 5 19 12"></polyline>
-              </svg>
-            </button>
-          </div>
-        </form>
-      </section>
-
-      <!-- 操作与筛选工具栏 -->
-      <div class="notes-toolbar">
-        <div class="notes-toolbar-left">
-          <div id="notes-filter-tabs" class="notes-tab-pills">
-            <button type="button" class="notes-tab-pill active" data-filter="pending">待整理 <span id="notes-count-pending" class="notes-tab-count">0</span></button>
-            <button type="button" class="notes-tab-pill" data-filter="archived">已收录 <span id="notes-count-archived" class="notes-tab-count">0</span></button>
-            <button type="button" class="notes-tab-pill" data-filter="all">全部 <span id="notes-count-all" class="notes-tab-count">0</span></button>
-          </div>
-        </div>
-        <div class="notes-toolbar-right">
-          <label class="notes-select-all-label" id="notes-select-all-wrap" title="全选或取消全选所有笔记" hidden>
-            <input type="checkbox" id="notes-global-select-all">
-            <span>全选</span>
-          </label>
-          <span id="notes-global-selected-count" class="notes-selected-count" hidden>已选 0 条</span>
-          <button id="notes-btn-select-mode" class="notes-button" type="button" title="开启多选批量操作">
-            选择
-          </button>
-          <button id="notes-btn-batch-copy" class="notes-button" type="button" title="复制笔记内容，可直接发给 AI（未勾选时复制全部）">
-            复制
-          </button>
-          <button id="notes-btn-batch-status" class="notes-button" type="button" title="收录笔记或还原">
-            收录
-          </button>
-          <button id="notes-btn-batch-delete" class="notes-button danger" type="button" title="删除选中的笔记">
-            删除
-          </button>
-          <button id="notes-btn-batch-edit" class="notes-button" type="button" title="编辑选中的笔记">
-            编辑
-          </button>
-        </div>
+        <button id="notes-btn-open-modal" class="notes-button notes-add-btn" type="button" title="新建笔记（快捷键：N）">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span>笔记</span>
+        </button>
       </div>
 
       <!-- 笔记列表 -->
       <div id="notes-list" class="notes-list"></div>
+
+      <!-- 弹窗：新建/快速整理录入笔记 -->
+      <dialog id="notes-modal" class="notes-modal-dialog">
+        <div class="notes-modal-header">
+          <h3>新建笔记</h3>
+          <button id="notes-modal-close" class="notes-modal-close" type="button" title="关闭 (Esc)">&times;</button>
+        </div>
+        <div class="notes-modal-body">
+          <form id="notes-form" class="notes-form">
+            <div class="notes-input-wrapper">
+              <textarea id="notes-raw-input" class="notes-textarea" rows="7" placeholder="整体粘贴内容，例如：&#10;网页标题&#10;https://example.com&#10;备注（可选）&#10;&#10;直接按 Enter 即可完成整理并添加具体时间&#10;（支持单条或多条批量粘贴）"></textarea>
+              <button id="notes-btn-save" class="notes-circle-submit" type="submit" title="整理录入（快捷键：Enter）" aria-label="整理录入">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="19" x2="12" y2="5"></line>
+                  <polyline points="5 12 12 5 19 12"></polyline>
+                </svg>
+              </button>
+            </div>
+            <div class="notes-modal-footer-hint">
+              <span>按 <b>Enter</b> 即可直接完成整理并录入，<b>Shift + Enter</b> 换行</span>
+            </div>
+          </form>
+        </div>
+      </dialog>
     </div>
     <div id="view-manage" class="view view-manager" role="tabpanel" aria-labelledby="tab-manage" hidden data-hub-locked>
       <section class="hub-lock-card">
         <div class="hub-lock-icon" aria-hidden="true">🔒</div>
-        <h2>登录 Google 账号查看 Plan 管理</h2>
-        <p>Plan、优惠、用量等数据保存在你自己的 Firestore 路径中，仅本账号可见。请勿在任何字段粘贴 API Key、访问令牌或其他凭证。</p>
+        <h2>登录 Google 账号查看资源管理</h2>
+        <p>Plan、API 等数据保存在你自己的 Firestore 路径中，仅本账号可见。请勿在任何字段粘贴 API Key、访问令牌或其他凭证。</p>
         <button type="button" class="hub-signin-button" data-hub-signin>使用 Google 登录</button>
         <p class="hub-lock-message" data-hub-message hidden></p>
       </section>
       <div class="manager-summary-row">
-        <p class="view-summary">手动维护套餐、模型、Harness 兼容性、用量和使用笔记；本页面不会收集或保存 API Key。</p>
+        <p class="view-summary">手动维护 Plan、API、投入、模型、兼容性与用量；本页面不会收集或保存 API Key。</p>
       </div>
 
       <div id="manager-app" hidden>
         <div class="manager-toolbar">
           <label class="manager-search">
             <span class="sr-only">搜索管理数据</span>
-            <input id="manager-search" type="search" placeholder="搜索 Plan、优惠、投入、模型、Harness 或备注…">
+            <input id="manager-search" type="search" placeholder="搜索 Plan、API、投入、模型、Harness 或备注…">
           </label>
         </div>
 
@@ -10811,24 +10787,13 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
         </section>
 
         <section class="manager-panel active" data-manager-panel="plans">
-          <div class="manager-section-heading">
-            <div><p class="manager-eyebrow">SUBSCRIPTIONS</p><h2>Plan</h2><p>管理购买金额、额度、期限、Base URL 和官方入口。</p></div>
-            <div class="manager-toolbar-actions">
-              <button id="manager-export" class="manager-button ghost" type="button">导出</button>
-              <label class="manager-button ghost manager-import-label">导入<input id="manager-import" type="file" accept="application/json,.json"></label>
-              <button id="manager-add-button" class="manager-button primary" type="button">＋ 新增 Plan</button>
-            </div>
-          </div>
           <div class="manager-tab-pills-bar">
             <div class="manager-tab-pills">
               <button type="button" class="manager-tab-pill active" data-plan-tab="active">进行中 <span id="manager-count-active" class="manager-tab-count">0</span></button>
               <button type="button" class="manager-tab-pill" data-plan-tab="archived">存档 <span id="manager-count-archived" class="manager-tab-count">0</span></button>
             </div>
+            <button id="manager-add-button" class="manager-button" type="button">+ 记录</button>
           </div>
-          <section class="manager-promotions-section">
-            <div class="manager-plan-subheading"><h3>限时优惠</h3><button id="manager-add-promotion" class="manager-button" type="button" data-add="plans" data-plan-type="限时优惠">新增限时优惠</button></div>
-            <div id="manager-promotions-list" class="manager-list"></div>
-          </section>
           <div id="manager-plans-list" class="manager-list"></div>
         </section>
 
@@ -10860,10 +10825,6 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
 
       <dialog id="manager-dialog" class="manager-dialog">
         <form id="manager-form" method="dialog" novalidate>
-          <div class="manager-dialog-heading">
-            <div><p id="manager-dialog-eyebrow" class="manager-eyebrow"></p><h2 id="manager-dialog-title"></h2></div>
-            <button class="manager-icon-button" type="button" data-dialog-close aria-label="关闭">×</button>
-          </div>
           <div id="manager-form-fields" class="manager-form-grid"></div>
           <p class="manager-secret-warning">请勿填写 API Key、访问令牌、Cookie 或其他凭证。</p>
           <p id="manager-form-message" class="manager-message" role="status"></p>
@@ -11354,7 +11315,7 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
       });
     });
   </script>
-  <script type="module" src="./manager.js?v=20260904a"></script>
-  <script type="module" src="./notes.js?v=20260904b"></script>
+  <script type="module" src="./manager.js?v=20260905k"></script>
+  <script type="module" src="./notes.js?v=20260905c"></script>
 </body>
 </html>
