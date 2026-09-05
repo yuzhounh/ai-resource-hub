@@ -1,0 +1,1148 @@
+/* ============================================================
+   Expenses / 支出板块样式（总览统计 + 单栏月度卡片 + 悬停操作）
+   ============================================================ */
+
+.view-expenses {
+  padding-top: 18px;
+}
+
+.primary-tabs #tab-expenses {
+  margin-left: 0;
+}
+
+/* 顶部统计卡片 */
+.expenses-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.expenses-stat-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: transform .15s ease, border-color .15s ease;
+}
+
+.expenses-stat-card:hover {
+  border-color: var(--accent);
+}
+
+.expenses-stat-label {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.expenses-stat-value {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: -0.02em;
+}
+
+.expenses-stat-sub {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* 顶部操作与筛选栏 */
+.expenses-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.expenses-toolbar-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.expenses-toolbar-main .search {
+  flex: 1;
+}
+
+.expenses-tool-btn,
+.expenses-add-btn {
+  height: 46px;
+  padding: 0 16px;
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all .15s ease;
+}
+
+.expenses-tool-btn:hover,
+.expenses-add-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--soft);
+  transform: translateY(-1px);
+}
+
+.expenses-tool-btn.active {
+  background: color-mix(in srgb, var(--accent) 12%, var(--card));
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.expenses-tool-btn:active,
+.expenses-add-btn:active {
+  transform: translateY(0);
+}
+
+/* 类别支出横向条形图面板 */
+.expenses-chart-panel {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, .025);
+  animation: expensesFadeDown .2s ease-out;
+}
+
+.expenses-chart-panel[hidden] {
+  display: none !important;
+}
+
+@keyframes expensesFadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.expenses-chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+
+.expenses-chart-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.expenses-chart-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14.5px;
+  color: var(--text);
+}
+
+.expenses-chart-title svg {
+  color: var(--accent);
+}
+
+/* 类别与年份切换 Tab 胶囊 */
+.expenses-chart-tabs {
+  display: inline-flex;
+  align-items: center;
+  background: color-mix(in srgb, var(--line) 45%, transparent);
+  padding: 2px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+}
+
+.expenses-chart-tab {
+  padding: 3px 10px;
+  font-size: 12px;
+  font-family: inherit;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .15s ease;
+  white-space: nowrap;
+}
+
+.expenses-chart-tab:hover {
+  color: var(--text);
+}
+
+.expenses-chart-tab.active {
+  background: var(--card);
+  color: var(--accent);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .08);
+}
+
+.expenses-chart-sub {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.expenses-chart-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1.15fr);
+  gap: 24px;
+  align-items: stretch;
+}
+
+@media (max-width: 960px) {
+  .expenses-chart-layout {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+/* 左侧多维分析列：左上类别 + 左下年份 */
+.expenses-chart-left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.expenses-chart-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: color-mix(in srgb, var(--card) 60%, var(--soft));
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+
+.expenses-chart-sec-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+}
+
+.expenses-chart-sec-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.expenses-chart-sec-title svg {
+  color: var(--accent);
+}
+
+.expenses-chart-sec-sub {
+  font-size: 11.5px;
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.expenses-chart-body {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.expenses-chart-row {
+  display: grid;
+  grid-template-columns: 60px 1fr 90px 48px;
+  align-items: center;
+  gap: 12px;
+  padding: 5px 8px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all .15s ease;
+  user-select: none;
+}
+
+.expenses-chart-row:hover {
+  background: color-mix(in srgb, var(--soft) 50%, transparent);
+}
+
+.expenses-chart-row.active {
+  background: color-mix(in srgb, var(--accent) 10%, var(--card));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.expenses-chart-cat-label {
+  display: flex;
+  align-items: center;
+}
+
+/* 右侧饼图卡片容器：高度自然延展展示全部 20 项，不产生滚动条 */
+.expenses-pie-card {
+  background: color-mix(in srgb, var(--card) 60%, var(--soft));
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 620px;
+  box-sizing: border-box;
+}
+
+.expenses-pie-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.expenses-pie-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.expenses-pie-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.expenses-pie-reset-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-family: inherit;
+  color: var(--muted);
+  background: color-mix(in srgb, var(--line) 40%, transparent);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+
+.expenses-pie-reset-btn:hover {
+  color: var(--text);
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  border-color: var(--accent);
+}
+
+.expenses-pie-total {
+  font-size: 13px;
+  font-weight: 700;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  color: var(--accent);
+}
+
+.expenses-pie-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  flex: 1;
+  min-height: 0;
+}
+
+.expenses-pie-svg-wrap {
+  width: 140px;
+  height: 140px;
+  flex-shrink: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 6px auto 0;
+}
+
+.expenses-pie-svg-wrap svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  overflow: visible;
+}
+
+/* 饼图切片交互动画效果 */
+.expenses-pie-slice {
+  cursor: pointer;
+  transition: stroke-width .22s cubic-bezier(0.34, 1.56, 0.64, 1), opacity .2s ease, filter .2s ease;
+  transform-origin: center center;
+}
+
+.expenses-pie-slice:hover,
+.expenses-pie-slice.active {
+  stroke-width: 29;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, .25));
+}
+
+.expenses-pie-svg-wrap:has(.expenses-pie-slice:hover) .expenses-pie-slice:not(:hover),
+.expenses-pie-svg-wrap:has(.expenses-pie-slice.active) .expenses-pie-slice:not(.active) {
+  opacity: .5;
+}
+
+.expenses-pie-donut-hole {
+  position: absolute;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: var(--card);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, .05);
+  pointer-events: none;
+}
+
+.expenses-pie-donut-hole span {
+  font-size: 10.5px;
+  color: var(--muted);
+  line-height: 1.1;
+}
+
+.expenses-pie-donut-hole strong {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.expenses-pie-legend {
+  flex: 1;
+  min-width: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.expenses-pie-legend-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border-bottom: 1px dashed color-mix(in srgb, var(--line) 60%, transparent);
+  cursor: pointer;
+  transition: background .18s ease, transform .15s ease, box-shadow .15s ease;
+}
+
+.expenses-pie-legend-item:hover,
+.expenses-pie-legend-item.active {
+  background: color-mix(in srgb, var(--accent) 14%, var(--card));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+.expenses-pie-legend-item:last-child {
+  border-bottom: none;
+}
+
+.expenses-pie-legend-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.expenses-pie-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.expenses-pie-legend-name {
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.expenses-pie-legend-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.expenses-pie-legend-amount {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.expenses-pie-legend-pct {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.expenses-chart-bar-wrap {
+  position: relative;
+  height: 12px;
+  background: color-mix(in srgb, var(--line) 55%, transparent);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.expenses-chart-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width .4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.expenses-chart-bar-fill.vpn {
+  background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+}
+
+.expenses-chart-bar-fill.api {
+  background: linear-gradient(90deg, #10b981, #047857);
+}
+
+.expenses-chart-bar-fill.sub {
+  background: linear-gradient(90deg, #8b5cf6, #6d28d9);
+}
+
+.expenses-chart-bar-fill.quota {
+  background: linear-gradient(90deg, #f59e0b, #b45309);
+}
+
+.expenses-chart-bar-fill.cloud {
+  background: linear-gradient(90deg, #06b6d4, #0e7490);
+}
+
+.expenses-chart-bar-fill.other {
+  background: linear-gradient(90deg, #f43f5e, #be123c);
+}
+
+.expenses-chart-bar-fill.year-bar {
+  background: linear-gradient(90deg, #3b82f6, #6366f1);
+}
+
+.expenses-chart-amount {
+  font-size: 13.5px;
+  font-weight: 700;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  color: var(--text);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.expenses-chart-pct {
+  font-size: 12px;
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  text-align: right;
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .expenses-chart-row {
+    grid-template-columns: 60px 1fr 85px 40px;
+    gap: 8px;
+  }
+}
+
+.expenses-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.expenses-filter-pill {
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+
+.expenses-filter-pill:hover {
+  color: var(--text);
+  border-color: var(--text);
+}
+
+.expenses-filter-pill.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* 单栏月度卡片布局 */
+.expenses-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.expenses-month-card {
+  display: flex;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, .03);
+}
+
+.expenses-month-aside {
+  width: 140px;
+  flex-shrink: 0;
+  background: color-mix(in srgb, var(--card) 60%, var(--soft));
+  border-right: 1px solid var(--line);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 6px;
+}
+
+.expenses-month-label {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.expenses-month-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.expenses-month-meta {
+  margin-top: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.expenses-month-count {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.expenses-month-total {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* 月度卡片右侧条目容器 */
+.expenses-month-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.expenses-month-items {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 单条支出行 */
+.expenses-item-row {
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  transition: background-color .15s ease;
+  position: relative;
+}
+
+.expenses-item-row:last-child {
+  border-bottom: 0;
+}
+
+.expenses-item-row:hover {
+  background-color: color-mix(in srgb, var(--soft) 28%, transparent);
+}
+
+.expenses-item-row.editing {
+  background-color: color-mix(in srgb, var(--accent) 5%, transparent);
+}
+
+/* 日期胶囊：统一固定宽度，胶囊内文字靠右对齐 */
+.expenses-item-date {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  background: color-mix(in srgb, var(--line) 45%, transparent);
+  padding: 3px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  width: 68px;
+  box-sizing: border-box;
+  text-align: right;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* 主内容 */
+.expenses-item-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.expenses-item-main-line {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  min-width: 0;
+}
+
+.expenses-item-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.expenses-item-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+}
+
+.expenses-item-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-width: 0;
+  min-height: 24px;
+}
+
+.expenses-item-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.35;
+}
+
+.expenses-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  box-sizing: border-box;
+  padding: 1px 0;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  margin-top: 2px;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.expenses-tag.vpn {
+  background: color-mix(in srgb, #3b82f6 12%, transparent);
+  color: #2563eb;
+  border-color: color-mix(in srgb, #3b82f6 28%, transparent);
+}
+
+.expenses-tag.api {
+  background: color-mix(in srgb, #10b981 12%, transparent);
+  color: #059669;
+  border-color: color-mix(in srgb, #10b981 28%, transparent);
+}
+
+.expenses-tag.sub {
+  background: color-mix(in srgb, #8b5cf6 12%, transparent);
+  color: #7c3aed;
+  border-color: color-mix(in srgb, #8b5cf6 28%, transparent);
+}
+
+.expenses-tag.quota {
+  background: color-mix(in srgb, #f59e0b 12%, transparent);
+  color: #d97706;
+  border-color: color-mix(in srgb, #f59e0b 28%, transparent);
+}
+
+.expenses-tag.cloud {
+  background: color-mix(in srgb, #06b6d4 12%, transparent);
+  color: #0891b2;
+  border-color: color-mix(in srgb, #06b6d4 28%, transparent);
+}
+
+.expenses-tag.other {
+  background: color-mix(in srgb, #f43f5e 12%, transparent);
+  color: #e11d48;
+  border-color: color-mix(in srgb, #f43f5e 28%, transparent);
+}
+
+.expenses-tag.year-tag {
+  background: color-mix(in srgb, #6366f1 12%, transparent);
+  color: #4f46e5;
+  border-color: color-mix(in srgb, #6366f1 28%, transparent);
+}
+
+.expenses-item-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* 金额与悬停操作区 */
+.expenses-item-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+  min-height: 24px;
+}
+
+.expenses-amount-wrapper {
+  text-align: right;
+  display: flex;
+  align-items: center;
+}
+
+.expenses-amount-val {
+  font-size: 16px;
+  font-weight: 800;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  line-height: 1.35;
+}
+
+/* 悬停操作按钮组：默认隐藏，悬停时浮现 */
+.expenses-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .15s ease, transform .15s ease;
+  transform: translateX(4px);
+}
+
+.expenses-item-row:hover .expenses-item-actions,
+.expenses-item-row:focus-within .expenses-item-actions {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+
+.expenses-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-family: inherit;
+  font-weight: 500;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all .15s ease;
+}
+
+.expenses-action-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--soft);
+}
+
+.expenses-action-btn.danger:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+  background: color-mix(in srgb, #ef4444 8%, transparent);
+}
+
+/* 备注小条目：与项目名称左对齐，去除竖线和背景，呈现清爽干净的注释排版 */
+.expenses-item-notes {
+  background: transparent;
+  border-left: none;
+  border-radius: 0;
+  padding: 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--muted);
+  word-break: break-word;
+  white-space: pre-wrap;
+  margin-top: 1px;
+}
+
+/* 行内编辑表单 */
+.expenses-edit-box {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 4px 0;
+}
+
+.expenses-edit-grid {
+  display: grid;
+  grid-template-columns: 140px 110px 1.5fr 1.5fr 120px;
+  gap: 8px;
+}
+
+.expenses-edit-sub-grid {
+  display: grid;
+  grid-template-columns: 258px 1fr;
+  gap: 8px;
+}
+
+.expenses-input, .expenses-select, .expenses-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  border-radius: 9px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--text);
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color .15s;
+}
+
+.expenses-input:focus, .expenses-select:focus, .expenses-textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 15%, transparent);
+}
+
+.expenses-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* 弹窗：新建支出 */
+.expenses-modal-dialog {
+  width: min(calc(100% - 32px), 580px);
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--card);
+  color: var(--text);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, .28);
+  outline: none;
+}
+
+.expenses-modal-dialog::backdrop {
+  background: rgba(0, 0, 0, .48);
+  backdrop-filter: blur(4px);
+}
+
+.expenses-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.expenses-modal-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 650;
+}
+
+.expenses-modal-close {
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  font-size: 22px;
+  line-height: 1;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .15s;
+}
+
+.expenses-modal-close:hover {
+  background: var(--soft);
+  color: var(--text);
+}
+
+.expenses-modal-body {
+  padding: 20px;
+}
+
+.expenses-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.expenses-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.expenses-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.expenses-form-group label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.expenses-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+/* 空状态 */
+.expenses-empty {
+  text-align: center;
+  padding: 50px 20px;
+  background: var(--card);
+  border: 1px dashed var(--line);
+  border-radius: 16px;
+  color: var(--muted);
+}
+
+.expenses-empty strong {
+  display: block;
+  font-size: 16px;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+/* Toast */
+.expenses-toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #1e293b;
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 500;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, .2);
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: all .2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.expenses-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* 移动端响应式适配 */
+@media (max-width: 900px) {
+  .expenses-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .expenses-edit-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 650px) {
+  .expenses-stats-grid {
+    grid-template-columns: 1fr;
+  }
+  .expenses-month-card {
+    flex-direction: column;
+  }
+  .expenses-month-aside {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+    padding: 14px 16px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .expenses-month-label {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .expenses-item-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .expenses-item-main-line {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .expenses-item-right {
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 4px;
+  }
+  .expenses-item-actions {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+  .expenses-form-row {
+    grid-template-columns: 1fr;
+  }
+  .expenses-edit-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -7,7 +7,7 @@
 <p align="center"><strong>AI 工具集、API 控制台与 Agent 生态地图等的统一入口</strong></p>
 
 <p align="center">
-  <a href="https://github.com/yuzhounh/ai-resource-hub/releases"><img src="https://img.shields.io/badge/version-v2.1.0-8875DE" alt="version v2.1.0"></a>
+  <a href="https://github.com/yuzhounh/ai-resource-hub/releases"><img src="https://img.shields.io/badge/version-v2.2.0-8875DE" alt="version v2.2.0"></a>
   <a href="https://ai-resource-hub-manager.vercel.app/"><img src="https://img.shields.io/badge/Vercel-online-43A68F" alt="Vercel online"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-D39448" alt="MIT License"></a>
   <img src="https://img.shields.io/badge/last%20updated-2026--09--05-668DD8" alt="last updated 2026-09-05">
@@ -23,7 +23,8 @@ AI Resource Hub 将工具集、API 控制台、Agent 生态地图、科研自动
 
 - **工具集 (`#tools`)**：AI 助手、搜索、科研、Coding / Agent、模型平台、榜单与创作工具导航。
 - **API 控制台 (`#api`)**：国内外模型厂商和 API Router 的 Key、Usage、充值、套餐与文档入口，集成 Coding Plan 对比与参考。
-- **笔记 (`#inbox`)**：随手采集 AI 工具、模型、开源项目与 API 链接，一键生成结构化提示词复制给 AI 合并入库；内容保存在 Google 账户。
+- **笔记 (`#notes`)**：随手采集 AI 工具、模型、开源项目与 API 链接，一键生成结构化提示词复制给 AI 合并入库；内容保存在 Google 账户。
+- **支出 (`#expenses`)**：跟踪 AI 订阅、Token Plan、API 充值与网络服务消费支出，支持单栏月度卡片、悬停编辑/删除与数据云同步。
 - **连通性报告 (`#connectivity`)**：Windows 凭据 API 密钥多协议（Chat / Responses / Anthropic Messages / Batch）连通性验证报告，含 16 服务商实测快照与模型级明细；服务商归档状态保存在 Google 账户，并自动同步资源管理的归档。
 - **Agent 生态地图 (`#agents`)**：AI 编程、知识工作、桌面和浏览器操作、常驻个人 Agent、Coding / Token Plan、API Router 与基础模型。
 - **科研全景图 (`#research`)**：端到端研究系统、Deep Research 与文献综述、Agent Skills 技能库、Awesome 合集、学术写作规范与选型速查。
@@ -65,13 +66,14 @@ Firestore 仅保存笔记、套餐、用量与归档状态等个人数据。项�
 
 ## 项目文件
 
-- `index.html`：站点统一入口，集成工具集、API 控制台、Agent 生态地图、科研全景图、笔记、连通性报告与 Plan 管理七个单页视图。
+- `index.html`：站点统一入口，集成工具集、API 控制台、Agent 生态地图、科研全景图、笔记、支出、连通性报告与资源管理八个单页视图。
 - `api-connectivity/`：模型 API 连通性报告与自动化探测测试链路（`refresh_api_report.py` / `api_probe.py` / `local_server.py` 等）。
 - `ai-resource-hub.svg`：页头图标。
 - `favicon.svg`：浏览器标签页图标。
-- `hub-auth.js`：Firebase 初始化、右上角 Google 账号入口、三视图登录门控与 Plan 归档广播。
-- `manager.css` / `manager.js`：Plan 管理区样式与 Firestore 数据管理交互。
-- `inbox.css` / `inbox.js`：笔记区样式与 Firestore 云同步逻辑。
+- `hub-auth.js`：Firebase 初始化、右上角 Google 账号入口、多视图登录门控与 Plan 归档广播。
+- `manager.css` / `manager.js`：资源管理区样式与 Firestore 数据管理交互。
+- `notes.css` / `notes.js`：笔记区样式与 Firestore 云同步逻辑。
+- `expenses.css` / `expenses.js`：支出板块样式、统计看板、单栏月度卡片与数据持久化逻辑。
 - `firestore.rules`：只允许固定 Firebase UID 访问个人数据的规则模板。
 
 ## License

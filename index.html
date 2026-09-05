@@ -7,6 +7,7 @@
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <link rel="stylesheet" href="./manager.css?v=20260905h">
   <link rel="stylesheet" href="./notes.css?v=20260905d">
+  <link rel="stylesheet" href="./expenses.css?v=20260905y">
   <title>AI Resource Hub</title>
   <style>
     :root{color-scheme:light dark;--bg:#f6f7f9;--card:#fff;--text:#17191c;--muted:#69707c;--line:#e3e6ea;--accent:#2563eb;--soft:#eef4ff;--warn:#fff7e6;--bar:color-mix(in srgb,var(--bg) 91%,transparent)}
@@ -157,6 +158,7 @@
       <a id="tab-agents" role="tab" href="#agents" aria-controls="view-agents">生态图</a>
       <a id="tab-research" role="tab" href="#research" aria-controls="view-research">科研自动化</a>
       <a id="tab-notes" class="hub-gated-tab" role="tab" href="#notes" aria-controls="view-notes">笔记</a>
+      <a id="tab-expenses" class="hub-gated-tab" role="tab" href="#expenses" aria-controls="view-expenses">支出</a>
       <a id="tab-connectivity" class="hub-gated-tab" role="tab" href="#connectivity" aria-controls="view-connectivity">连通性</a>
       <a id="tab-manage" class="hub-gated-tab" role="tab" href="#manage" aria-controls="view-manage">资源管理</a>
     </nav>
@@ -10746,6 +10748,175 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
         </div>
       </dialog>
     </div>
+    <div id="view-expenses" class="view view-expenses" role="tabpanel" aria-labelledby="tab-expenses" hidden data-hub-locked>
+      <section class="hub-lock-card">
+        <div class="hub-lock-icon" aria-hidden="true">🔒</div>
+        <h2>登录 Google 账号查看支出</h2>
+        <p>支出记录保存在你的 Google 账户中，登录后即可跨设备查看、录入与管理。</p>
+        <button type="button" class="hub-signin-button" data-hub-signin>使用 Google 登录</button>
+        <p class="hub-lock-message" data-hub-message hidden></p>
+      </section>
+      <p class="view-summary">全面记录 AI 订阅、Token Plan、厂商 API 充值与网络服务支出，追踪月度与年度投入。</p>
+
+      <!-- 统计卡片看板 -->
+      <div class="expenses-stats-grid">
+        <div class="expenses-stat-card">
+          <span class="expenses-stat-label">累计总支出</span>
+          <span id="exp-stat-total" class="expenses-stat-value">¥ 0.00</span>
+          <span class="expenses-stat-sub">全部历史投入汇总</span>
+        </div>
+        <div class="expenses-stat-card">
+          <span class="expenses-stat-label">2026 年度支出</span>
+          <span id="exp-stat-2026" class="expenses-stat-value">¥ 0.00</span>
+          <span class="expenses-stat-sub">当前年度累计</span>
+        </div>
+        <div class="expenses-stat-card">
+          <span class="expenses-stat-label">历史年度支出</span>
+          <span id="exp-stat-hist" class="expenses-stat-value">¥ 0.00</span>
+          <span class="expenses-stat-sub">2020 - 2025 年汇总</span>
+        </div>
+        <div class="expenses-stat-card">
+          <span class="expenses-stat-label">支出笔数</span>
+          <span id="exp-stat-count" class="expenses-stat-value">0 笔</span>
+          <span class="expenses-stat-sub">已记录项总计</span>
+        </div>
+      </div>
+
+      <!-- 工具栏：搜索、分类筛选与新建按钮 -->
+      <div class="view-toolbar expenses-toolbar">
+        <div class="expenses-toolbar-main">
+          <div class="search">
+            <input id="expenses-search" type="search" placeholder="搜索支出项目、描述、规格或备注…（按 / 聚焦）">
+          </div>
+          <button id="expenses-btn-toggle-chart" class="expenses-tool-btn" type="button" title="展开/收起类别支出分布图" aria-expanded="false">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            <span>分布图</span>
+          </button>
+          <button id="expenses-btn-open-modal" class="expenses-add-btn" type="button" title="记录新支出（快捷键：E）">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>支出</span>
+          </button>
+        </div>
+        <div id="expenses-filter-bar" class="expenses-filter-bar">
+          <button type="button" class="expenses-filter-pill active" data-cat="all">全部</button>
+          <button type="button" class="expenses-filter-pill" data-cat="vpn">VPN / 机场</button>
+          <button type="button" class="expenses-filter-pill" data-cat="api">API 充值</button>
+          <button type="button" class="expenses-filter-pill" data-cat="sub">AI 订阅</button>
+          <button type="button" class="expenses-filter-pill" data-cat="quota">额度充值</button>
+          <button type="button" class="expenses-filter-pill" data-cat="cloud">云平台</button>
+          <button type="button" class="expenses-filter-pill" data-cat="other">会员</button>
+        </div>
+      </div>
+
+      <!-- 支出多维分析大看板：左上类别分析、左下年份分析、右侧全量/选中细分饼图 -->
+      <section id="expenses-chart-panel" class="expenses-chart-panel" hidden>
+        <div class="expenses-chart-header">
+          <div class="expenses-chart-title">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            <strong>支出多维综合分析看板</strong>
+          </div>
+          <span class="expenses-chart-sub" id="expenses-chart-sub">左侧点击任一类别或年份，右侧即时联动穿透分析</span>
+        </div>
+        <div class="expenses-chart-layout">
+          <!-- 左侧双分析区：左上类别分析 + 左下年份分析 -->
+          <div class="expenses-chart-left-col">
+            <!-- 左上：按类别支出分析（从高到低） -->
+            <div class="expenses-chart-section">
+              <div class="expenses-chart-sec-header">
+                <span class="expenses-chart-sec-title">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h10M4 18h7"/></svg>
+                  按类别支出分析（从高到低）
+                </span>
+                <span class="expenses-chart-sec-sub" id="expenses-chart-cat-sub">共 0 个类别</span>
+              </div>
+              <div id="expenses-chart-cat-body" class="expenses-chart-body"></div>
+            </div>
+
+            <!-- 左下：按年份支出分析（倒序排列，不跳过年份） -->
+            <div class="expenses-chart-section">
+              <div class="expenses-chart-sec-header">
+                <span class="expenses-chart-sec-title">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  按年份支出分析（连续年份倒序）
+                </span>
+                <span class="expenses-chart-sec-sub" id="expenses-chart-year-sub">连续 0 年</span>
+              </div>
+              <div id="expenses-chart-year-body" class="expenses-chart-body"></div>
+            </div>
+          </div>
+
+          <!-- 右侧：全量/穿透项目饼图卡片 -->
+          <div id="expenses-pie-container" class="expenses-pie-card">
+            <!-- 动态渲染细分饼图与图例 -->
+          </div>
+        </div>
+      </section>
+
+      <!-- 支出列表 -->
+      <div id="expenses-list" class="expenses-list"></div>
+
+      <!-- 弹窗：新建支出 -->
+      <dialog id="expenses-modal" class="expenses-modal-dialog">
+        <div class="expenses-modal-header">
+          <h3>记录支出</h3>
+          <button id="expenses-modal-close" class="expenses-modal-close" type="button" title="关闭 (Esc)">&times;</button>
+        </div>
+        <div class="expenses-modal-body">
+          <form id="expenses-form" class="expenses-form">
+            <div class="expenses-form-row">
+              <div class="expenses-form-group">
+                <label for="exp-form-date">支出日期</label>
+                <input id="exp-form-date" class="expenses-input" type="date" required>
+              </div>
+              <div class="expenses-form-group">
+                <label for="exp-form-cat">支出分类</label>
+                <select id="exp-form-cat" class="expenses-select">
+                  <option value="vpn">VPN / 机场</option>
+                  <option value="api">API 充值</option>
+                  <option value="sub">AI 订阅</option>
+                  <option value="quota">额度充值</option>
+                  <option value="cloud">云平台</option>
+                  <option value="other">会员</option>
+                </select>
+              </div>
+            </div>
+            <div class="expenses-form-row">
+              <div class="expenses-form-group">
+                <label for="exp-form-title">项目名称</label>
+                <input id="exp-form-title" class="expenses-input" type="text" placeholder="如 Flower Cloud Lite, ChatGPT Plus" required>
+              </div>
+              <div class="expenses-form-group">
+                <label for="exp-form-desc">规格 / 周期 / 套餐详情</label>
+                <input id="exp-form-desc" class="expenses-input" type="text" placeholder="如 每月150GB，年付">
+              </div>
+            </div>
+            <div class="expenses-form-group">
+              <label for="exp-form-amount">金额 (元)</label>
+              <input id="exp-form-amount" class="expenses-input" type="number" step="0.01" placeholder="如 134.69" required>
+            </div>
+            <div class="expenses-form-group">
+              <label for="exp-form-notes">备注信息 (可选)</label>
+              <textarea id="exp-form-notes" class="expenses-textarea" rows="3" placeholder="填写充值渠道、汇率换算、优惠情况等备忘信息…"></textarea>
+            </div>
+            <div class="expenses-modal-footer">
+              <button id="expenses-modal-cancel" class="expenses-action-btn" type="button" style="padding:7px 16px;">取消</button>
+              <button class="expenses-action-btn primary" type="submit" style="padding:7px 16px;background:var(--accent);color:#fff;border-color:var(--accent);">保存记录</button>
+            </div>
+          </form>
+        </div>
+      </dialog>
+    </div>
     <div id="view-manage" class="view view-manager" role="tabpanel" aria-labelledby="tab-manage" hidden data-hub-locked>
       <section class="hub-lock-card">
         <div class="hub-lock-icon" aria-hidden="true">🔒</div>
@@ -10834,7 +11005,7 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
     </div>
   </main>
   <script>
-    const viewNames=['tools','api','agents','research','notes','connectivity','manage'];
+    const viewNames=['tools','api','agents','research','notes','expenses','connectivity','manage'];
     let activeView=null;
 
     function hashParts(){
@@ -11317,5 +11488,6 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
   </script>
   <script type="module" src="./manager.js?v=20260905k"></script>
   <script type="module" src="./notes.js?v=20260905c"></script>
+  <script type="module" src="./expenses.js?v=20260905aa"></script>
 </body>
 </html>

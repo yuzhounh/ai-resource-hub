@@ -43,7 +43,7 @@ const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: "select_account" });
 
 // 需要登录 Google 账号才能查看内容的视图
-const GATED_VIEWS = ["notes", "connectivity", "manage"];
+const GATED_VIEWS = ["notes", "expenses", "connectivity", "manage"];
 
 const els = {
   account: document.getElementById("hub-account"),
