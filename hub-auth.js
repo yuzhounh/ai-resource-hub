@@ -269,20 +269,31 @@ onAuthStateChanged(auth, user => {
   authListeners.forEach(cb => { try { cb(user); } catch {} });
 });
 
-if (els.signin) els.signin.addEventListener("click", signInWithGoogle);
-document.querySelectorAll("[data-hub-signin]").forEach(btn => btn.addEventListener("click", signInWithGoogle));
-if (els.menuButton) els.menuButton.addEventListener("click", event => {
-  event.stopPropagation();
-  const open = els.menu.hidden;
-  els.menu.hidden = !open;
-  els.menuButton.setAttribute("aria-expanded", String(open));
-});
-document.addEventListener("click", event => {
-  if (els.account && !els.account.contains(event.target)) {
-    els.menu.hidden = true;
-    els.menuButton.setAttribute("aria-expanded", "false");
-  }
-});
+function toggleUserMenu(force) {
+  if (!els.menu || !els.menuButton) return;
+  const willOpen = typeof force === "boolean" ? force : els.menu.hidden;
+  els.menu.hidden = !willOpen;
+  els.menuButton.setAttribute("aria-expanded", String(willOpen));
+}
+
+if (els.signin) els.signin.onclick = signInWithGoogle;
+document.querySelectorAll("[data-hub-signin]").forEach(btn => { btn.onclick = signInWithGoogle; });
+if (els.menuButton) {
+  els.menuButton.onclick = event => {
+    event.stopPropagation();
+    toggleUserMenu();
+  };
+}
+
+if (!window.__hub_doc_click_bound__) {
+  window.__hub_doc_click_bound__ = true;
+  document.addEventListener("click", event => {
+    if (els.account && !els.account.contains(event.target)) {
+      toggleUserMenu(false);
+    }
+  });
+}
+
 function handleSignOut() {
   if (GATED_VIEWS.some(name => location.hash.startsWith(`#${name}`))) {
     location.hash = "#tools";
@@ -290,7 +301,7 @@ function handleSignOut() {
   return signOut(auth);
 }
 
-if (els.signout) els.signout.addEventListener("click", handleSignOut);
+if (els.signout) els.signout.onclick = handleSignOut;
 
 export { auth, db };
 
