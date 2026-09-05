@@ -6,7 +6,7 @@
   <meta name="description" content="AI 工具集、API 控制台与 Agent 生态地图的统一导航入口">
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <link rel="stylesheet" href="./manager.css?v=20260905h">
-  <link rel="stylesheet" href="./notes.css?v=20260905d">
+  <link rel="stylesheet" href="./notes.css?v=20260905e">
   <link rel="stylesheet" href="./expenses.css?v=20260905y">
   <title>AI Resource Hub</title>
   <style>
@@ -15,7 +15,7 @@
     *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:150px}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.55}
     a{color:var(--accent)}.app-shell{width:min(calc(100% - 44px),1280px);margin-inline:auto}.site-header{padding:30px 0 18px;text-align:left}.brand-row{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}.brand{min-width:0}.brand-title{display:flex;align-items:center;justify-content:flex-start;gap:10px;margin-bottom:6px}.brand-title img{width:36px;height:36px;flex:0 0 auto}.site-header h1{font-size:34px;letter-spacing:-.03em;margin:0}.site-header p{color:var(--muted);margin:0}
     .hub-account{position:relative;flex:0 0 auto;display:flex;align-items:center}.hub-signin-button{border:1px solid var(--line);background:var(--card);color:var(--text);font:inherit;font-size:14px;font-weight:650;padding:9px 16px;border-radius:999px;cursor:pointer;transition:.15s;white-space:nowrap}.hub-signin-button:hover{border-color:var(--accent);color:var(--accent)}.hub-user{position:relative}.hub-user-button{display:flex;align-items:center;justify-content:center;width:38px;height:38px;padding:0;border:1px solid var(--line);border-radius:50%;background:var(--card);cursor:pointer;overflow:hidden}.hub-user-button img{width:100%;height:100%;object-fit:cover;display:block}.hub-user-button span{font-weight:700;color:var(--accent);font-size:16px}.hub-user-menu{position:absolute;right:0;top:calc(100% + 8px);z-index:60;width:250px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,.12);padding:12px}.hub-user-menu-profile{display:flex;align-items:center;gap:10px;padding:4px 4px 10px;border-bottom:1px solid var(--line)}.hub-user-menu-avatar{width:36px;height:36px;flex:0 0 auto;border-radius:50%;overflow:hidden;background:var(--soft);display:flex;align-items:center;justify-content:center}.hub-user-menu-avatar img{width:100%;height:100%;object-fit:cover}.hub-user-menu-avatar span{font-weight:700;color:var(--accent)}.hub-user-menu-identity{min-width:0;display:flex;flex-direction:column;gap:2px}.hub-user-menu-identity strong{font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hub-user-menu-identity span{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hub-user-menu-actions{padding-top:8px}.hub-user-menu-actions button{width:100%;border:1px solid var(--line);background:transparent;color:var(--text);font:inherit;font-size:13px;padding:8px 10px;border-radius:9px;cursor:pointer}.hub-user-menu-actions button:hover{border-color:var(--accent);color:var(--accent)}
-    .hub-gated-tab{display:none}body.hub-signed-in .hub-gated-tab{display:block}
+    .hub-gated-tab{display:none!important}body.hub-signed-in .hub-gated-tab{display:block}body.hub-signed-in .primary-tabs .hub-gated-tab{display:inline-flex!important}
     .view[data-hub-locked]>:not(.hub-lock-card){display:none!important}.view:not([data-hub-locked])>.hub-lock-card{display:none!important}.hub-lock-card{max-width:520px;margin:70px auto;padding:38px 30px;text-align:center;background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.05)}.view-connectivity .hub-lock-card{margin:70px auto}.hub-lock-icon{font-size:30px;margin-bottom:10px}.hub-lock-card h2{margin:0 0 10px;font-size:22px}.hub-lock-card>p{color:var(--muted);font-size:14px;line-height:1.7;margin:0 0 20px}.hub-lock-card .hub-signin-button{font-size:15px;padding:11px 22px}.hub-lock-message{margin:14px 0 0!important;font-size:13px;color:var(--muted)}.hub-lock-message.error{color:var(--danger-text,var(--accent))}
     .primary-bar{position:sticky;top:0;z-index:30;background:var(--bar);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}.primary-tabs{display:flex;flex-wrap:wrap;gap:8px;padding:10px 0}.primary-tabs a{flex:0 0 auto;color:var(--muted);font-weight:650;text-decoration:none;padding:9px 14px;border-radius:10px}.primary-tabs a:hover{color:var(--text);background:var(--card)}.primary-tabs a[aria-selected="true"]{color:var(--accent);background:var(--card);box-shadow:inset 0 0 0 1px var(--line)}
     .view{padding:28px 0 70px}.view[hidden]{display:none!important}.view-summary{height:25px;line-height:25px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color:var(--muted);font-size:16px;margin:0 0 20px}.view-toolbar{position:sticky;top:59px;z-index:20;padding:9px 0 12px;background:var(--bar);backdrop-filter:blur(12px)}.search input,.view-toolbar>input{width:100%;padding:13px 15px;border-radius:13px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:15px;outline:none}.search input:focus,.view-toolbar>input:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 15%,transparent)}
@@ -126,7 +126,7 @@
         <p>AI 工具集、API 控制台与 Agent 生态地图等的统一入口</p>
       </div>
       <div id="hub-account" class="hub-account" data-state="signed-out">
-        <button id="hub-signin" class="hub-signin-button" type="button">使用 Google 登录</button>
+        <button id="hub-signin" class="hub-signin-button" type="button">Google 登录</button>
         <div id="hub-user" class="hub-user" hidden>
           <button id="hub-user-menu-button" class="hub-user-button" type="button" aria-label="打开用户菜单" aria-haspopup="true" aria-expanded="false">
             <img id="hub-user-avatar" alt="" hidden>
@@ -853,7 +853,7 @@
         <div class="hub-lock-icon" aria-hidden="true">🔒</div>
         <h2>登录 Google 账号查看连通性</h2>
         <p>连通性实测报告与服务商归档状态保存在你的 Google 账户中，登录后即可查看与管理。</p>
-        <button type="button" class="hub-signin-button" data-hub-signin>使用 Google 登录</button>
+        <button type="button" class="hub-signin-button" data-hub-signin>Google 登录</button>
         <p class="hub-lock-message" data-hub-message hidden></p>
       </section>
       <p class="view-summary">Windows 凭据 API 密钥多协议连通性验证报告；16 服务商实测快照与协议适配明细。</p>
@@ -10706,7 +10706,7 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
         <div class="hub-lock-icon" aria-hidden="true">🔒</div>
         <h2>登录 Google 账号查看笔记</h2>
         <p>笔记内容保存在你的 Google 账户中，登录后即可跨设备查看、录入与整理。</p>
-        <button type="button" class="hub-signin-button" data-hub-signin>使用 Google 登录</button>
+        <button type="button" class="hub-signin-button" data-hub-signin>Google 登录</button>
         <p class="hub-lock-message" data-hub-message hidden></p>
       </section>
       <p class="view-summary">快速采集日常浏览到的 AI 工具、模型、开源项目或 API 控制台链接。在此积累灵感与备忘，随时一键生成结构化提示词复制给 AI 合并入库。</p>
@@ -10753,7 +10753,7 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
         <div class="hub-lock-icon" aria-hidden="true">🔒</div>
         <h2>登录 Google 账号查看支出</h2>
         <p>支出记录保存在你的 Google 账户中，登录后即可跨设备查看、录入与管理。</p>
-        <button type="button" class="hub-signin-button" data-hub-signin>使用 Google 登录</button>
+        <button type="button" class="hub-signin-button" data-hub-signin>Google 登录</button>
         <p class="hub-lock-message" data-hub-message hidden></p>
       </section>
       <p class="view-summary">全面记录 AI 订阅、Token Plan、厂商 API 充值与网络服务支出，追踪月度与年度投入。</p>
@@ -10922,7 +10922,7 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
         <div class="hub-lock-icon" aria-hidden="true">🔒</div>
         <h2>登录 Google 账号查看资源管理</h2>
         <p>Plan、API 等数据保存在你自己的 Firestore 路径中，仅本账号可见。请勿在任何字段粘贴 API Key、访问令牌或其他凭证。</p>
-        <button type="button" class="hub-signin-button" data-hub-signin>使用 Google 登录</button>
+        <button type="button" class="hub-signin-button" data-hub-signin>Google 登录</button>
         <p class="hub-lock-message" data-hub-message hidden></p>
       </section>
       <div class="manager-summary-row">
@@ -11048,10 +11048,16 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
     document.querySelector('.primary-tabs').addEventListener('keydown',event=>{
       if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
       event.preventDefault();
-      const index=viewNames.indexOf(activeView);
-      const next=event.key==='Home'?0:event.key==='End'?viewNames.length-1:(index+(event.key==='ArrowRight'?1:-1)+viewNames.length)%viewNames.length;
-      document.getElementById(`tab-${viewNames[next]}`).click();
-      document.getElementById(`tab-${viewNames[next]}`).focus();
+      const visibleTabs=[...document.querySelectorAll('.primary-tabs a')].filter(el=>window.getComputedStyle(el).display!=='none');
+      if(!visibleTabs.length) return;
+      const currentTab=document.getElementById(`tab-${activeView}`);
+      const index=visibleTabs.indexOf(currentTab);
+      const nextIndex=event.key==='Home'?0:
+                      event.key==='End'?visibleTabs.length-1:
+                      index===-1?0:
+                      (index+(event.key==='ArrowRight'?1:-1)+visibleTabs.length)%visibleTabs.length;
+      visibleTabs[nextIndex].click();
+      visibleTabs[nextIndex].focus();
     });
 
     const toolsSearch=document.getElementById('tools-search');

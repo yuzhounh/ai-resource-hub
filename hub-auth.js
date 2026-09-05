@@ -206,7 +206,14 @@ document.addEventListener("click", event => {
     els.menuButton.setAttribute("aria-expanded", "false");
   }
 });
-if (els.signout) els.signout.addEventListener("click", () => signOut(auth));
+function handleSignOut() {
+  if (GATED_VIEWS.some(name => location.hash.startsWith(`#${name}`))) {
+    location.hash = "#tools";
+  }
+  return signOut(auth);
+}
+
+if (els.signout) els.signout.addEventListener("click", handleSignOut);
 
 export { auth, db };
 
@@ -215,7 +222,7 @@ export const HubAuth = {
   db,
   googleProvider,
   signIn: signInWithGoogle,
-  signOut: () => signOut(auth),
+  signOut: handleSignOut,
   getUser: () => auth.currentUser,
   getArchivedPlanProviders: () => [...archivedPlanProviders],
   saveUserData,

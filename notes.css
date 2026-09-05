@@ -6,7 +6,15 @@
   padding-top: 18px;
 }
 
-.primary-tabs #tab-notes {
+.primary-tabs .hub-gated-tab {
+  display: none !important;
+}
+
+body.hub-signed-in .primary-tabs .hub-gated-tab {
+  display: inline-flex !important;
+}
+
+body.hub-signed-in .primary-tabs #tab-notes {
   margin-left: auto;
 }
 
@@ -17,6 +25,12 @@
   box-sizing: border-box;
   display: inline-flex;
   align-items: center;
+}
+
+@media (max-width: 768px) {
+  body.hub-signed-in .primary-tabs #tab-notes {
+    margin-left: 0;
+  }
 }
 
 .primary-tabs #tab-research {
