@@ -16,6 +16,10 @@
     a{color:var(--accent)}.app-shell{width:min(calc(100% - 44px),1280px);margin-inline:auto}.site-header{padding:30px 0 18px;text-align:left}.brand-row{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}.brand{min-width:0}.brand-title{display:flex;align-items:center;justify-content:flex-start;gap:10px;margin-bottom:6px}.brand-title img{width:36px;height:36px;flex:0 0 auto}.site-header h1{font-size:34px;letter-spacing:-.03em;margin:0}.site-header p{color:var(--muted);margin:0}
     .hub-account{position:relative;flex:0 0 auto;display:flex;align-items:center}.hub-signin-button{border:1px solid var(--line);background:var(--card);color:var(--text);font:inherit;font-size:14px;font-weight:650;padding:9px 16px;border-radius:999px;cursor:pointer;transition:.15s;white-space:nowrap}.hub-signin-button:hover{border-color:var(--accent);color:var(--accent)}.hub-user{position:relative}.hub-user-button{display:flex;align-items:center;justify-content:center;width:38px;height:38px;padding:0;border:1px solid var(--line);border-radius:50%;background:var(--card);cursor:pointer;overflow:hidden}.hub-user-button img{width:100%;height:100%;object-fit:cover;display:block}.hub-user-button span{font-weight:700;color:var(--accent);font-size:16px}.hub-user-menu{position:absolute;right:0;top:calc(100% + 8px);z-index:60;width:250px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,.12);padding:12px}.hub-user-menu-profile{display:flex;align-items:center;gap:10px;padding:4px 4px 10px;border-bottom:1px solid var(--line)}.hub-user-menu-avatar{width:36px;height:36px;flex:0 0 auto;border-radius:50%;overflow:hidden;background:var(--soft);display:flex;align-items:center;justify-content:center}.hub-user-menu-avatar img{width:100%;height:100%;object-fit:cover}.hub-user-menu-avatar span{font-weight:700;color:var(--accent)}.hub-user-menu-identity{min-width:0;display:flex;flex-direction:column;gap:2px}.hub-user-menu-identity strong{font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hub-user-menu-identity span{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hub-user-menu-actions{padding-top:8px}.hub-user-menu-actions button{width:100%;border:1px solid var(--line);background:transparent;color:var(--text);font:inherit;font-size:13px;padding:8px 10px;border-radius:9px;cursor:pointer}.hub-user-menu-actions button:hover{border-color:var(--accent);color:var(--accent)}
     .hub-gated-tab{display:none!important}body.hub-signed-in .hub-gated-tab{display:block}body.hub-signed-in .primary-tabs .hub-gated-tab{display:inline-flex!important}
+    .hub-toast{position:fixed;top:70px;right:20px;z-index:9999;max-width:380px;padding:12px 18px;border-radius:12px;font-size:14px;line-height:1.5;background:var(--card);color:var(--text);border:1px solid var(--line);box-shadow:0 12px 32px rgba(0,0,0,.16);transition:opacity .2s,transform .2s;pointer-events:none}
+    .hub-toast.error{border-color:#ef4444;color:#ef4444;background:color-mix(in srgb,#ef4444 10%,var(--card))}
+    .hub-toast.info{border-color:var(--accent);color:var(--text)}
+    .hub-toast[hidden]{display:none!important}
     .view[data-hub-locked]>:not(.hub-lock-card){display:none!important}.view:not([data-hub-locked])>.hub-lock-card{display:none!important}.hub-lock-card{max-width:520px;margin:70px auto;padding:38px 30px;text-align:center;background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.05)}.view-connectivity .hub-lock-card{margin:70px auto}.hub-lock-icon{font-size:30px;margin-bottom:10px}.hub-lock-card h2{margin:0 0 10px;font-size:22px}.hub-lock-card>p{color:var(--muted);font-size:14px;line-height:1.7;margin:0 0 20px}.hub-lock-card .hub-signin-button{font-size:15px;padding:11px 22px}.hub-lock-message{margin:14px 0 0!important;font-size:13px;color:var(--muted)}.hub-lock-message.error{color:var(--danger-text,var(--accent))}
     .primary-bar{position:sticky;top:0;z-index:30;background:var(--bar);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}.primary-tabs{display:flex;flex-wrap:wrap;gap:8px;padding:10px 0}.primary-tabs a{flex:0 0 auto;color:var(--muted);font-weight:650;text-decoration:none;padding:9px 14px;border-radius:10px}.primary-tabs a:hover{color:var(--text);background:var(--card)}.primary-tabs a[aria-selected="true"]{color:var(--accent);background:var(--card);box-shadow:inset 0 0 0 1px var(--line)}
     .view{padding:28px 0 70px}.view[hidden]{display:none!important}.view-summary{height:25px;line-height:25px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color:var(--muted);font-size:16px;margin:0 0 20px}.view-toolbar{position:sticky;top:59px;z-index:20;padding:9px 0 12px;background:var(--bar);backdrop-filter:blur(12px)}.search input,.view-toolbar>input{width:100%;padding:13px 15px;border-radius:13px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:15px;outline:none}.search input:focus,.view-toolbar>input:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 15%,transparent)}
@@ -11491,7 +11495,20 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
         resetTimer=setTimeout(()=>{button.classList.remove('copied');button.title=origTitle;},2000);
       });
     });
+    document.getElementById('hub-signin')?.addEventListener('click', () => {
+      if (!window.HubAuth) {
+        const toast = document.getElementById('hub-toast');
+        if (toast) {
+          toast.textContent = '登录组件正在加载中，请稍候；若一直无响应请检查网络代理是否能连接 Google，或关闭拦截插件。';
+          toast.className = 'hub-toast info';
+          toast.hidden = false;
+          setTimeout(() => { toast.hidden = true; }, 6000);
+        }
+      }
+    });
   </script>
+  <div id="hub-toast" class="hub-toast" hidden aria-live="polite"></div>
+  <script type="module" src="./hub-auth.js?v=20260905c"></script>
   <script type="module" src="./manager.js?v=20260905k"></script>
   <script type="module" src="./notes.js?v=20260905c"></script>
   <script type="module" src="./expenses.js?v=20260905aa"></script>

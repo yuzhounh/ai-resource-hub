@@ -16,6 +16,8 @@ import {
   onAuthStateChanged,
   setPersistence,
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   signOut
 } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 import {
@@ -41,6 +43,12 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: "select_account" });
+
+// 模块初始化时设置持久化与捕获重定向回调，避免在点击时异步消耗浏览器手势权限
+setPersistence(auth, browserLocalPersistence).catch(() => {});
+getRedirectResult(auth).catch(err => {
+  console.warn("getRedirectResult error:", err);
+});
 
 // 需要登录 Google 账号才能查看内容的视图
 const GATED_VIEWS = ["notes", "expenses", "connectivity", "manage"];
@@ -70,6 +78,24 @@ function safeUrl(value) {
   }
 }
 
+let toastTimer = null;
+function showToast(message, type = "info", duration = 4500) {
+  let toast = document.getElementById("hub-toast");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "hub-toast";
+    toast.className = "hub-toast";
+    document.body.appendChild(toast);
+  }
+  toast.textContent = message;
+  toast.className = `hub-toast ${type}`;
+  toast.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.hidden = true;
+  }, duration);
+}
+
 function setLockMessages(message, type = "") {
   document.querySelectorAll("[data-hub-message]").forEach(el => {
     el.textContent = message;
@@ -78,19 +104,70 @@ function setLockMessages(message, type = "") {
   });
 }
 
+function setSigninLoading(loading, customText = "") {
+  const buttons = [els.signin, ...document.querySelectorAll("[data-hub-signin]")].filter(Boolean);
+  buttons.forEach(btn => {
+    btn.disabled = loading;
+    if (loading) {
+      if (!btn.dataset.origText) btn.dataset.origText = btn.textContent;
+      btn.textContent = customText || "正在登录…";
+      btn.style.opacity = "0.75";
+      btn.style.cursor = "wait";
+    } else {
+      btn.textContent = btn.dataset.origText || "Google 登录";
+      btn.style.opacity = "";
+      btn.style.cursor = "";
+    }
+  });
+}
+
+let isSigningIn = false;
 async function signInWithGoogle() {
+  if (isSigningIn) return;
+  isSigningIn = true;
+  setSigninLoading(true);
   setLockMessages("正在打开 Google 登录…");
+  showToast("正在连接 Google 账号…", "info", 3000);
+
   try {
-    await setPersistence(auth, browserLocalPersistence);
+    // 直接在用户点击手势内调用 signInWithPopup（无前置 await），保障浏览器允许弹出窗口
     await signInWithPopup(auth, googleProvider);
     setLockMessages("");
+    showToast("登录成功！", "info", 2000);
   } catch (error) {
     const code = error?.code || "";
     let text = error?.message || "登录失败，请稍后重试。";
-    if (code.includes("popup-closed")) text = "登录窗口已关闭，请重新点击登录。";
-    else if (code.includes("popup-blocked")) text = "浏览器阻止了登录窗口，请允许弹窗后重试。";
-    else if (code.includes("unauthorized-domain")) text = "当前域名尚未加入 Firebase Authentication 的 Authorized domains。";
-    setLockMessages(text, "error");
+    let isError = true;
+
+    if (code.includes("popup-blocked")) {
+      text = "浏览器拦截了登录弹窗，正在为您切换为整页跳转登录…";
+      showToast(text, "info", 5000);
+      setLockMessages(text);
+      setSigninLoading(true, "正在跳转…");
+      try {
+        await signInWithRedirect(auth, googleProvider);
+        return;
+      } catch (redirErr) {
+        text = "跳转登录失败，请在浏览器地址栏允许弹出窗口后重试。";
+        showToast(text, "error", 6000);
+      }
+    } else if (code.includes("popup-closed")) {
+      text = "登录已取消（窗口已关闭）";
+      isError = false;
+      showToast(text, "info", 2500);
+    } else if (code.includes("network-request-failed")) {
+      text = "网络连接超时：访问 Google 账号需要科学上网/代理环境，请检查代理后重试。";
+      showToast(text, "error", 7000);
+    } else if (code.includes("unauthorized-domain")) {
+      text = "当前域名尚未在 Firebase Authentication 的 Authorized domains 中授权。";
+      showToast(text, "error", 7000);
+    } else {
+      showToast(text, "error", 5000);
+    }
+    setLockMessages(text, isError ? "error" : "");
+  } finally {
+    isSigningIn = false;
+    setSigninLoading(false);
   }
 }
 
