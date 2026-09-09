@@ -46,6 +46,44 @@ function formatExactTime(d = new Date()) {
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
+function formatDisplayTime(rawTime, timestamp) {
+  if (typeof rawTime === "string" && rawTime.trim()) {
+    const trimmed = rawTime.trim();
+    if (/^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}/.test(trimmed)) {
+      return trimmed.replace(/^\d{4}-/, "");
+    }
+    if (/^\d{4}-\d{2}-\d{2}T/.test(trimmed)) {
+      const d = new Date(trimmed);
+      if (!isNaN(d.getTime())) {
+        const pad = n => String(n).padStart(2, "0");
+        const month = pad(d.getMonth() + 1);
+        const day = pad(d.getDate());
+        const hours = pad(d.getHours());
+        const minutes = pad(d.getMinutes());
+        const seconds = pad(d.getSeconds());
+        return `${month}-${day} ${hours}:${minutes}:${seconds}`;
+      }
+    }
+    if (/^\d{4}-/.test(trimmed)) {
+      return trimmed.replace(/^\d{4}-/, "");
+    }
+    return trimmed;
+  }
+  if (timestamp) {
+    const d = new Date(timestamp);
+    if (!isNaN(d.getTime())) {
+      const pad = n => String(n).padStart(2, "0");
+      const month = pad(d.getMonth() + 1);
+      const day = pad(d.getDate());
+      const hours = pad(d.getHours());
+      const minutes = pad(d.getMinutes());
+      const seconds = pad(d.getSeconds());
+      return `${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
+  }
+  return rawTime || "刚刚";
+}
+
 function showToast(message) {
   let toast = document.getElementById("notes-toast");
   if (!toast) {
@@ -406,7 +444,7 @@ function renderNotes() {
                 </a>
               </div>
               <div class="notes-item-meta">
-                <span class="notes-time">${escapeHtml(note.createdAt || "刚刚")}</span>
+                <span class="notes-time">${escapeHtml(formatDisplayTime(note.createdAt, note.timestamp))}</span>
               </div>
             </div>
             <div class="notes-item-body">
