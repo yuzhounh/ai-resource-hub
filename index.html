@@ -10782,7 +10782,7 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
         </div>
       </div>
 
-      <!-- 工具栏：搜索、分类筛选与新建按钮 -->
+      <!-- 工具栏：搜索与操作按钮 -->
       <div class="view-toolbar expenses-toolbar">
         <div class="expenses-toolbar-main">
           <div class="search">
@@ -10803,15 +10803,6 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
             </svg>
             <span>支出</span>
           </button>
-        </div>
-        <div id="expenses-filter-bar" class="expenses-filter-bar">
-          <button type="button" class="expenses-filter-pill active" data-cat="all">全部</button>
-          <button type="button" class="expenses-filter-pill" data-cat="vpn">VPN / 机场</button>
-          <button type="button" class="expenses-filter-pill" data-cat="api">API 充值</button>
-          <button type="button" class="expenses-filter-pill" data-cat="sub">AI 订阅</button>
-          <button type="button" class="expenses-filter-pill" data-cat="quota">额度充值</button>
-          <button type="button" class="expenses-filter-pill" data-cat="cloud">云平台</button>
-          <button type="button" class="expenses-filter-pill" data-cat="other">会员</button>
         </div>
       </div>
 
@@ -10862,6 +10853,17 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
           </div>
         </div>
       </section>
+
+      <!-- 支出分类筛选标签（用于筛选下方支出明细列表） -->
+      <div id="expenses-filter-bar" class="expenses-filter-bar">
+        <button type="button" class="expenses-filter-pill active" data-cat="all">全部</button>
+        <button type="button" class="expenses-filter-pill" data-cat="vpn">VPN / 机场</button>
+        <button type="button" class="expenses-filter-pill" data-cat="api">API 充值</button>
+        <button type="button" class="expenses-filter-pill" data-cat="sub">AI 订阅</button>
+        <button type="button" class="expenses-filter-pill" data-cat="quota">额度充值</button>
+        <button type="button" class="expenses-filter-pill" data-cat="cloud">云平台</button>
+        <button type="button" class="expenses-filter-pill" data-cat="other">会员</button>
+      </div>
 
       <!-- 支出列表 -->
       <div id="expenses-list" class="expenses-list"></div>

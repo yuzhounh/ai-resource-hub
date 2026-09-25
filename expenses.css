@@ -52,12 +52,9 @@
   color: var(--muted);
 }
 
-/* 顶部操作与筛选栏 */
+/* 顶部操作与工具栏 */
 .expenses-toolbar {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
 }
 
 .expenses-toolbar-main {
@@ -573,6 +570,7 @@
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
+  margin-bottom: 20px;
 }
 
 .expenses-filter-pill {
