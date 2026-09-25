@@ -7,7 +7,7 @@
 <p align="center"><strong>AI 工具集、API 控制台与 Agent 生态地图等的统一入口</strong></p>
 
 <p align="center">
-  <a href="https://github.com/yuzhounh/ai-resource-hub/releases"><img src="https://img.shields.io/badge/version-v2.2.1-8875DE" alt="version v2.2.1"></a>
+  <a href="https://github.com/yuzhounh/ai-resource-hub/releases"><img src="https://img.shields.io/badge/version-v2.2.2-8875DE" alt="version v2.2.2"></a>
   <a href="https://ai-resource-hub-manager.vercel.app/"><img src="https://img.shields.io/badge/Vercel-online-43A68F" alt="Vercel online"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-D39448" alt="MIT License"></a>
   <img src="https://img.shields.io/badge/last%20updated-2026--09--25-668DD8" alt="last updated 2026-09-25">
