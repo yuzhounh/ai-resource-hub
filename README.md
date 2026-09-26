@@ -48,7 +48,7 @@ AI Resource Hub 将工具集、API 控制台、Agent 生态地图、科研自动
 
 ## Google 账号配置
 
-1. 在 Firebase Authentication 中启用 Google 登录，并添加 Vercel 正式域名。
+1. 在 Firebase Authentication 中启用 Google 登录，并添加 GitHub Pages 域名（`yuzhounh.github.io`）。
 2. 创建 Cloud Firestore，初始选择 Production / Locked Mode。
 3. 首次登录后，在 Plan 管理面板复制页面显示的 Firebase UID。
 4. 将 `firestore.rules` 中的占位 UID 替换为该 UID。
