@@ -32,7 +32,7 @@ AI Resource Hub 将工具集、API 控制台、Agent 生态地图、科研自动
 
 ## 功能
 
-- 七个并列的一级分类标签与各自的二级分类导航，全站单页无缝切换（无需跳转外部 HTML）。
+- 八个并列的一级分类标签与各自的二级分类导航，全站单页无缝切换（无需跳转外部 HTML）。
 - 独立的行级/卡片级即时过滤搜索框，`/` 键快捷聚焦，`Esc` 清空。
 - 页面右上角 Google 账号入口：笔记、连通性与资源管理三个页面需登录后才显示内容，数据保存在登录用户自己的 Firestore 路径中。
 - 资源管理中归档的服务商，会在连通性页面自动归档（按服务商名称匹配）。
@@ -75,6 +75,10 @@ Firestore 仅保存笔记、套餐、用量与归档状态等个人数据。项�
 - `notes.css` / `notes.js`：笔记区样式与 Firestore 云同步逻辑。
 - `expenses.css` / `expenses.js`：支出板块样式、统计看板、单栏月度卡片与数据持久化逻辑。
 - `firestore.rules`：只允许固定 Firebase UID 访问个人数据的规则模板。
+
+## 相关项目
+
+- [ai-agent-landscape](https://github.com/yuzhounh/ai-agent-landscape)：独立维护的 AI Agent 生态资料，与本项目的生态导航主题相关。
 
 ## License
 
