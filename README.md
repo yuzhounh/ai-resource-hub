@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://github.com/yuzhounh/ai-resource-hub/releases"><img src="https://img.shields.io/badge/version-v2.2.2-8875DE" alt="version v2.2.2"></a>
-  <a href="https://yuzhounh.github.io/ai-resource-hub/"><img src="https://img.shields.io/badge/GitHub_Pages-online-181717?logo=github" alt="GitHub Pages online"></a>
+  <a href="https://ai-resource-hub.pages.dev/"><img src="https://img.shields.io/badge/Cloudflare_Pages-online-F38020?logo=cloudflare" alt="Cloudflare Pages online"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-D39448" alt="MIT License"></a>
   <img src="https://img.shields.io/badge/last updated-2026--09--26-668DD8" alt="last updated 2026-09-26">
 </p>
@@ -17,7 +17,7 @@ AI Resource Hub 将工具集、API 控制台、Agent 生态地图、科研自动
 
 ## 在线访问
 
-<https://yuzhounh.github.io/ai-resource-hub/>
+<https://ai-resource-hub.pages.dev/>
 
 ## 内容与视图
 
