@@ -8,12 +8,6 @@
   font-size: 23px;
   margin: 0;
 }
-.view-pricing .table-intro {
-  margin: 0 0 12px;
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.6;
-}
 .view-pricing .table-wrap {
   overflow-x: auto;
   background: var(--card);
@@ -24,17 +18,17 @@
 .view-pricing table {
   border-collapse: collapse;
   width: 100%;
-  min-width: 960px;
+  min-width: 940px;
   table-layout: auto;
 }
 
-/* 表头与单元格（恢复紧凑行距） */
+/* 表头与单元格（轻盈紧凑行距） */
 .view-pricing th,
 .view-pricing td {
   padding: 9px 14px;
   text-align: left;
   vertical-align: middle;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 .view-pricing th {
   background: color-mix(in srgb, var(--card) 78%, var(--soft));
@@ -49,7 +43,7 @@
   border-bottom: 1px solid color-mix(in srgb, var(--line) 45%, transparent);
 }
 
-/* 行悬停平滑过渡 */
+/* 行悬停微高亮 */
 .view-pricing tbody tr:hover {
   background: color-mix(in srgb, var(--card) 93%, var(--soft));
 }
@@ -67,29 +61,20 @@
 
 /* 第一列：厂商 / 平台 */
 .view-pricing td.cell-vendor {
-  width: 145px;
+  width: 130px;
   white-space: nowrap;
   vertical-align: middle;
 }
-.view-pricing .vendor-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  align-items: flex-start;
-}
 .view-pricing .vendor-title-link {
   font-weight: 700;
-  font-size: 14.5px;
+  font-size: 14px;
   color: var(--text);
   text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
   transition: color .15s ease;
-  line-height: 1.25;
 }
 .view-pricing .vendor-title-link:hover {
   color: var(--accent);
+  text-decoration: underline;
 }
 .view-pricing .vendor-sub-ghost {
   display: none;
@@ -102,41 +87,6 @@
 }
 .view-pricing table.is-filtered .vendor-sub-ghost {
   display: inline-block;
-}
-
-/* 官方来源胶囊徽标 (紧跟在厂商名下方) */
-.view-pricing .source-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 1.5px 6.5px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--card) 88%, var(--soft));
-  border: 1px solid color-mix(in srgb, var(--line) 75%, transparent);
-  font-size: 11px;
-  color: var(--muted);
-  text-decoration: none;
-  transition: all .15s ease;
-  line-height: 1.2;
-}
-.view-pricing .source-pill:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: var(--card);
-}
-.view-pricing .source-pill-dot {
-  width: 4.5px;
-  height: 4.5px;
-  border-radius: 50%;
-  background: var(--accent);
-  opacity: .75;
-}
-.view-pricing .source-pill svg {
-  opacity: .6;
-  flex: 0 0 auto;
-}
-.view-pricing .source-pill:hover svg {
-  opacity: 1;
 }
 
 /* 第二列：模型 */
@@ -158,7 +108,7 @@
   color: var(--text);
 }
 
-/* 主力推荐模型行 (仅加粗，无背景色) */
+/* 主力推荐模型行 (仅字体加粗，无背景色) */
 .view-pricing tr.pricing-row-flagship .model-name {
   font-weight: 700;
   font-size: 14.5px;
@@ -184,78 +134,66 @@
   color: color-mix(in srgb, var(--text) 82%, transparent);
 }
 
-/* 最后一列：推荐定位 (单行紧凑徽标) */
+/* 最后一列：推荐定位 (无背景，保留emoji和文字颜色，仅默认推荐加粗) */
 .view-pricing td.cell-recommend {
   white-space: nowrap;
 }
-.view-pricing .recommend-badge {
+.view-pricing .recommend-tag {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  font-size: 12.5px;
-  padding: 2.5px 8px;
-  border-radius: 6px;
+  gap: 6px;
+  font-size: 13px;
+  background: none;
+  border: none;
+  padding: 0;
   line-height: 1.35;
 }
-.view-pricing .badge-emoji {
-  font-size: 13px;
+.view-pricing .tag-emoji {
+  font-size: 13.5px;
   line-height: 1;
 }
 
-/* 定位徽标色彩 */
-.view-pricing .badge-flagship {
-  background: color-mix(in srgb, #f59e0b 14%, var(--card));
-  border: 1px solid color-mix(in srgb, #f59e0b 40%, transparent);
+/* 1. 默认推荐：加粗 + 琥珀金文字 */
+.view-pricing .tag-flagship {
   color: #b45309;
   font-weight: 700;
 }
 @media (prefers-color-scheme: dark) {
-  .view-pricing .badge-flagship {
+  .view-pricing .tag-flagship {
     color: #fbbf24;
-    background: color-mix(in srgb, #f59e0b 18%, var(--card));
-    border-color: color-mix(in srgb, #f59e0b 45%, transparent);
   }
 }
 
-.view-pricing .badge-budget {
-  background: color-mix(in srgb, #10b981 12%, var(--card));
-  border: 1px solid color-mix(in srgb, #10b981 30%, transparent);
+/* 2. 经济型：常规字重 + 翠绿色 */
+.view-pricing .tag-budget {
   color: #047857;
-  font-weight: 550;
+  font-weight: 400;
 }
 @media (prefers-color-scheme: dark) {
-  .view-pricing .badge-budget {
+  .view-pricing .tag-budget {
     color: #34d399;
-    background: color-mix(in srgb, #10b981 16%, var(--card));
-    border-color: color-mix(in srgb, #10b981 35%, transparent);
   }
 }
 
-.view-pricing .badge-reasoning {
-  background: color-mix(in srgb, #8b5cf6 12%, var(--card));
-  border: 1px solid color-mix(in srgb, #8b5cf6 30%, transparent);
+/* 3. 高难推理型：常规字重 + 薰衣草紫 */
+.view-pricing .tag-reasoning {
   color: #6d28d9;
-  font-weight: 550;
+  font-weight: 400;
 }
 @media (prefers-color-scheme: dark) {
-  .view-pricing .badge-reasoning {
+  .view-pricing .tag-reasoning {
     color: #a78bfa;
-    background: color-mix(in srgb, #8b5cf6 16%, var(--card));
-    border-color: color-mix(in srgb, #8b5cf6 35%, transparent);
   }
 }
 
-.view-pricing .badge-extreme {
-  background: color-mix(in srgb, #ec4899 12%, var(--card));
-  border: 1px solid color-mix(in srgb, #ec4899 30%, transparent);
+/* 4. 极限长程型：常规字重 + 品红玫瑰 */
+.view-pricing .tag-extreme {
   color: #be185d;
-  font-weight: 550;
+  font-weight: 400;
 }
 @media (prefers-color-scheme: dark) {
-  .view-pricing .badge-extreme {
+  .view-pricing .tag-extreme {
     color: #f472b6;
-    background: color-mix(in srgb, #ec4899 16%, var(--card));
-    border-color: color-mix(in srgb, #ec4899 35%, transparent);
   }
 }
 
