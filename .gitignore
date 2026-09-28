@@ -1,4 +1,6 @@
-.vercel
+.vercel*
+.firebase/
+.wrangler/
 .env*
 __pycache__/
 *.pyc
