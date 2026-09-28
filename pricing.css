@@ -134,7 +134,7 @@
   color: color-mix(in srgb, var(--text) 82%, transparent);
 }
 
-/* 最后一列：推荐定位 (无背景，保留emoji和文字颜色，仅默认推荐加粗) */
+/* 最后一列：推荐定位 (统一黑字，保留emoji，默认推荐加粗) */
 .view-pricing td.cell-recommend {
   white-space: nowrap;
 }
@@ -147,54 +147,24 @@
   border: none;
   padding: 0;
   line-height: 1.35;
+  color: var(--text);
 }
 .view-pricing .tag-emoji {
   font-size: 13.5px;
   line-height: 1;
 }
 
-/* 1. 默认推荐：加粗 + 琥珀金文字 */
+/* 1. 默认推荐：加粗 */
 .view-pricing .tag-flagship {
-  color: #b45309;
   font-weight: 700;
 }
-@media (prefers-color-scheme: dark) {
-  .view-pricing .tag-flagship {
-    color: #fbbf24;
-  }
-}
 
-/* 2. 经济型：常规字重 + 翠绿色 */
-.view-pricing .tag-budget {
-  color: #047857;
-  font-weight: 400;
-}
-@media (prefers-color-scheme: dark) {
-  .view-pricing .tag-budget {
-    color: #34d399;
-  }
-}
-
-/* 3. 高难推理型：常规字重 + 薰衣草紫 */
-.view-pricing .tag-reasoning {
-  color: #6d28d9;
-  font-weight: 400;
-}
-@media (prefers-color-scheme: dark) {
-  .view-pricing .tag-reasoning {
-    color: #a78bfa;
-  }
-}
-
-/* 4. 极限长程型：常规字重 + 品红玫瑰 */
+/* 2. 其它类型：常规字重 */
+.view-pricing .tag-budget,
+.view-pricing .tag-reasoning,
 .view-pricing .tag-extreme {
-  color: #be185d;
   font-weight: 400;
-}
-@media (prefers-color-scheme: dark) {
-  .view-pricing .tag-extreme {
-    color: #f472b6;
-  }
+  color: color-mix(in srgb, var(--text) 90%, transparent);
 }
 
 /* 说明注释 */
