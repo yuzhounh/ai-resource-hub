@@ -27,7 +27,6 @@ const pricingRows = [
   { vendor: 'Anthropic', model: 'Claude Opus 5.5', input: '$4.00', cache: '$0.20', output: '$20.00', ratio: '2.00×', desc: '高难 Coding / Agent', emoji: '🧠', type: 'reasoning' },
   { vendor: 'Anthropic', model: 'Claude Fable 5.1', input: '$10.00', cache: '$0.25', output: '$50.00', ratio: '5.00×', desc: '极限档 / 超长程复杂任务', emoji: '🚀', type: 'extreme' },
 
-  { vendor: 'Google', model: 'Gemini 3.5 Flash-Lite', input: '$0.30', cache: '$0.03', output: '$2.50', ratio: '0.62×', desc: '高吞吐低成本', emoji: '💰', type: 'budget' },
   { vendor: 'Google', model: 'Gemini 3.8 Flash', input: '$0.75', cache: '$0.075', output: '$3.75', ratio: '1.00×', desc: '默认推荐 / Coding & Agent', emoji: '⭐', isFlagship: true, type: 'flagship' },
   { vendor: 'Google', model: 'Gemini 3.1 Pro', input: '$2.00', cache: '$0.20', output: '$12.00', ratio: '3.11×', desc: '复杂知识 / 多模态推理', emoji: '🧠', type: 'reasoning' },
 
