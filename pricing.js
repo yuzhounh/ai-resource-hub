@@ -5,9 +5,10 @@ const pricingSources = {
   Anthropic: { url: 'https://platform.claude.com/docs/en/about-claude/pricing', label: 'Anthropic' },
   Google: { url: 'https://ai.google.dev/gemini-api/docs/pricing', label: 'Google AI for Dev' },
   'SpaceXAI / Cursor': { url: 'https://docs.cursor.com/models', label: 'Cursor / xAI' },
+  Meta: { url: 'https://www.llama.com/', label: 'Meta Llama' },
   xAI: { url: 'https://docs.x.ai/developers/models/grok-4.7', label: 'xAI Docs' },
   Cursor: { url: 'https://docs.cursor.com/models', label: 'Cursor Models' },
-  DeepSeek: { url: 'https://api-docs.deepseek.com/quick_start/pricing/', label: 'DeepSeek Docs' },
+  DeepSeek: { url: 'https://api-docs.deepseek.com/zh-cn/quick_start/pricing/', label: 'DeepSeek Docs' },
   Qwen: { url: 'https://help.aliyun.com/zh/model-studio/qwen3-8-flash', label: '阿里云百炼' },
   Kimi: { url: 'https://platform.moonshot.ai/docs/pricing', label: 'Moonshot Docs' },
   'GLM / Z.ai': { url: 'https://docs.z.ai/guides/overview/pricing', label: '智谱开放平台' },
@@ -33,7 +34,10 @@ const pricingRows = [
   { vendor: 'SpaceXAI / Cursor', model: 'Composer 2.5', input: '$0.50', cache: '$0.20', output: '$2.50', ratio: '1.00×', desc: '默认推荐 / Coding & Agent', emoji: '⭐', isFlagship: true, type: 'flagship' },
   { vendor: 'SpaceXAI / Cursor', model: 'Grok 4.7', input: '$2.00', cache: '$0.50', output: '$6.00', ratio: '2.67×', desc: '更困难、长程 Coding / Agent', emoji: '🧠', type: 'reasoning' },
 
-  { vendor: 'DeepSeek', model: 'DeepSeek V4.1 Flash', input: '$0.30', cache: '$0.006', output: '$1.20', ratio: '1.00×', desc: '默认推荐；峰值价', emoji: '⭐', isFlagship: true, type: 'flagship' },
+  { vendor: 'Meta', model: 'Llama 4 Scout', input: '$0.08', cache: '$0.008', output: '$0.30', ratio: '1.00×', desc: '默认推荐 / 10M 上下文', emoji: '⭐', isFlagship: true, type: 'flagship' },
+  { vendor: 'Meta', model: 'Llama 4 Maverick', input: '$0.20', cache: '$0.02', output: '$0.80', ratio: '2.63×', desc: '复杂推理 / Coding & Agent', emoji: '🧠', type: 'reasoning' },
+
+  { vendor: 'DeepSeek', model: 'DeepSeek V4.1 Flash', input: '¥2.00', cache: '¥0.04', output: '¥8.00', ratio: '1.00×', desc: '默认推荐；峰值价', emoji: '⭐', isFlagship: true, type: 'flagship' },
 
   { vendor: 'Qwen', model: 'Qwen3.8 Flash', input: '¥0.80', cache: '¥0.10', output: '¥2.70', ratio: '1.00×', desc: '默认推荐 / 高性价比', emoji: '⭐', isFlagship: true, type: 'flagship' },
   { vendor: 'Qwen', model: 'Qwen3.8 Max', input: '¥12.00', cache: '¥1.50', output: '¥36.00', ratio: '13.71×', desc: '旗舰复杂任务', emoji: '🧠', type: 'reasoning' },
@@ -44,10 +48,10 @@ const pricingRows = [
   { vendor: 'GLM / Z.ai', model: 'GLM-5.3 Flash', input: '—', cache: '—', output: '—', ratio: '—', desc: '默认推荐 / 性价比', emoji: '⭐', isFlagship: true, type: 'flagship' },
   { vendor: 'GLM / Z.ai', model: 'GLM-5.3', input: '—', cache: '—', output: '—', ratio: '—', desc: '高难 Coding / 长程 Agent', emoji: '🧠', type: 'reasoning' },
 
-  { vendor: 'MiniMax', model: 'MiniMax M3', input: '$0.30', cache: '$0.06', output: '$1.20', ratio: '1.00×', desc: '默认推荐', emoji: '⭐', isFlagship: true, type: 'flagship' },
+  { vendor: 'MiniMax', model: 'MiniMax M3', input: '¥2.10', cache: '¥0.42', output: '¥8.40', ratio: '1.00×', desc: '默认推荐', emoji: '⭐', isFlagship: true, type: 'flagship' },
 
-  { vendor: 'Xiaomi MiMo', model: 'MiMo-V2.6 Flash', input: '$0.14', cache: '$0.0028', output: '$0.28', ratio: '1.00×', desc: '默认推荐', emoji: '⭐', isFlagship: true, type: 'flagship' },
-  { vendor: 'Xiaomi MiMo', model: 'MiMo-V2.6 Pro', input: '$0.435', cache: '$0.0036', output: '$0.87', ratio: '3.11×', desc: '高难推理', emoji: '🧠', type: 'reasoning' },
+  { vendor: 'Xiaomi MiMo', model: 'MiMo-V2.6 Flash', input: '¥1.00', cache: '¥0.02', output: '¥2.00', ratio: '1.00×', desc: '默认推荐', emoji: '⭐', isFlagship: true, type: 'flagship' },
+  { vendor: 'Xiaomi MiMo', model: 'MiMo-V2.6 Pro', input: '¥3.00', cache: '¥0.025', output: '¥6.00', ratio: '3.00×', desc: '高难推理', emoji: '🧠', type: 'reasoning' },
 
   { vendor: '腾讯混元', model: 'Hy3', input: '¥1.00', cache: '¥0.25', output: '¥4.00', ratio: '1.00×', desc: '默认性价比', emoji: '⭐', isFlagship: true, type: 'flagship' },
   { vendor: '腾讯混元', model: 'Hy4 Preview', input: '¥6.00', cache: '¥0.30', output: '¥18.00', ratio: '4.80×', desc: '高质量 / Coding / Agent', emoji: '🧠', type: 'reasoning' },
