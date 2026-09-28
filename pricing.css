@@ -28,13 +28,13 @@
   table-layout: auto;
 }
 
-/* 表头 */
+/* 表头与单元格（恢复紧凑行距） */
 .view-pricing th,
 .view-pricing td {
-  padding: 12px 14px;
+  padding: 9px 14px;
   text-align: left;
   vertical-align: middle;
-  line-height: 1.45;
+  line-height: 1.4;
 }
 .view-pricing th {
   background: color-mix(in srgb, var(--card) 78%, var(--soft));
@@ -47,6 +47,11 @@
 .view-pricing td {
   font-size: 13.5px;
   border-bottom: 1px solid color-mix(in srgb, var(--line) 45%, transparent);
+}
+
+/* 行悬停平滑过渡 */
+.view-pricing tbody tr:hover {
+  background: color-mix(in srgb, var(--card) 93%, var(--soft));
 }
 
 /* 厂商分组行 */
@@ -62,10 +67,15 @@
 
 /* 第一列：厂商 / 平台 */
 .view-pricing td.cell-vendor {
-  width: 135px;
+  width: 145px;
   white-space: nowrap;
-  vertical-align: top;
-  padding-top: 13px;
+  vertical-align: middle;
+}
+.view-pricing .vendor-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  align-items: flex-start;
 }
 .view-pricing .vendor-title-link {
   font-weight: 700;
@@ -76,6 +86,7 @@
   align-items: center;
   gap: 4px;
   transition: color .15s ease;
+  line-height: 1.25;
 }
 .view-pricing .vendor-title-link:hover {
   color: var(--accent);
@@ -91,6 +102,41 @@
 }
 .view-pricing table.is-filtered .vendor-sub-ghost {
   display: inline-block;
+}
+
+/* 官方来源胶囊徽标 (紧跟在厂商名下方) */
+.view-pricing .source-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1.5px 6.5px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--card) 88%, var(--soft));
+  border: 1px solid color-mix(in srgb, var(--line) 75%, transparent);
+  font-size: 11px;
+  color: var(--muted);
+  text-decoration: none;
+  transition: all .15s ease;
+  line-height: 1.2;
+}
+.view-pricing .source-pill:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--card);
+}
+.view-pricing .source-pill-dot {
+  width: 4.5px;
+  height: 4.5px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: .75;
+}
+.view-pricing .source-pill svg {
+  opacity: .6;
+  flex: 0 0 auto;
+}
+.view-pricing .source-pill:hover svg {
+  opacity: 1;
 }
 
 /* 第二列：模型 */
@@ -112,30 +158,23 @@
   color: var(--text);
 }
 
-/* 主力推荐模型行 (Highlight Flagship Row) */
-.view-pricing tr.pricing-row-flagship {
-  background: color-mix(in srgb, var(--accent) 5.5%, var(--card));
-}
-.view-pricing tr.pricing-row-flagship:hover {
-  background: color-mix(in srgb, var(--accent) 9.5%, var(--card));
-}
+/* 主力推荐模型行 (仅加粗，无背景色) */
 .view-pricing tr.pricing-row-flagship .model-name {
   font-weight: 700;
   font-size: 14.5px;
+  color: var(--text);
 }
 .view-pricing tr.pricing-row-flagship td.cell-price {
   font-weight: 700;
   font-size: 14px;
+  color: var(--text);
 }
 .view-pricing tr.pricing-row-flagship td.cell-ratio {
   font-weight: 700;
   color: var(--text);
 }
 
-/* 普通行样式及悬停效果 */
-.view-pricing tr.pricing-row-normal:hover {
-  background: color-mix(in srgb, var(--card) 94%, var(--soft));
-}
+/* 普通行样式 */
 .view-pricing tr.pricing-row-normal .model-name {
   font-weight: 450;
   color: color-mix(in srgb, var(--text) 88%, transparent);
@@ -145,24 +184,17 @@
   color: color-mix(in srgb, var(--text) 82%, transparent);
 }
 
-/* 推荐定位与来源列 */
+/* 最后一列：推荐定位 (单行紧凑徽标) */
 .view-pricing td.cell-recommend {
-  min-width: 250px;
-}
-.view-pricing .recommend-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  align-items: flex-start;
+  white-space: nowrap;
 }
 .view-pricing .recommend-badge {
   display: inline-flex;
   align-items: center;
   gap: 5px;
   font-size: 12.5px;
-  padding: 3px 9px;
+  padding: 2.5px 8px;
   border-radius: 6px;
-  white-space: nowrap;
   line-height: 1.35;
 }
 .view-pricing .badge-emoji {
@@ -170,23 +202,21 @@
   line-height: 1;
 }
 
-/* 各种定位类型的徽章色彩层次 */
-/* 1. 主力 / 默认推荐 (Flagship) - 醒目金色 */
+/* 定位徽标色彩 */
 .view-pricing .badge-flagship {
-  background: color-mix(in srgb, #f59e0b 15%, var(--card));
-  border: 1px solid color-mix(in srgb, #f59e0b 42%, transparent);
+  background: color-mix(in srgb, #f59e0b 14%, var(--card));
+  border: 1px solid color-mix(in srgb, #f59e0b 40%, transparent);
   color: #b45309;
   font-weight: 700;
 }
 @media (prefers-color-scheme: dark) {
   .view-pricing .badge-flagship {
     color: #fbbf24;
-    background: color-mix(in srgb, #f59e0b 20%, var(--card));
+    background: color-mix(in srgb, #f59e0b 18%, var(--card));
     border-color: color-mix(in srgb, #f59e0b 45%, transparent);
   }
 }
 
-/* 2. 经济 / 批量 (Budget) - 清爽淡绿 */
 .view-pricing .badge-budget {
   background: color-mix(in srgb, #10b981 12%, var(--card));
   border: 1px solid color-mix(in srgb, #10b981 30%, transparent);
@@ -201,7 +231,6 @@
   }
 }
 
-/* 3. 复杂推理 / 高难 (Reasoning) - 典雅紫 */
 .view-pricing .badge-reasoning {
   background: color-mix(in srgb, #8b5cf6 12%, var(--card));
   border: 1px solid color-mix(in srgb, #8b5cf6 30%, transparent);
@@ -216,7 +245,6 @@
   }
 }
 
-/* 4. 极限 / 超长程 (Extreme) - 活力品红/玫瑰 */
 .view-pricing .badge-extreme {
   background: color-mix(in srgb, #ec4899 12%, var(--card));
   border: 1px solid color-mix(in srgb, #ec4899 30%, transparent);
@@ -229,42 +257,6 @@
     background: color-mix(in srgb, #ec4899 16%, var(--card));
     border-color: color-mix(in srgb, #ec4899 35%, transparent);
   }
-}
-
-/* 官方来源胶囊徽标 (Source Pill) */
-.view-pricing .source-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 2px 7px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--card) 90%, var(--soft));
-  border: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
-  font-size: 11px;
-  color: var(--muted);
-  text-decoration: none;
-  transition: all .15s ease;
-  line-height: 1.25;
-}
-.view-pricing .source-pill:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: var(--card);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, .05);
-}
-.view-pricing .source-pill-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--accent);
-  opacity: .75;
-}
-.view-pricing .source-pill svg {
-  opacity: .6;
-  flex: 0 0 auto;
-}
-.view-pricing .source-pill:hover svg {
-  opacity: 1;
 }
 
 /* 说明注释 */

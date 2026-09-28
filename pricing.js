@@ -63,7 +63,7 @@ const pricingTable = document.getElementById('pricing-table');
 const pricingBody = document.getElementById('pricing-body');
 
 let lastVendor = null;
-pricingRows.forEach((item, index) => {
+pricingRows.forEach((item) => {
   const tr = document.createElement('tr');
   const isFirstInVendor = item.vendor !== lastVendor;
   lastVendor = item.vendor;
@@ -86,20 +86,34 @@ pricingRows.forEach((item, index) => {
 
   const source = pricingSources[item.vendor] || { url: '#', label: item.vendor };
 
-  // 1. 厂商 / 平台
+  // 1. 厂商 / 平台 (首行展示厂商名及紧随其下方的文档微标胶囊；同组后续行保持空白)
   const tdVendor = document.createElement('td');
   tdVendor.className = 'cell-vendor';
   if (isFirstInVendor) {
+    const wrap = document.createElement('div');
+    wrap.className = 'vendor-wrap';
+
     const a = document.createElement('a');
     a.href = source.url;
     a.target = '_blank';
     a.rel = 'noopener';
     a.className = 'vendor-title-link';
     a.textContent = item.vendor;
-    a.title = '查看 ' + item.vendor + ' 官方定价';
-    tdVendor.append(a);
+    a.title = '查看 ' + item.vendor + ' 官方定价或产品页面';
+    wrap.append(a);
+
+    const pill = document.createElement('a');
+    pill.href = source.url;
+    pill.target = '_blank';
+    pill.rel = 'noopener';
+    pill.className = 'source-pill';
+    pill.title = '查看 ' + source.label + ' 定价或产品页';
+    pill.innerHTML = `<span class="source-pill-dot"></span><span>${source.label}</span><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>`;
+    wrap.append(pill);
+
+    tdVendor.append(wrap);
   } else {
-    // 隐藏/Ghost厂商名，供过滤时显示
+    // 隐藏/Ghost厂商名，供过滤搜索状态下显示
     const ghost = document.createElement('span');
     ghost.className = 'vendor-sub-ghost';
     ghost.textContent = item.vendor;
@@ -134,36 +148,22 @@ pricingRows.forEach((item, index) => {
   tdOutput.textContent = item.output;
   tr.append(tdOutput);
 
-  // 6. 本家倍数
+  // 6. 基准倍数
   const tdRatio = document.createElement('td');
   tdRatio.className = 'cell-ratio cell-price';
   tdRatio.textContent = item.ratio;
   tr.append(tdRatio);
 
-  // 7. 推荐定位
+  // 7. 推荐定位 (单行紧凑徽标展示)
   const tdRecommend = document.createElement('td');
   tdRecommend.className = 'cell-recommend';
-
-  const wrapper = document.createElement('div');
-  wrapper.className = 'recommend-wrapper';
 
   const badge = document.createElement('span');
   badge.className = `recommend-badge badge-${item.type}`;
   badge.innerHTML = `<span class="badge-emoji">${item.emoji}</span><span>${item.desc}</span>`;
-  wrapper.append(badge);
+  tdRecommend.append(badge);
 
-  const pill = document.createElement('a');
-  pill.href = source.url;
-  pill.target = '_blank';
-  pill.rel = 'noopener';
-  pill.className = 'source-pill';
-  pill.title = '查看 ' + source.label + ' 定价或产品页';
-  pill.innerHTML = `<span class="source-pill-dot"></span><span>${source.label}</span><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>`;
-  wrapper.append(pill);
-
-  tdRecommend.append(wrapper);
   tr.append(tdRecommend);
-
   pricingBody.append(tr);
 });
 
