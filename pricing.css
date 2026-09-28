@@ -99,28 +99,20 @@
   color: var(--text);
 }
 
-/* 价格数值与倍数列 */
+/* 价格数值与倍数列 (第 3、4、5、6 列，全表统一常规字重，不加粗) */
 .view-pricing td.cell-price {
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 13.5px;
+  font-weight: 400;
   color: var(--text);
 }
 
-/* 主力推荐模型行 (仅字体加粗，无背景色) */
+/* 主力推荐模型行 (仅模型名加粗，价格与倍数列不加粗) */
 .view-pricing tr.pricing-row-flagship .model-name {
   font-weight: 700;
   font-size: 14.5px;
-  color: var(--text);
-}
-.view-pricing tr.pricing-row-flagship td.cell-price {
-  font-weight: 700;
-  font-size: 14px;
-  color: var(--text);
-}
-.view-pricing tr.pricing-row-flagship td.cell-ratio {
-  font-weight: 700;
   color: var(--text);
 }
 
@@ -128,10 +120,6 @@
 .view-pricing tr.pricing-row-normal .model-name {
   font-weight: 450;
   color: color-mix(in srgb, var(--text) 88%, transparent);
-}
-.view-pricing tr.pricing-row-normal td.cell-price {
-  font-weight: 400;
-  color: color-mix(in srgb, var(--text) 82%, transparent);
 }
 
 /* 最后一列：推荐定位 (统一黑字，保留emoji，默认推荐加粗) */
