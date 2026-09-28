@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="./manager.css?v=20260905h">
   <link rel="stylesheet" href="./notes.css?v=20260905e">
   <link rel="stylesheet" href="./expenses.css?v=20260905y">
-  <link rel="stylesheet" href="./pricing.css?v=20260928a">
+  <link rel="stylesheet" href="./pricing.css?v=20260928b">
   <title>AI Resource Hub</title>
   <style>
     :root{color-scheme:light dark;--bg:#f6f7f9;--card:#fff;--text:#17191c;--muted:#69707c;--line:#e3e6ea;--accent:#2563eb;--soft:#eef4ff;--warn:#fff7e6;--bar:color-mix(in srgb,var(--bg) 91%,transparent)}
@@ -10606,8 +10606,8 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
       <section id="pricing-models" data-title="模型价格对比">
         <div class="section-title"><h2>模型价格对比</h2></div>
         <p class="table-intro">2026-09-28 对话整理快照；价格按每百万 token 计，缓存输入不参与“本家倍数”计算。不同币种、上下文长度和计费通道不能直接横向比较。实际费用以厂商定价页为准。</p>
-        <div class="table-wrap"><table class="data-table">
-          <thead><tr><th>厂商 / 平台</th><th>模型</th><th>输入</th><th>缓存输入</th><th>输出</th><th>本家倍数</th><th>推荐定位</th></tr></thead>
+        <div class="table-wrap"><table class="data-table" id="pricing-table">
+          <thead><tr><th>厂商 / 平台</th><th>模型</th><th>输入 / 1M</th><th>缓存输入 / 1M</th><th>输出 / 1M</th><th>本家倍数</th><th>推荐定位</th></tr></thead>
           <tbody id="pricing-body"></tbody>
         </table></div>
         <p id="pricing-empty" class="empty-state" hidden>没有匹配的模型。</p>
@@ -11512,7 +11512,7 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
       });
     });
   </script>
-  <script src="./pricing.js?v=20260928a"></script>
+  <script src="./pricing.js?v=20260928b"></script>
   <script type="module" src="./manager.js?v=20260905k"></script>
   <script type="module" src="./notes.js?v=20260905c"></script>
   <script type="module" src="./expenses.js?v=20260905aa"></script>

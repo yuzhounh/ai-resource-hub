@@ -1,79 +1,185 @@
 // 2026-09-28 snapshot from the linked price-comparison conversation.
 // Prices are displayed as supplied there; source links let readers check current rates.
 const pricingSources = {
-  OpenAI: 'https://developers.openai.com/api/docs/pricing',
-  Anthropic: 'https://platform.claude.com/docs/en/about-claude/pricing',
-  Google: 'https://ai.google.dev/gemini-api/docs/pricing',
-  xAI: 'https://docs.x.ai/developers/models/grok-4.7',
-  Cursor: 'https://docs.cursor.com/models',
-  DeepSeek: 'https://api-docs.deepseek.com/quick_start/pricing/',
-  Qwen: 'https://help.aliyun.com/zh/model-studio/qwen3-8-flash',
-  Kimi: 'https://platform.moonshot.ai/docs/pricing',
-  'GLM / Z.ai': 'https://docs.z.ai/guides/overview/pricing',
-  MiniMax: 'https://platform.minimax.io/docs/guides/pricing',
-  'Xiaomi MiMo': 'https://platform.xiaomimimo.com/',
-  '腾讯混元': 'https://cloud.tencent.com/product/hunyuan',
-  'Seed / 豆包': 'https://www.volcengine.com/product/ark'
+  OpenAI: { url: 'https://developers.openai.com/api/docs/pricing', label: 'OpenAI Developer' },
+  Anthropic: { url: 'https://platform.claude.com/docs/en/about-claude/pricing', label: 'Anthropic' },
+  Google: { url: 'https://ai.google.dev/gemini-api/docs/pricing', label: 'Google AI for Dev' },
+  xAI: { url: 'https://docs.x.ai/developers/models/grok-4.7', label: 'xAI Docs' },
+  Cursor: { url: 'https://docs.cursor.com/models', label: 'Cursor Models' },
+  DeepSeek: { url: 'https://api-docs.deepseek.com/quick_start/pricing/', label: 'DeepSeek Docs' },
+  Qwen: { url: 'https://help.aliyun.com/zh/model-studio/qwen3-8-flash', label: '阿里云百炼' },
+  Kimi: { url: 'https://platform.moonshot.ai/docs/pricing', label: 'Moonshot Docs' },
+  'GLM / Z.ai': { url: 'https://docs.z.ai/guides/overview/pricing', label: '智谱开放平台' },
+  MiniMax: { url: 'https://platform.minimax.io/docs/guides/pricing', label: 'MiniMax Docs' },
+  'Xiaomi MiMo': { url: 'https://platform.xiaomimimo.com/', label: 'Xiaomi MiMo' },
+  '腾讯混元': { url: 'https://cloud.tencent.com/product/hunyuan', label: '腾讯云混元' },
+  'Seed / 豆包': { url: 'https://www.volcengine.com/product/ark', label: '火山方舟' }
 };
 
 const pricingRows = [
-  ['OpenAI', 'GPT-6 Luna', '$0.10', '$0.01', '$0.50', '0.05×', '大批量、简单任务'],
-  ['OpenAI', 'GPT-6 Sol', '$2.00', '$0.20', '$10.00', '1×', '默认推荐'],
-  ['OpenAI', 'GPT-6 Astra', '$10.00', '$1.00', '$50.00', '5.00×', '最高难度任务'],
-  ['Anthropic', 'Claude Haiku 4.5', '$1.00', '≈$0.10', '$5.00', '0.50×', '低成本 / 子 Agent'],
-  ['Anthropic', 'Claude Sonnet 5', '$2.00', '≈$0.20', '$10.00', '1×', '默认推荐'],
-  ['Anthropic', 'Claude Opus 5.5', '$4.00', '$0.20', '$20.00', '2.00×', '高难 Coding / Agent'],
-  ['Anthropic', 'Claude Fable 5.1', '$10.00', '$0.25', '$50.00', '5.00×', '极限档 / 超长程复杂任务'],
-  ['Google', 'Gemini 3.5 Flash-Lite', '$0.30', '$0.03', '$2.50', '0.62×', '高吞吐低成本'],
-  ['Google', 'Gemini 3.8 Flash', '$0.75', '$0.075', '$3.75', '1×', '默认推荐 / Coding & Agent'],
-  ['Google', 'Gemini 3.1 Pro Preview', '$2.00', '$0.20', '$12.00', '3.11×', '复杂知识 / 多模态推理'],
-  ['xAI', 'Grok 4.7', '$2.00', '$0.50', '$6.00', '1×', '默认推荐 / Coding + 知识工作'],
-  ['Cursor', 'Composer 2.5', '$0.50', '$0.20', '$2.50', '1×', '默认推荐 / Coding & Agent'],
-  ['Cursor', 'Grok 4.7', '$2.00', '$0.50', '$6.00', '2.67×', '更困难、长程 Coding / Agent'],
-  ['DeepSeek', 'V4.1 Flash', '$0.30', '$0.006', '$1.20', '1×', '默认推荐；峰值价'],
-  ['Qwen', 'Qwen3.8 Flash', '$0.113', '$0.014', '$0.382', '1×', '默认推荐 / 高性价比'],
-  ['Qwen', 'Qwen3.8 Max', '$1.65', '$0.206', '$4.951', '13.34×', '旗舰复杂任务'],
-  ['Kimi', 'K2.8 Preview', '—', '—', '—', '—', '默认推荐 / Coding & Agent'],
-  ['Kimi', 'K3', '—', '—', '—', '—', '通用旗舰 / 大型代码库 / 知识工作'],
-  ['GLM / Z.ai', 'GLM-5.3 Flash', '—', '—', '—', '—', '默认推荐 / 性价比'],
-  ['GLM / Z.ai', 'GLM-5.3', '—', '—', '—', '—', '高难 Coding / 长程 Agent'],
-  ['MiniMax', 'MiniMax M3', '$0.30', '$0.06', '$1.20', '1×', '默认推荐'],
-  ['Xiaomi MiMo', 'MiMo-V2.6 Flash', '$0.14', '$0.0028', '$0.28', '1×', '默认推荐'],
-  ['Xiaomi MiMo', 'MiMo-V2.6 Pro', '$0.435', '$0.0036', '$0.87', '3.11×', '高难推理'],
-  ['腾讯混元', 'Hy3', '¥1', '¥0.25', '¥4', '1×', '默认性价比'],
-  ['腾讯混元', 'Hy4 Preview', '¥6', '¥0.30', '¥18', '4.80×', '高质量 / Coding / Agent'],
-  ['Seed / 豆包', 'Seed 2.1 Lite', '¥0.80', '¥0.16', '¥2.70', '0.10×', '低成本、大规模调用'],
-  ['Seed / 豆包', 'Seed 2.1 Pro', '¥6.00', '¥1.20', '¥30.00', '1×', '通用默认推荐'],
-  ['Seed / 豆包', 'Seed Evolving', '¥6.00', '¥1.20', '¥30.00', '1×', 'Coding / Agent 默认推荐']
+  { vendor: 'OpenAI', model: 'GPT-6 Luna', input: '$0.10', cache: '$0.01', output: '$0.50', ratio: '0.05×', desc: '大批量、简单任务', emoji: '💰', type: 'budget' },
+  { vendor: 'OpenAI', model: 'GPT-6 Sol', input: '$2.00', cache: '$0.20', output: '$10.00', ratio: '1×', desc: '默认推荐', emoji: '⭐', isFlagship: true, type: 'flagship' },
+  { vendor: 'OpenAI', model: 'GPT-6 Astra', input: '$10.00', cache: '$1.00', output: '$50.00', ratio: '5.00×', desc: '最高难度任务', emoji: '🧠', type: 'reasoning' },
+
+  { vendor: 'Anthropic', model: 'Claude Haiku 4.5', input: '$1.00', cache: '≈$0.10', output: '$5.00', ratio: '0.50×', desc: '低成本 / 子 Agent', emoji: '💰', type: 'budget' },
+  { vendor: 'Anthropic', model: 'Claude Sonnet 5', input: '$2.00', cache: '≈$0.20', output: '$10.00', ratio: '1×', desc: '默认推荐', emoji: '⭐', isFlagship: true, type: 'flagship' },
+  { vendor: 'Anthropic', model: 'Claude Opus 5.5', input: '$4.00', cache: '$0.20', output: '$20.00', ratio: '2.00×', desc: '高难 Coding / Agent', emoji: '🧠', type: 'reasoning' },
+  { vendor: 'Anthropic', model: 'Claude Fable 5.1', input: '$10.00', cache: '$0.25', output: '$50.00', ratio: '5.00×', desc: '极限档 / 超长程复杂任务', emoji: '🚀', type: 'extreme' },
+
+  { vendor: 'Google', model: 'Gemini 3.5 Flash-Lite', input: '$0.30', cache: '$0.03', output: '$2.50', ratio: '0.62×', desc: '高吞吐低成本', emoji: '💰', type: 'budget' },
+  { vendor: 'Google', model: 'Gemini 3.8 Flash', input: '$0.75', cache: '$0.075', output: '$3.75', ratio: '1×', desc: '默认推荐 / Coding & Agent', emoji: '⭐', isFlagship: true, type: 'flagship' },
+  { vendor: 'Google', model: 'Gemini 3.1 Pro Preview', input: '$2.00', cache: '$0.20', output: '$12.00', ratio: '3.11×', desc: '复杂知识 / 多模态推理', emoji: '🧠', type: 'reasoning' },
+
+  { vendor: 'xAI', model: 'Grok 4.7', input: '$2.00', cache: '$0.50', output: '$6.00', ratio: '1×', desc: '默认推荐 / Coding + 知识工作', emoji: '⭐', isFlagship: true, type: 'flagship' },
+
+  { vendor: 'Cursor', model: 'Composer 2.5', input: '$0.50', cache: '$0.20', output: '$2.50', ratio: '1×', desc: '默认推荐 / Coding & Agent', emoji: '⭐', isFlagship: true, type: 'flagship' },
+  { vendor: 'Cursor', model: 'Grok 4.7', input: '$2.00', cache: '$0.50', output: '$6.00', ratio: '2.67×', desc: '更困难、长程 Coding / Agent', emoji: '🚀', type: 'extreme' },
+
+  { vendor: 'DeepSeek', model: 'V4.1 Flash', input: '$0.30', cache: '$0.006', output: '$1.20', ratio: '1×', desc: '默认推荐；峰值价', emoji: '⭐', isFlagship: true, type: 'flagship' },
+
+  { vendor: 'Qwen', model: 'Qwen3.8 Flash', input: '$0.113', cache: '$0.014', output: '$0.382', ratio: '1×', desc: '默认推荐 / 高性价比', emoji: '⭐', isFlagship: true, type: 'flagship' },
+  { vendor: 'Qwen', model: 'Qwen3.8 Max', input: '$1.65', cache: '$0.206', output: '$4.951', ratio: '13.34×', desc: '旗舰复杂任务', emoji: '🧠', type: 'reasoning' },
+
+  { vendor: 'Kimi', model: 'K2.8 Preview', input: '—', cache: '—', output: '—', ratio: '—', desc: '默认推荐 / Coding & Agent', emoji: '⭐', isFlagship: true, type: 'flagship' },
+  { vendor: 'Kimi', model: 'K3', input: '—', cache: '—', output: '—', ratio: '—', desc: '通用旗舰 / 大型代码库 / 知识工作', emoji: '🧠', type: 'reasoning' },
+
+  { vendor: 'GLM / Z.ai', model: 'GLM-5.3 Flash', input: '—', cache: '—', output: '—', ratio: '—', desc: '默认推荐 / 性价比', emoji: '⭐', isFlagship: true, type: 'flagship' },
+  { vendor: 'GLM / Z.ai', model: 'GLM-5.3', input: '—', cache: '—', output: '—', ratio: '—', desc: '高难 Coding / 长程 Agent', emoji: '🧠', type: 'reasoning' },
+
+  { vendor: 'MiniMax', model: 'MiniMax M3', input: '$0.30', cache: '$0.06', output: '$1.20', ratio: '1×', desc: '默认推荐', emoji: '⭐', isFlagship: true, type: 'flagship' },
+
+  { vendor: 'Xiaomi MiMo', model: 'MiMo-V2.6 Flash', input: '$0.14', cache: '$0.0028', output: '$0.28', ratio: '1×', desc: '默认推荐', emoji: '⭐', isFlagship: true, type: 'flagship' },
+  { vendor: 'Xiaomi MiMo', model: 'MiMo-V2.6 Pro', input: '$0.435', cache: '$0.0036', output: '$0.87', ratio: '3.11×', desc: '高难推理', emoji: '🧠', type: 'reasoning' },
+
+  { vendor: '腾讯混元', model: 'Hy3', input: '¥1', cache: '¥0.25', output: '¥4', ratio: '1×', desc: '默认性价比', emoji: '⭐', isFlagship: true, type: 'flagship' },
+  { vendor: '腾讯混元', model: 'Hy4 Preview', input: '¥6', cache: '¥0.30', output: '¥18', ratio: '4.80×', desc: '高质量 / Coding / Agent', emoji: '🧠', type: 'reasoning' },
+
+  { vendor: 'Seed / 豆包', model: 'Seed 2.1 Lite', input: '¥0.80', cache: '¥0.16', output: '¥2.70', ratio: '0.10×', desc: '低成本、大规模调用', emoji: '💰', type: 'budget' },
+  { vendor: 'Seed / 豆包', model: 'Seed 2.1 Pro', input: '¥6.00', cache: '¥1.20', output: '¥30.00', ratio: '1×', desc: '通用默认推荐', emoji: '⭐', isFlagship: true, type: 'flagship' },
+  { vendor: 'Seed / 豆包', model: 'Seed Evolving', input: '¥6.00', cache: '¥1.20', output: '¥30.00', ratio: '1×', desc: 'Coding / Agent 默认推荐', emoji: '⭐', isFlagship: true, type: 'flagship' }
 ];
 
+const pricingTable = document.getElementById('pricing-table');
 const pricingBody = document.getElementById('pricing-body');
-for (const row of pricingRows) {
+
+let lastVendor = null;
+pricingRows.forEach((item, index) => {
   const tr = document.createElement('tr');
-  row.forEach((value, index) => {
-    const td = document.createElement('td');
-    if (index === 0) {
-      const a = document.createElement('a');
-      a.href = pricingSources[value];
-      a.target = '_blank';
-      a.rel = 'noopener';
-      a.textContent = value;
-      a.title = '查看厂商定价或产品页面';
-      td.append(a);
-    } else {
-      td.textContent = value;
-    }
-    tr.append(td);
-  });
+  const isFirstInVendor = item.vendor !== lastVendor;
+  lastVendor = item.vendor;
+
+  if (isFirstInVendor) {
+    tr.classList.add('vendor-group-start');
+  } else {
+    tr.classList.add('vendor-group-sub');
+  }
+
+  if (item.isFlagship) {
+    tr.classList.add('pricing-row-flagship');
+  } else {
+    tr.classList.add('pricing-row-normal');
+  }
+
+  tr.dataset.vendor = item.vendor;
+  tr.dataset.model = item.model;
+  tr.dataset.desc = item.desc;
+
+  const source = pricingSources[item.vendor] || { url: '#', label: item.vendor };
+
+  // 1. 厂商 / 平台
+  const tdVendor = document.createElement('td');
+  tdVendor.className = 'cell-vendor';
+  if (isFirstInVendor) {
+    const a = document.createElement('a');
+    a.href = source.url;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.className = 'vendor-title-link';
+    a.textContent = item.vendor;
+    a.title = '查看 ' + item.vendor + ' 官方定价';
+    tdVendor.append(a);
+  } else {
+    // 隐藏/Ghost厂商名，供过滤时显示
+    const ghost = document.createElement('span');
+    ghost.className = 'vendor-sub-ghost';
+    ghost.textContent = item.vendor;
+    tdVendor.append(ghost);
+  }
+  tr.append(tdVendor);
+
+  // 2. 模型
+  const tdModel = document.createElement('td');
+  tdModel.className = 'cell-model';
+  const modelSpan = document.createElement('span');
+  modelSpan.className = 'model-name';
+  modelSpan.textContent = item.model;
+  tdModel.append(modelSpan);
+  tr.append(tdModel);
+
+  // 3. 输入 / 1M
+  const tdInput = document.createElement('td');
+  tdInput.className = 'cell-price';
+  tdInput.textContent = item.input;
+  tr.append(tdInput);
+
+  // 4. 缓存输入 / 1M
+  const tdCache = document.createElement('td');
+  tdCache.className = 'cell-price';
+  tdCache.textContent = item.cache;
+  tr.append(tdCache);
+
+  // 5. 输出 / 1M
+  const tdOutput = document.createElement('td');
+  tdOutput.className = 'cell-price';
+  tdOutput.textContent = item.output;
+  tr.append(tdOutput);
+
+  // 6. 本家倍数
+  const tdRatio = document.createElement('td');
+  tdRatio.className = 'cell-ratio cell-price';
+  tdRatio.textContent = item.ratio;
+  tr.append(tdRatio);
+
+  // 7. 推荐定位
+  const tdRecommend = document.createElement('td');
+  tdRecommend.className = 'cell-recommend';
+
+  const wrapper = document.createElement('div');
+  wrapper.className = 'recommend-wrapper';
+
+  const badge = document.createElement('span');
+  badge.className = `recommend-badge badge-${item.type}`;
+  badge.innerHTML = `<span class="badge-emoji">${item.emoji}</span><span>${item.desc}</span>`;
+  wrapper.append(badge);
+
+  const pill = document.createElement('a');
+  pill.href = source.url;
+  pill.target = '_blank';
+  pill.rel = 'noopener';
+  pill.className = 'source-pill';
+  pill.title = '查看 ' + source.label + ' 定价或产品页';
+  pill.innerHTML = `<span class="source-pill-dot"></span><span>${source.label}</span><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>`;
+  wrapper.append(pill);
+
+  tdRecommend.append(wrapper);
+  tr.append(tdRecommend);
+
   pricingBody.append(tr);
-}
+});
 
 const pricingSearch = document.getElementById('pricing-search');
 pricingSearch.addEventListener('input', () => {
   const query = pricingSearch.value.trim().toLocaleLowerCase();
   let visible = 0;
+  if (query) {
+    pricingTable?.classList.add('is-filtered');
+  } else {
+    pricingTable?.classList.remove('is-filtered');
+  }
+
   pricingBody.querySelectorAll('tr').forEach(row => {
-    const match = !query || row.textContent.toLocaleLowerCase().includes(query);
+    const text = (row.dataset.vendor + ' ' + row.dataset.model + ' ' + row.dataset.desc + ' ' + row.textContent).toLocaleLowerCase();
+    const match = !query || text.includes(query);
     row.hidden = !match;
     if (match) visible++;
   });
