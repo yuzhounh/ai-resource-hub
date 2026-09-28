@@ -61,7 +61,7 @@
 
 /* 第一列：厂商 / 平台 */
 .view-pricing td.cell-vendor {
-  width: 130px;
+  width: 155px;
   white-space: nowrap;
   vertical-align: middle;
 }
@@ -167,14 +167,3 @@
   color: color-mix(in srgb, var(--text) 90%, transparent);
 }
 
-/* 说明注释 */
-.view-pricing .note {
-  margin-top: 14px;
-  border: 1px solid var(--line);
-  background: var(--soft);
-  border-radius: 12px;
-  padding: 12px 14px;
-  font-size: 13px;
-  color: var(--muted);
-  line-height: 1.6;
-}

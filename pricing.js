@@ -4,6 +4,7 @@ const pricingSources = {
   OpenAI: { url: 'https://developers.openai.com/api/docs/pricing', label: 'OpenAI Developer' },
   Anthropic: { url: 'https://platform.claude.com/docs/en/about-claude/pricing', label: 'Anthropic' },
   Google: { url: 'https://ai.google.dev/gemini-api/docs/pricing', label: 'Google AI for Dev' },
+  'SpaceXAI / Cursor': { url: 'https://docs.cursor.com/models', label: 'Cursor / xAI' },
   xAI: { url: 'https://docs.x.ai/developers/models/grok-4.7', label: 'xAI Docs' },
   Cursor: { url: 'https://docs.cursor.com/models', label: 'Cursor Models' },
   DeepSeek: { url: 'https://api-docs.deepseek.com/quick_start/pricing/', label: 'DeepSeek Docs' },
@@ -30,10 +31,9 @@ const pricingRows = [
   { vendor: 'Google', model: 'Gemini 3.8 Flash', input: '$0.75', cache: '$0.075', output: '$3.75', ratio: '1×', desc: '默认推荐 / Coding & Agent', emoji: '⭐', isFlagship: true, type: 'flagship' },
   { vendor: 'Google', model: 'Gemini 3.1 Pro Preview', input: '$2.00', cache: '$0.20', output: '$12.00', ratio: '3.11×', desc: '复杂知识 / 多模态推理', emoji: '🧠', type: 'reasoning' },
 
-  { vendor: 'xAI', model: 'Grok 4.7', input: '$2.00', cache: '$0.50', output: '$6.00', ratio: '1×', desc: '默认推荐 / Coding + 知识工作', emoji: '⭐', isFlagship: true, type: 'flagship' },
-
-  { vendor: 'Cursor', model: 'Composer 2.5', input: '$0.50', cache: '$0.20', output: '$2.50', ratio: '1×', desc: '默认推荐 / Coding & Agent', emoji: '⭐', isFlagship: true, type: 'flagship' },
-  { vendor: 'Cursor', model: 'Grok 4.7', input: '$2.00', cache: '$0.50', output: '$6.00', ratio: '2.67×', desc: '更困难、长程 Coding / Agent', emoji: '🚀', type: 'extreme' },
+  { vendor: 'SpaceXAI / Cursor', model: 'Grok 4.7', input: '$2.00', cache: '$0.50', output: '$6.00', ratio: '1×', desc: '默认推荐 / Coding + 知识工作', emoji: '⭐', isFlagship: true, type: 'flagship' },
+  { vendor: 'SpaceXAI / Cursor', model: 'Composer 2.5', input: '$0.50', cache: '$0.20', output: '$2.50', ratio: '1×', desc: '默认推荐 / Coding & Agent', emoji: '⭐', isFlagship: true, type: 'flagship' },
+  { vendor: 'SpaceXAI / Cursor', model: 'Grok 4.7', input: '$2.00', cache: '$0.50', output: '$6.00', ratio: '2.67×', desc: '更困难、长程 Coding / Agent', emoji: '🚀', type: 'extreme' },
 
   { vendor: 'DeepSeek', model: 'V4.1 Flash', input: '$0.30', cache: '$0.006', output: '$1.20', ratio: '1×', desc: '默认推荐；峰值价', emoji: '⭐', isFlagship: true, type: 'flagship' },
 
@@ -86,7 +86,7 @@ pricingRows.forEach((item) => {
 
   const source = pricingSources[item.vendor] || { url: '#', label: item.vendor };
 
-  // 1. 厂商 / 平台 (首行仅展示可点击的厂商名，同组后续型号行留白)
+  // 1. 厂商 / 平台 (首行展示厂商名链接，同组后续型号行留白)
   const tdVendor = document.createElement('td');
   tdVendor.className = 'cell-vendor';
   if (isFirstInVendor) {
@@ -140,7 +140,7 @@ pricingRows.forEach((item) => {
   tdRatio.textContent = item.ratio;
   tr.append(tdRatio);
 
-  // 7. 推荐定位 (无背景色，保留emoji和文字颜色，仅默认推荐加粗)
+  // 7. 推荐定位 (无背景色，保留emoji和标准文字颜色，仅默认推荐加粗)
   const tdRecommend = document.createElement('td');
   tdRecommend.className = 'cell-recommend';
 
