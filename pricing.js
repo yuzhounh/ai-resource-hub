@@ -35,8 +35,8 @@ const pricingRows = [
 
   { vendor: 'DeepSeek', model: 'DeepSeek V4.1 Flash', input: '$0.30', cache: '$0.006', output: '$1.20', ratio: '1.00×', desc: '默认推荐；峰值价', emoji: '⭐', isFlagship: true, type: 'flagship' },
 
-  { vendor: 'Qwen', model: 'Qwen3.8 Flash', input: '$0.113', cache: '$0.014', output: '$0.382', ratio: '1.00×', desc: '默认推荐 / 高性价比', emoji: '⭐', isFlagship: true, type: 'flagship' },
-  { vendor: 'Qwen', model: 'Qwen3.8 Max', input: '$1.65', cache: '$0.206', output: '$4.951', ratio: '13.34×', desc: '旗舰复杂任务', emoji: '🧠', type: 'reasoning' },
+  { vendor: 'Qwen', model: 'Qwen3.8 Flash', input: '¥0.80', cache: '¥0.10', output: '¥2.70', ratio: '1.00×', desc: '默认推荐 / 高性价比', emoji: '⭐', isFlagship: true, type: 'flagship' },
+  { vendor: 'Qwen', model: 'Qwen3.8 Max', input: '¥12.00', cache: '¥1.50', output: '¥36.00', ratio: '13.71×', desc: '旗舰复杂任务', emoji: '🧠', type: 'reasoning' },
 
   { vendor: 'Kimi', model: 'Kimi K2.8 Preview', input: '—', cache: '—', output: '—', ratio: '—', desc: '默认推荐 / Coding & Agent', emoji: '⭐', isFlagship: true, type: 'flagship' },
   { vendor: 'Kimi', model: 'Kimi K3', input: '—', cache: '—', output: '—', ratio: '—', desc: '通用旗舰 / 大型代码库 / 知识工作', emoji: '🧠', type: 'reasoning' },
@@ -49,8 +49,8 @@ const pricingRows = [
   { vendor: 'Xiaomi MiMo', model: 'MiMo-V2.6 Flash', input: '$0.14', cache: '$0.0028', output: '$0.28', ratio: '1.00×', desc: '默认推荐', emoji: '⭐', isFlagship: true, type: 'flagship' },
   { vendor: 'Xiaomi MiMo', model: 'MiMo-V2.6 Pro', input: '$0.435', cache: '$0.0036', output: '$0.87', ratio: '3.11×', desc: '高难推理', emoji: '🧠', type: 'reasoning' },
 
-  { vendor: '腾讯混元', model: 'Hy3', input: '¥1', cache: '¥0.25', output: '¥4', ratio: '1.00×', desc: '默认性价比', emoji: '⭐', isFlagship: true, type: 'flagship' },
-  { vendor: '腾讯混元', model: 'Hy4 Preview', input: '¥6', cache: '¥0.30', output: '¥18', ratio: '4.80×', desc: '高质量 / Coding / Agent', emoji: '🧠', type: 'reasoning' },
+  { vendor: '腾讯混元', model: 'Hy3', input: '¥1.00', cache: '¥0.25', output: '¥4.00', ratio: '1.00×', desc: '默认性价比', emoji: '⭐', isFlagship: true, type: 'flagship' },
+  { vendor: '腾讯混元', model: 'Hy4 Preview', input: '¥6.00', cache: '¥0.30', output: '¥18.00', ratio: '4.80×', desc: '高质量 / Coding / Agent', emoji: '🧠', type: 'reasoning' },
 
   { vendor: 'Seed / 豆包', model: 'Seed 2.1 Lite', input: '¥0.30', cache: '¥0.06', output: '¥0.60', ratio: '1.00×', desc: '默认推荐 / 极低成本', emoji: '⭐', isFlagship: true, type: 'flagship' },
   { vendor: 'Seed / 豆包', model: 'Seed 2.1 Pro', input: '¥0.80', cache: '¥0.16', output: '¥2.00', ratio: '3.11×', desc: '高质量 / 复杂任务', emoji: '🧠', type: 'reasoning' }
