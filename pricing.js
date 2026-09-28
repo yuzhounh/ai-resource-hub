@@ -52,8 +52,8 @@ const pricingRows = [
   { vendor: '腾讯混元', model: 'Hy3', input: '¥1', cache: '¥0.25', output: '¥4', ratio: '1.00×', desc: '默认性价比', emoji: '⭐', isFlagship: true, type: 'flagship' },
   { vendor: '腾讯混元', model: 'Hy4 Preview', input: '¥6', cache: '¥0.30', output: '¥18', ratio: '4.80×', desc: '高质量 / Coding / Agent', emoji: '🧠', type: 'reasoning' },
 
-  { vendor: 'Seed / 豆包', model: 'Seed 2.1 Lite', input: '¥0.80', cache: '¥0.16', output: '¥2.70', ratio: '0.10×', desc: '低成本、大规模调用', emoji: '💰', type: 'budget' },
-  { vendor: 'Seed / 豆包', model: 'Seed 2.1 Pro', input: '¥6.00', cache: '¥1.20', output: '¥30.00', ratio: '1.00×', desc: '通用默认推荐', emoji: '⭐', isFlagship: true, type: 'flagship' }
+  { vendor: 'Seed / 豆包', model: 'Seed 2.1 Lite', input: '¥0.30', cache: '¥0.06', output: '¥0.60', ratio: '1.00×', desc: '默认推荐 / 极低成本', emoji: '⭐', isFlagship: true, type: 'flagship' },
+  { vendor: 'Seed / 豆包', model: 'Seed 2.1 Pro', input: '¥0.80', cache: '¥0.16', output: '¥2.00', ratio: '3.11×', desc: '高质量 / 复杂任务', emoji: '🧠', type: 'reasoning' }
 ];
 
 const pricingTable = document.getElementById('pricing-table');
