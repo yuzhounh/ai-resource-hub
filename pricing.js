@@ -34,13 +34,13 @@ const pricingRows = [
   { vendor: 'SpaceXAI / Cursor', model: 'Composer 2.5', input: '$0.50', cache: '$0.20', output: '$2.50', ratio: '1.00×', desc: '默认推荐 / Coding & Agent', emoji: '⭐', isFlagship: true, type: 'flagship' },
   { vendor: 'SpaceXAI / Cursor', model: 'Grok 4.7', input: '$2.00', cache: '$0.50', output: '$6.00', ratio: '2.67×', desc: '更困难、长程 Coding / Agent', emoji: '🧠', type: 'reasoning' },
 
-  { vendor: 'DeepSeek', model: 'V4.1 Flash', input: '$0.30', cache: '$0.006', output: '$1.20', ratio: '1.00×', desc: '默认推荐；峰值价', emoji: '⭐', isFlagship: true, type: 'flagship' },
+  { vendor: 'DeepSeek', model: 'DeepSeek V4.1 Flash', input: '$0.30', cache: '$0.006', output: '$1.20', ratio: '1.00×', desc: '默认推荐；峰值价', emoji: '⭐', isFlagship: true, type: 'flagship' },
 
   { vendor: 'Qwen', model: 'Qwen3.8 Flash', input: '$0.113', cache: '$0.014', output: '$0.382', ratio: '1.00×', desc: '默认推荐 / 高性价比', emoji: '⭐', isFlagship: true, type: 'flagship' },
   { vendor: 'Qwen', model: 'Qwen3.8 Max', input: '$1.65', cache: '$0.206', output: '$4.951', ratio: '13.34×', desc: '旗舰复杂任务', emoji: '🧠', type: 'reasoning' },
 
-  { vendor: 'Kimi', model: 'K2.8 Preview', input: '—', cache: '—', output: '—', ratio: '—', desc: '默认推荐 / Coding & Agent', emoji: '⭐', isFlagship: true, type: 'flagship' },
-  { vendor: 'Kimi', model: 'K3', input: '—', cache: '—', output: '—', ratio: '—', desc: '通用旗舰 / 大型代码库 / 知识工作', emoji: '🧠', type: 'reasoning' },
+  { vendor: 'Kimi', model: 'Kimi K2.8 Preview', input: '—', cache: '—', output: '—', ratio: '—', desc: '默认推荐 / Coding & Agent', emoji: '⭐', isFlagship: true, type: 'flagship' },
+  { vendor: 'Kimi', model: 'Kimi K3', input: '—', cache: '—', output: '—', ratio: '—', desc: '通用旗舰 / 大型代码库 / 知识工作', emoji: '🧠', type: 'reasoning' },
 
   { vendor: 'GLM / Z.ai', model: 'GLM-5.3 Flash', input: '—', cache: '—', output: '—', ratio: '—', desc: '默认推荐 / 性价比', emoji: '⭐', isFlagship: true, type: 'flagship' },
   { vendor: 'GLM / Z.ai', model: 'GLM-5.3', input: '—', cache: '—', output: '—', ratio: '—', desc: '高难 Coding / 长程 Agent', emoji: '🧠', type: 'reasoning' },
