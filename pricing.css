@@ -1,0 +1,15 @@
+.view-pricing section{margin:34px 0 44px}
+.view-pricing .section-title{margin-bottom:12px}
+.view-pricing h2{font-size:23px;margin:0}
+.view-pricing .table-intro{margin:0 0 12px;color:var(--muted);font-size:14px}
+.view-pricing .table-wrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:14px}
+.view-pricing table{border-collapse:collapse;width:100%;min-width:900px}
+.view-pricing th,.view-pricing td{padding:12px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);line-height:1.45}
+.view-pricing th{background:color-mix(in srgb,var(--card) 78%,var(--soft));font-size:13px;white-space:nowrap}
+.view-pricing td{font-size:13.5px}
+.view-pricing tr:last-child td{border-bottom:0}
+.view-pricing td:nth-child(1),.view-pricing td:nth-child(2){font-weight:650;white-space:nowrap}
+.view-pricing td:nth-child(n+3):nth-child(-n+6){white-space:nowrap;font-variant-numeric:tabular-nums}
+.view-pricing td a{text-decoration:none}
+.view-pricing td a:hover{text-decoration:underline}
+.view-pricing .note{margin-top:12px;border:1px solid var(--line);background:var(--soft);border-radius:12px;padding:12px 14px;font-size:13px}
