@@ -1,4 +1,4 @@
-// 2026-09-28 snapshot from the linked price-comparison conversation.
+// Updated on 2026-09-28.
 // Prices are displayed as supplied there; source links let readers check current rates.
 const pricingSources = {
   OpenAI: { url: 'https://developers.openai.com/api/docs/pricing', label: 'OpenAI Developer' },
