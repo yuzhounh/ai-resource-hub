@@ -1,4 +1,4 @@
-// Updated on 2026-09-28.
+// Updated on 2026-09-29.
 // Prices are displayed as supplied there; source links let readers check current rates.
 const pricingSources = {
   OpenAI: { url: 'https://developers.openai.com/api/docs/pricing', label: 'OpenAI Developer' },
@@ -24,7 +24,7 @@ const pricingRows = [
   { vendor: 'OpenAI', model: 'GPT-6 Astra', input: '$10.00', cache: '$1.00', output: '$50.00', ratio: '5.00×', desc: '最高难度任务', emoji: '🧠', type: 'reasoning' },
 
   { vendor: 'Anthropic', model: 'Claude Haiku 4.5', input: '$1.00', cache: '$0.10', output: '$5.00', ratio: '0.50×', desc: '低成本 / 子 Agent', emoji: '💰', type: 'budget' },
-  { vendor: 'Anthropic', model: 'Claude Sonnet 5', input: '$2.00', cache: '$0.20', output: '$10.00', ratio: '1.00×', desc: '默认推荐', emoji: '⭐', isFlagship: true, type: 'flagship' },
+  { vendor: 'Anthropic', model: 'Claude Sonnet 5.5', input: '$2.00', cache: '$0.20', output: '$10.00', ratio: '1.00×', desc: '默认推荐', emoji: '⭐', isFlagship: true, type: 'flagship' },
   { vendor: 'Anthropic', model: 'Claude Opus 5.5', input: '$4.00', cache: '$0.20', output: '$20.00', ratio: '2.00×', desc: '高难 Coding / Agent', emoji: '🧠', type: 'reasoning' },
   { vendor: 'Anthropic', model: 'Claude Fable 5.1', input: '$10.00', cache: '$0.25', output: '$50.00', ratio: '5.00×', desc: '极限档 / 超长程复杂任务', emoji: '🚀', type: 'extreme' },
 
