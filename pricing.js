@@ -1,4 +1,4 @@
-// Updated on 2026-09-29.
+// Updated on 2026-09-30.
 // Prices are displayed as supplied there; source links let readers check current rates.
 const pricingSources = {
   OpenAI: { url: 'https://developers.openai.com/api/docs/pricing', label: 'OpenAI Developer' },
@@ -20,7 +20,7 @@ const pricingSources = {
 
 const pricingRows = [
   { vendor: 'OpenAI', model: 'GPT-6 Luna', input: '$0.10', cache: '$0.01', output: '$0.50', ratio: '0.05×', desc: '大批量、简单任务', emoji: '💰', type: 'budget' },
-  { vendor: 'OpenAI', model: 'GPT-6 Sol', input: '$2.00', cache: '$0.20', output: '$10.00', ratio: '1.00×', desc: '默认推荐', emoji: '⭐', isFlagship: true, type: 'flagship' },
+  { vendor: 'OpenAI', model: 'GPT-6.1 Sol', input: '$2.00', cache: '$0.10', output: '$10.00', ratio: '1.00×', desc: '默认推荐', emoji: '⭐', isFlagship: true, type: 'flagship' },
   { vendor: 'OpenAI', model: 'GPT-6 Astra', input: '$10.00', cache: '$1.00', output: '$50.00', ratio: '5.00×', desc: '最高难度任务', emoji: '🧠', type: 'reasoning' },
 
   { vendor: 'Anthropic', model: 'Claude Haiku 4.5', input: '$1.00', cache: '$0.10', output: '$5.00', ratio: '0.50×', desc: '低成本 / 子 Agent', emoji: '💰', type: 'budget' },
@@ -164,9 +164,11 @@ pricingSearch.addEventListener('input', () => {
     pricingTable?.classList.remove('is-filtered');
   }
 
+  const normQuery = query.replace(/[-\s]+/g, ' ');
   pricingBody.querySelectorAll('tr').forEach(row => {
     const text = (row.dataset.vendor + ' ' + row.dataset.model + ' ' + row.dataset.desc + ' ' + row.textContent).toLocaleLowerCase();
-    const match = !query || text.includes(query);
+    const normText = text.replace(/[-\s]+/g, ' ');
+    const match = !query || text.includes(query) || normText.includes(normQuery);
     row.hidden = !match;
     if (match) visible++;
   });
