@@ -1,22 +1,4 @@
 {
-  "hosting": {
-    "public": ".",
-    "ignore": [
-      "firebase.json",
-      ".firebaserc",
-      "**/.*",
-      "**/node_modules/**",
-      "README.md",
-      "firestore.rules",
-      "pagetrace.user.js",
-      "api-connectivity/**",
-      "**/*.py",
-      "**/*.bat",
-      "**/*.sh",
-      "**/*.ps1",
-      "**/*.cmd"
-    ]
-  },
   "firestore": {
     "rules": "firestore.rules"
   }
