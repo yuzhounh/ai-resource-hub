@@ -5,7 +5,7 @@ const pricingSources = {
   Anthropic: { url: 'https://platform.claude.com/docs/en/about-claude/pricing', label: 'Anthropic' },
   Google: { url: 'https://ai.google.dev/gemini-api/docs/pricing', label: 'Google AI for Dev' },
   'SpaceXAI / Cursor': { url: 'https://docs.cursor.com/models', label: 'Cursor / xAI' },
-  Meta: { url: 'https://www.llama.com/', label: 'Meta Llama' },
+  Meta: { url: 'https://dev.meta.ai/', label: 'Meta Model API' },
   xAI: { url: 'https://docs.x.ai/developers/models/grok-4.7', label: 'xAI Docs' },
   Cursor: { url: 'https://docs.cursor.com/models', label: 'Cursor Models' },
   DeepSeek: { url: 'https://api-docs.deepseek.com/zh-cn/quick_start/pricing/', label: 'DeepSeek Docs' },
@@ -34,8 +34,8 @@ const pricingRows = [
   { vendor: 'SpaceXAI / Cursor', model: 'Composer 2.5', input: '$0.50', cache: '$0.20', output: '$2.50', ratio: '1.00×', desc: '默认推荐 / Coding & Agent', emoji: '⭐', isFlagship: true, type: 'flagship' },
   { vendor: 'SpaceXAI / Cursor', model: 'Grok 4.7', input: '$2.00', cache: '$0.50', output: '$6.00', ratio: '2.67×', desc: '更困难、长程 Coding / Agent', emoji: '🧠', type: 'reasoning' },
 
-  { vendor: 'Meta', model: 'Llama 4 Scout', input: '$0.08', cache: '$0.008', output: '$0.30', ratio: '1.00×', desc: '默认推荐 / 10M 上下文', emoji: '⭐', isFlagship: true, type: 'flagship' },
-  { vendor: 'Meta', model: 'Llama 4 Maverick', input: '$0.20', cache: '$0.02', output: '$0.80', ratio: '2.63×', desc: '复杂推理 / Coding & Agent', emoji: '🧠', type: 'reasoning' },
+  { vendor: 'Meta', model: 'Muse Spark (Contributor)', input: '$0.10', cache: '$0.002', output: '$0.20', ratio: '0.06×', desc: '极低成本 / 共享训练数据', emoji: '💰', type: 'budget' },
+  { vendor: 'Meta', model: 'Muse Spark', input: '$1.25', cache: '$0.15', output: '$4.25', ratio: '1.00×', desc: '默认推荐 / 原生多模态 & Agent', emoji: '⭐', isFlagship: true, type: 'flagship' },
 
   { vendor: 'DeepSeek', model: 'DeepSeek V4.1 Flash', input: '¥2.00', cache: '¥0.04', output: '¥8.00', ratio: '1.00×', desc: '默认推荐；峰值价', emoji: '⭐', isFlagship: true, type: 'flagship' },
 
