@@ -1,6 +1,8 @@
 .vercel*
 .firebase/
 .wrangler/
+.netlify/
 .env*
 __pycache__/
 *.pyc
+pagetrace.user.js
