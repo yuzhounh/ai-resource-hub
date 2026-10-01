@@ -1,10 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <defs>
+    <linearGradient id="favHub" x1="9" y1="9" x2="15" y2="15" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7457e8"/>
+      <stop offset="1" stop-color="#de4f82"/>
+    </linearGradient>
+  </defs>
   <style>
-    .link{stroke:#8b96a5}.hub{fill:#8875de}.left{fill:#43a68f}.right{fill:#668dd8}.center{fill:#d39448}
+    .link{stroke:#668dd8;stroke-opacity:.8;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;fill:none}
+    .hub{fill:url(#favHub)}
+    .node-mint{fill:#16b997}
+    .node-ocean{fill:#397ce8}
+    .node-amber{fill:#e58a24}
+    @media(prefers-color-scheme:dark){.link{stroke-opacity:.9}}
   </style>
-  <path class="link" d="M12 7v2.5M12 9.5 4.5 13.75M12 9.5l7.5 4.25M12 9.5v9" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle class="hub" cx="12" cy="5.25" r="3.6"/>
-  <rect class="left" x="1.75" y="11" width="5.5" height="5.5" rx="1.6"/>
-  <rect class="center" x="9.25" y="17" width="5.5" height="5.5" rx="1.6"/>
-  <rect class="right" x="16.75" y="11" width="5.5" height="5.5" rx="1.6"/>
+  <path class="link" d="M14.85 13.23 Q13.78 17.66 12.00 19.80"/>
+  <path class="link" d="M9.51 13.85 Q6.21 10.72 5.24 8.10"/>
+  <path class="link" d="M11.64 8.92 Q16.01 7.62 18.76 8.10"/>
+  <circle class="hub" cx="12" cy="12" r="3.2"/>
+  <circle class="node-amber" cx="12.00" cy="19.80" r="2.1"/>
+  <circle class="node-mint" cx="5.24" cy="8.10" r="2.1"/>
+  <circle class="node-ocean" cx="18.76" cy="8.10" r="2.1"/>
 </svg>
