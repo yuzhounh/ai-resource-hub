@@ -1,17 +1,30 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-labelledby="title">
+  <title id="title">AI Resource Hub</title>
   <defs>
     <linearGradient id="favHub" x1="9" y1="9" x2="15" y2="15" gradientUnits="userSpaceOnUse">
       <stop stop-color="#7457e8"/>
       <stop offset="1" stop-color="#de4f82"/>
     </linearGradient>
+    <linearGradient id="favMint" x1="3" y1="6" x2="7.5" y2="10.5" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#43a68f"/>
+      <stop offset="1" stop-color="#16b997"/>
+    </linearGradient>
+    <linearGradient id="favOcean" x1="16.5" y1="6" x2="21" y2="10.5" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#668dd8"/>
+      <stop offset="1" stop-color="#397ce8"/>
+    </linearGradient>
+    <linearGradient id="favAmber" x1="10" y1="17.5" x2="14" y2="22" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#d39448"/>
+      <stop offset="1" stop-color="#e58a24"/>
+    </linearGradient>
   </defs>
   <style>
-    .link{stroke:#668dd8;stroke-opacity:.8;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;fill:none}
+    .link{stroke:#668dd8;stroke-opacity:.75;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;fill:none}
     .hub{fill:url(#favHub)}
-    .node-mint{fill:#16b997}
-    .node-ocean{fill:#397ce8}
-    .node-amber{fill:#e58a24}
-    @media(prefers-color-scheme:dark){.link{stroke-opacity:.9}}
+    .node-mint{fill:url(#favMint)}
+    .node-ocean{fill:url(#favOcean)}
+    .node-amber{fill:url(#favAmber)}
+    @media(prefers-color-scheme:dark){.link{stroke-opacity:.88}}
   </style>
   <path class="link" d="M14.85 13.23 Q13.78 17.66 12.00 19.80"/>
   <path class="link" d="M9.51 13.85 Q6.21 10.72 5.24 8.10"/>
