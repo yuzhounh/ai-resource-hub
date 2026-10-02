@@ -1,796 +1,15 @@
 // ============================================================
 // Expenses / 支出板块核心逻辑（总览统计 + 单栏月度卡片 + 悬停操作）
 // 数据保存在登录用户的 Google 账户（Firestore）中；
-// localStorage 作为本地缓存与离线使用，首次使用内置完整历史记录。
+// localStorage 按用户 UID 缓存；未登录及新账户不加载任何预置记录。
 // ============================================================
 
 import { doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 import { HubAuth } from "./hub-auth.js";
 
 const STORAGE_KEY = "ai_hub_expenses_records";
-
-const INITIAL_EXPENSES = [
-  {
-    id: "exp_20260903_flower",
-    date: "2026-09-03",
-    title: "Flower Cloud Lite",
-    category: "vpn",
-    description: "每月150GB，年付",
-    amount: 363.3,
-    amountDisplay: "363.3元",
-    notes: ""
-  },
-  {
-    id: "exp_20260903_googleai_1",
-    date: "2026-09-03",
-    title: "Google AI Pro",
-    category: "sub",
-    description: "18个月",
-    amount: 12.8,
-    amountDisplay: "12.8元",
-    notes: ""
-  },
-  {
-    id: "exp_20260903_googleai_2",
-    date: "2026-09-03",
-    title: "Google AI Pro",
-    category: "sub",
-    description: "18个月",
-    amount: 12.8,
-    amountDisplay: "12.8元",
-    notes: ""
-  },
-  {
-    id: "exp_20260902_bajie",
-    date: "2026-09-02",
-    title: "八戒",
-    category: "vpn",
-    description: "不限时套餐，390GB",
-    amount: 118.29,
-    amountDisplay: "118.29元",
-    notes: ""
-  },
-  {
-    id: "exp_20260902_mojie",
-    date: "2026-09-02",
-    title: "魔戒",
-    category: "vpn",
-    description: "不限时套餐，150GB",
-    amount: 52.0,
-    amountDisplay: "52元",
-    notes: ""
-  },
-  {
-    id: "exp_20260827_glm",
-    date: "2026-08-27",
-    title: "智谱 GLM API",
-    category: "api",
-    description: "",
-    amount: 30.0,
-    amountDisplay: "30元",
-    notes: ""
-  },
-  {
-    id: "exp_20260824_chatgpt",
-    date: "2026-08-24",
-    title: "ChatGPT Plus",
-    category: "sub",
-    description: "月付",
-    amount: 134.69,
-    amountDisplay: "134.69元",
-    notes: "注：对应20美元"
-  },
-  {
-    id: "exp_20260821_opencode",
-    date: "2026-08-21",
-    title: "OpenCode Go",
-    category: "sub",
-    description: "",
-    amount: 34.95,
-    amountDisplay: "34.95元",
-    notes: "注：对应5美元"
-  },
-  {
-    id: "exp_20260821_qwen",
-    date: "2026-08-21",
-    title: "阿里 Qwen API",
-    category: "api",
-    description: "",
-    amount: 10.0,
-    amountDisplay: "10元",
-    notes: ""
-  },
-  {
-    id: "exp_20260818_qwentoken",
-    date: "2026-08-18",
-    title: "阿里 Qwen Token Plan",
-    category: "sub",
-    description: "月付",
-    amount: 80.0,
-    amountDisplay: "80元",
-    notes: ""
-  },
-  {
-    id: "exp_20260818_deepseek",
-    date: "2026-08-18",
-    title: "DeepSeek API",
-    category: "api",
-    description: "",
-    amount: 50.0,
-    amountDisplay: "50元",
-    notes: ""
-  },
-  {
-    id: "exp_20260816_deepseek",
-    date: "2026-08-16",
-    title: "DeepSeek API",
-    category: "api",
-    description: "",
-    amount: 100.0,
-    amountDisplay: "100元",
-    notes: ""
-  },
-  {
-    id: "exp_20260813_deepseek",
-    date: "2026-08-13",
-    title: "DeepSeek API",
-    category: "api",
-    description: "",
-    amount: 100.0,
-    amountDisplay: "100元",
-    notes: ""
-  },
-  {
-    id: "exp_20260811_kimi",
-    date: "2026-08-11",
-    title: "Kimi API",
-    category: "api",
-    description: "",
-    amount: 50.0,
-    amountDisplay: "50元",
-    notes: ""
-  },
-  {
-    id: "exp_20260810_googlecloud",
-    date: "2026-08-10",
-    title: "Google Cloud",
-    category: "cloud",
-    description: "SGD 25 预付费",
-    amount: 132.4,
-    amountDisplay: "132.4元",
-    notes: "注：无意中给谷歌充值了SGD 25，即132.4元。重置界面是真的看不懂，而且设定了信用卡支付后，都不需要手机验证码啥的，自动就从信用卡扣款了。这是预付费，有效期一年时间，一年后自动作废。之前还说使用 Google AI Studio 一分不花，这不就花了么。也不能说亏吧，毕竟蹬 Gemini 是蹬得最多的。只不过这种消费方式实在是令人意外，我都不知道是啥时候支付的。刚看到手机短信提示是今天晚上21:49支付的，也就是不到一个小时前。"
-  },
-  {
-    id: "exp_20260731_cursor",
-    date: "2026-07-31",
-    title: "Cursor Pro",
-    category: "sub",
-    description: "一个月会员",
-    amount: 115.0,
-    amountDisplay: "115元",
-    notes: ""
-  },
-  {
-    id: "exp_20260729_googleai",
-    date: "2026-07-29",
-    title: "Google AI Pro",
-    category: "sub",
-    description: "18个月",
-    amount: 17.9,
-    amountDisplay: "17.9元",
-    notes: ""
-  },
-  {
-    id: "exp_20260726_chatgpt",
-    date: "2026-07-26",
-    title: "ChatGPT Plus",
-    category: "sub",
-    description: "月付",
-    amount: 135.7,
-    amountDisplay: "135.7元",
-    notes: "注：通过 Google Play Store 购买了 ChatGPT Plus 账号（20美元，即135.7元），这两天蹬完了一周额度，值了。"
-  },
-  {
-    id: "exp_20260726_flower",
-    date: "2026-07-26",
-    title: "Flower Cloud Air",
-    category: "vpn",
-    description: "每月20GB，年付",
-    amount: 134.31,
-    amountDisplay: "134.31元",
-    notes: ""
-  },
-  {
-    id: "exp_20260724_qwen",
-    date: "2026-07-24",
-    title: "阿里 Qwen API",
-    category: "api",
-    description: "",
-    amount: 15.71,
-    amountDisplay: "15.71元",
-    notes: ""
-  },
-  {
-    id: "exp_20260724_cursor",
-    date: "2026-07-24",
-    title: "Cursor Pro",
-    category: "quota",
-    description: "",
-    amount: 59.8,
-    amountDisplay: "59.8元",
-    notes: ""
-  },
-  {
-    id: "exp_20260722_cursor",
-    date: "2026-07-22",
-    title: "Cursor Pro",
-    category: "quota",
-    description: "",
-    amount: 26.8,
-    amountDisplay: "26.8元",
-    notes: ""
-  },
-  {
-    id: "exp_20260620_cursor",
-    date: "2026-06-20",
-    title: "Cursor Pro",
-    category: "quota",
-    description: "",
-    amount: 59.8,
-    amountDisplay: "59.8元",
-    notes: ""
-  },
-  {
-    id: "exp_20260531_cursor",
-    date: "2026-05-31",
-    title: "Cursor Pro",
-    category: "quota",
-    description: "",
-    amount: 29.8,
-    amountDisplay: "29.8元",
-    notes: ""
-  },
-  {
-    id: "exp_20260530_openrouter",
-    date: "2026-05-30",
-    title: "OpenRouter API",
-    category: "api",
-    description: "",
-    amount: 176.0,
-    amountDisplay: "176元",
-    notes: ""
-  },
-  {
-    id: "exp_20260529_gpts",
-    date: "2026-05-29",
-    title: "GPTs API",
-    category: "api",
-    description: "",
-    amount: 35.5,
-    amountDisplay: "35.5元",
-    notes: ""
-  },
-  {
-    id: "exp_20260419_cursor",
-    date: "2026-04-19",
-    title: "Cursor Pro",
-    category: "quota",
-    description: "",
-    amount: 7.23,
-    amountDisplay: "7.23元",
-    notes: ""
-  },
-  {
-    id: "exp_20260205_cursor",
-    date: "2026-02-05",
-    title: "Cursor Pro",
-    category: "quota",
-    description: "",
-    amount: 18.0,
-    amountDisplay: "18元",
-    notes: ""
-  },
-  {
-    id: "exp_20251226_bluebird",
-    date: "2025-12-26",
-    title: "蓝鸟 Vunun（原 ANYWAY 机场）",
-    category: "vpn",
-    description: "不限时套餐，1800GB",
-    amount: 128.0,
-    amountDisplay: "128元",
-    notes: ""
-  },
-  {
-    id: "exp_20251226_wps_1",
-    date: "2025-12-26",
-    title: "WPS",
-    category: "other",
-    description: "一天",
-    amount: 0.29,
-    amountDisplay: "0.29元",
-    notes: ""
-  },
-  {
-    id: "exp_20251226_wps_2",
-    date: "2025-12-26",
-    title: "WPS",
-    category: "other",
-    description: "一天",
-    amount: 0.01,
-    amountDisplay: "0.01元",
-    notes: ""
-  },
-  {
-    id: "exp_20251211_wps",
-    date: "2025-12-11",
-    title: "WPS",
-    category: "other",
-    description: "一天",
-    amount: 0.39,
-    amountDisplay: "0.39元",
-    notes: ""
-  },
-  {
-    id: "exp_20251123_cursor",
-    date: "2025-11-23",
-    title: "Cursor Pro",
-    category: "quota",
-    description: "",
-    amount: 20.0,
-    amountDisplay: "20元",
-    notes: ""
-  },
-  {
-    id: "exp_20251109_xunlei",
-    date: "2025-11-09",
-    title: "迅雷SVIP",
-    category: "other",
-    description: "一天",
-    amount: 0.11,
-    amountDisplay: "0.11元",
-    notes: ""
-  },
-  {
-    id: "exp_20251109_todesk_1",
-    date: "2025-11-09",
-    title: "ToDesk",
-    category: "other",
-    description: "一小时",
-    amount: 0.78,
-    amountDisplay: "0.78元",
-    notes: ""
-  },
-  {
-    id: "exp_20251109_todesk_2",
-    date: "2025-11-09",
-    title: "ToDesk",
-    category: "other",
-    description: "一小时",
-    amount: 0.78,
-    amountDisplay: "0.78元",
-    notes: ""
-  },
-  {
-    id: "exp_20251108_todesk",
-    date: "2025-11-08",
-    title: "ToDesk",
-    category: "other",
-    description: "一小时",
-    amount: 0.78,
-    amountDisplay: "0.78元",
-    notes: ""
-  },
-  {
-    id: "exp_20251103_todesk",
-    date: "2025-11-03",
-    title: "ToDesk",
-    category: "other",
-    description: "一小时",
-    amount: 2.0,
-    amountDisplay: "2元",
-    notes: ""
-  },
-  {
-    id: "exp_20251031_cursor",
-    date: "2025-10-31",
-    title: "Cursor Pro",
-    category: "quota",
-    description: "",
-    amount: 18.0,
-    amountDisplay: "18元",
-    notes: ""
-  },
-  {
-    id: "exp_20251030_cursor",
-    date: "2025-10-30",
-    title: "Cursor Pro",
-    category: "quota",
-    description: "",
-    amount: 16.5,
-    amountDisplay: "16.5元",
-    notes: ""
-  },
-  {
-    id: "exp_20251021_wos",
-    date: "2025-10-21",
-    title: "WOS 数据库",
-    category: "other",
-    description: "",
-    amount: 33.95,
-    amountDisplay: "33.95元",
-    notes: ""
-  },
-  {
-    id: "exp_20250922_cursor",
-    date: "2025-09-22",
-    title: "Cursor Pro",
-    category: "quota",
-    description: "",
-    amount: 25.0,
-    amountDisplay: "25元",
-    notes: ""
-  },
-  {
-    id: "exp_20250922_claude",
-    date: "2025-09-22",
-    title: "Claude",
-    category: "sub",
-    description: "一天",
-    amount: 0.98,
-    amountDisplay: "0.98元",
-    notes: ""
-  },
-  {
-    id: "exp_20250922_wos",
-    date: "2025-09-22",
-    title: "WOS 数据库",
-    category: "other",
-    description: "",
-    amount: 6.86,
-    amountDisplay: "6.86元",
-    notes: ""
-  },
-  {
-    id: "exp_20250913_wenku",
-    date: "2025-09-13",
-    title: "百度文库",
-    category: "other",
-    description: "一篇",
-    amount: 0.48,
-    amountDisplay: "0.48元",
-    notes: ""
-  },
-  {
-    id: "exp_20250729_cursor",
-    date: "2025-07-29",
-    title: "Cursor Pro",
-    category: "quota",
-    description: "",
-    amount: 30.0,
-    amountDisplay: "30元",
-    notes: ""
-  },
-  {
-    id: "exp_20250714_cursor",
-    date: "2025-07-14",
-    title: "Cursor Pro",
-    category: "quota",
-    description: "",
-    amount: 12.9,
-    amountDisplay: "12.9元",
-    notes: ""
-  },
-  {
-    id: "exp_20250702_cursor",
-    date: "2025-07-02",
-    title: "Cursor Pro",
-    category: "quota",
-    description: "",
-    amount: 12.9,
-    amountDisplay: "12.9元",
-    notes: ""
-  },
-  {
-    id: "exp_20250612_cursor",
-    date: "2025-06-12",
-    title: "Cursor Pro",
-    category: "quota",
-    description: "",
-    amount: 23.88,
-    amountDisplay: "23.88元",
-    notes: ""
-  },
-  {
-    id: "exp_20250524_cursor",
-    date: "2025-05-24",
-    title: "Cursor Pro",
-    category: "quota",
-    description: "",
-    amount: 24.8,
-    amountDisplay: "24.8元",
-    notes: ""
-  },
-  {
-    id: "exp_20250225_haolizi",
-    date: "2025-02-25",
-    title: "好例子网",
-    category: "other",
-    description: "一篇",
-    amount: 0.88,
-    amountDisplay: "0.88元",
-    notes: ""
-  },
-  {
-    id: "exp_20241230_wps",
-    date: "2024-12-30",
-    title: "WPS",
-    category: "other",
-    description: "两小时",
-    amount: 0.68,
-    amountDisplay: "0.68元",
-    notes: ""
-  },
-  {
-    id: "exp_20241227_wps",
-    date: "2024-12-27",
-    title: "WPS",
-    category: "other",
-    description: "一小时",
-    amount: 0.28,
-    amountDisplay: "0.28元",
-    notes: ""
-  },
-  {
-    id: "exp_20241226_wps",
-    date: "2024-12-26",
-    title: "WPS",
-    category: "other",
-    description: "4小时",
-    amount: 0.48,
-    amountDisplay: "0.48元",
-    notes: ""
-  },
-  {
-    id: "exp_20241216_cursor",
-    date: "2024-12-16",
-    title: "Cursor Pro",
-    category: "quota",
-    description: "",
-    amount: 14.49,
-    amountDisplay: "14.49元",
-    notes: ""
-  },
-  {
-    id: "exp_20241008_mirror",
-    date: "2024-10-08",
-    title: "共享镜像",
-    category: "other",
-    description: "一天",
-    amount: 2.5,
-    amountDisplay: "2.5元",
-    notes: ""
-  },
-  {
-    id: "exp_20241006_naiyun",
-    date: "2024-10-06",
-    title: "奈云",
-    category: "vpn",
-    description: "不限时套餐，2048GB",
-    amount: 298.8,
-    amountDisplay: "298.8元",
-    notes: ""
-  },
-  {
-    id: "exp_20240717_riolu",
-    date: "2024-07-17",
-    title: "精灵学院 Riolu",
-    category: "vpn",
-    description: "季付",
-    amount: 14.25,
-    amountDisplay: "14.25元",
-    notes: ""
-  },
-  {
-    id: "exp_20240410_wps",
-    date: "2024-04-10",
-    title: "WPS",
-    category: "other",
-    description: "一个月",
-    amount: 9.9,
-    amountDisplay: "9.9元",
-    notes: ""
-  },
-  {
-    id: "exp_20231229_baidunetdisk",
-    date: "2023-12-29",
-    title: "百度网盘",
-    category: "other",
-    description: "三天",
-    amount: 6.6,
-    amountDisplay: "6.6元",
-    notes: ""
-  },
-  {
-    id: "exp_20231220_wenku",
-    date: "2023-12-20",
-    title: "百度文库",
-    category: "other",
-    description: "一篇",
-    amount: 0.46,
-    amountDisplay: "0.46元",
-    notes: ""
-  },
-  {
-    id: "exp_20231028_weixin",
-    date: "2023-10-28",
-    title: "微信",
-    category: "other",
-    description: "",
-    amount: 0.52,
-    amountDisplay: "0.52元",
-    notes: ""
-  },
-  {
-    id: "exp_20231011_ssrdog",
-    date: "2023-10-11",
-    title: "SSRDOG",
-    category: "vpn",
-    description: "不限时套餐，500GB",
-    amount: 211.45,
-    amountDisplay: "211.45元",
-    notes: ""
-  },
-  {
-    id: "exp_20231011_wos",
-    date: "2023-10-11",
-    title: "WOS 数据库",
-    category: "other",
-    description: "",
-    amount: 29.0,
-    amountDisplay: "29元",
-    notes: ""
-  },
-  {
-    id: "exp_20230922_ssrdog",
-    date: "2023-09-22",
-    title: "SSRDOG",
-    category: "vpn",
-    description: "轻量，月付",
-    amount: 25.0,
-    amountDisplay: "25元",
-    notes: ""
-  },
-  {
-    id: "exp_20230804_wps",
-    date: "2023-08-04",
-    title: "WPS",
-    category: "other",
-    description: "七天",
-    amount: 5.82,
-    amountDisplay: "5.82元",
-    notes: ""
-  },
-  {
-    id: "exp_20220107_csdn_1",
-    date: "2022-01-07",
-    title: "CSDN",
-    category: "other",
-    description: "一篇",
-    amount: 0.01,
-    amountDisplay: "0.01元",
-    notes: ""
-  },
-  {
-    id: "exp_20220107_csdn_2",
-    date: "2022-01-07",
-    title: "CSDN",
-    category: "other",
-    description: "一篇",
-    amount: 0.01,
-    amountDisplay: "0.01元",
-    notes: ""
-  },
-  {
-    id: "exp_20200910_csdn",
-    date: "2020-09-10",
-    title: "CSDN",
-    category: "other",
-    description: "一篇",
-    amount: 0.6,
-    amountDisplay: "0.6元",
-    notes: ""
-  },
-  {
-    id: "exp_20200906_csdn_1",
-    date: "2020-09-06",
-    title: "CSDN",
-    category: "other",
-    description: "一篇",
-    amount: 0.65,
-    amountDisplay: "0.65元",
-    notes: ""
-  },
-  {
-    id: "exp_20200906_csdn_2",
-    date: "2020-09-06",
-    title: "CSDN",
-    category: "other",
-    description: "一篇",
-    amount: 0.58,
-    amountDisplay: "0.58元",
-    notes: ""
-  },
-  {
-    id: "exp_20200906_csdn_3",
-    date: "2020-09-06",
-    title: "CSDN",
-    category: "other",
-    description: "一篇",
-    amount: 0.58,
-    amountDisplay: "0.58元",
-    notes: ""
-  },
-  {
-    id: "exp_20200906_csdn_4",
-    date: "2020-09-06",
-    title: "CSDN",
-    category: "other",
-    description: "一篇",
-    amount: 0.55,
-    amountDisplay: "0.55元",
-    notes: ""
-  },
-  {
-    id: "exp_20200906_csdn_5",
-    date: "2020-09-06",
-    title: "CSDN",
-    category: "other",
-    description: "一篇",
-    amount: 0.88,
-    amountDisplay: "0.88元",
-    notes: ""
-  },
-  {
-    id: "exp_20200906_wenku",
-    date: "2020-09-06",
-    title: "百度文库",
-    category: "other",
-    description: "一篇",
-    amount: 1.98,
-    amountDisplay: "1.98元",
-    notes: ""
-  },
-  {
-    id: "exp_20200906_csdn_6",
-    date: "2020-09-06",
-    title: "CSDN",
-    category: "other",
-    description: "一篇",
-    amount: 0.99,
-    amountDisplay: "0.99元",
-    notes: ""
-  },
-  {
-    id: "exp_20200906_csdn_7",
-    date: "2020-09-06",
-    title: "CSDN",
-    category: "other",
-    description: "一篇",
-    amount: 0.98,
-    amountDisplay: "0.98元",
-    notes: ""
-  },
-  {
-    id: "exp_20200906_csdn_8",
-    date: "2020-09-06",
-    title: "CSDN",
-    category: "other",
-    description: "一篇",
-    amount: 0.98,
-    amountDisplay: "0.98元",
-    notes: ""
-  }
-];
+// 与 firestore.rules 中的所有者一致；旧版共享缓存仅迁移给原所有者。
+const LEGACY_OWNER_UID = "8ASrz9xvKmMcrGkV7Yu98i6IrZO2";
 
 const CATEGORY_MAP = {
   vpn: { label: "VPN", cls: "vpn" },
@@ -813,6 +32,7 @@ let expensesState = {
 let currentUid = null;
 let cloudUnsubscribe = null;
 let saveTimer = null;
+let sessionVersion = 0;
 
 function escapeHtml(str) {
   if (!str) return "";
@@ -867,133 +87,109 @@ function cleanItemTitle(title) {
 
 function migrateItems(list) {
   if (!Array.isArray(list)) return [];
-  const result = [];
-  const existingIds = new Set();
-  const existingKeys = new Set();
+  return list
+    .filter(item => item && typeof item === "object")
+    .map(item => ({
+      ...item,
+      title: cleanItemTitle(item.title),
+      description: cleanRedundantDesc(String(item.description || ""))
+    }))
+    .sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
+}
 
-  list.forEach(item => {
-    if (item.id === "exp_20260903_googleai" || (item.title === "Google AI Pro" && item.date === "2026-09-03" && (item.amount === 25.6 || (item.description && item.description.includes("两个账号"))))) {
-      result.push({
-        id: "exp_20260903_googleai_1",
-        date: "2026-09-03",
-        title: "Google AI Pro",
-        category: "sub",
-        description: "18个月",
-        amount: 12.8,
-        amountDisplay: "12.8元",
-        notes: ""
-      });
-      result.push({
-        id: "exp_20260903_googleai_2",
-        date: "2026-09-03",
-        title: "Google AI Pro",
-        category: "sub",
-        description: "18个月",
-        amount: 12.8,
-        amountDisplay: "12.8元",
-        notes: ""
-      });
-      existingIds.add("exp_20260903_googleai_1");
-      existingIds.add("exp_20260903_googleai_2");
-      existingKeys.add("2026-09-03_Google AI Pro_12.8");
-    } else {
-      item.title = cleanItemTitle(item.title);
-      item.description = cleanRedundantDesc(item.description);
-      if (item.id === "exp_20260529_gpts" || item.title === "GPTs API") {
-        item.amountDisplay = "35.5元";
-        item.notes = "";
+function readLocalExpenses(uid = currentUid) {
+  if (!uid) return [];
+  try {
+    const key = `${STORAGE_KEY}:${uid}`;
+    const raw = localStorage.getItem(key);
+    if (raw !== null) return migrateItems(JSON.parse(raw));
+    if (uid === LEGACY_OWNER_UID) {
+      const legacy = localStorage.getItem(STORAGE_KEY);
+      if (legacy !== null) {
+        const items = migrateItems(JSON.parse(legacy));
+        localStorage.setItem(key, JSON.stringify(items));
+        localStorage.removeItem(STORAGE_KEY);
+        return items;
       }
-      result.push(item);
-      if (item.id) existingIds.add(item.id);
-      existingKeys.add(`${item.date}_${item.title}_${item.amount}`);
     }
-  });
-
-  // 如果已有记录中缺少预置历史记录（如新增的一批历史数据），自动补齐合并
-  INITIAL_EXPENSES.forEach(initItem => {
-    const key = `${initItem.date}_${initItem.title}_${initItem.amount}`;
-    if (!existingIds.has(initItem.id) && !existingKeys.has(key)) {
-      result.push(JSON.parse(JSON.stringify(initItem)));
-      existingIds.add(initItem.id);
-      existingKeys.add(key);
-    }
-  });
-
-  // 按日期倒序排列
-  result.sort((a, b) => (b.date || "").localeCompare(a.date || ""));
-
-  return result;
-}
-
-function readLocalExpenses() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return JSON.parse(JSON.stringify(INITIAL_EXPENSES));
-    const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed) && parsed.length) {
-      const migrated = migrateItems(parsed);
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated)); } catch {}
-      return migrated;
-    }
-    return JSON.parse(JSON.stringify(INITIAL_EXPENSES));
   } catch {
-    return JSON.parse(JSON.stringify(INITIAL_EXPENSES));
+    // 缓存损坏或浏览器禁止存储时，从空数据等待云端读取。
   }
+  return [];
 }
 
-function writeLocalCache() {
+function writeLocalCache(uid = currentUid) {
+  if (!uid) return;
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(expensesState.items));
+    localStorage.setItem(`${STORAGE_KEY}:${uid}`, JSON.stringify(expensesState.items));
   } catch {}
 }
 
-function attachCloud(uid) {
-  currentUid = uid;
+function resetExpensesSession(uid = null) {
+  sessionVersion += 1;
+  clearTimeout(saveTimer);
+  saveTimer = null;
   if (cloudUnsubscribe) { cloudUnsubscribe(); cloudUnsubscribe = null; }
+  currentUid = uid;
+  expensesState.items = readLocalExpenses(uid);
+  expensesState.query = "";
+  expensesState.activeCategory = "all";
+  expensesState.editingId = null;
+  expensesState.selectedFilter = null;
+  const search = document.getElementById("expenses-search");
+  if (search) search.value = "";
+  document.querySelectorAll(".expenses-filter-pill").forEach(pill => {
+    pill.classList.toggle("active", pill.dataset.cat === "all");
+  });
+  document.getElementById("expenses-form")?.reset();
+  const modal = document.getElementById("expenses-modal");
+  if (modal?.open) modal.close();
+  renderExpenses();
+}
+
+function attachCloud(uid) {
+  resetExpensesSession(uid);
+  const version = sessionVersion;
   const ref = doc(HubAuth.db, "users", uid, "expenses", "records");
   cloudUnsubscribe = onSnapshot(ref, snapshot => {
+    if (version !== sessionVersion || currentUid !== uid) return;
     if (!snapshot.exists()) {
-      const local = readLocalExpenses();
-      setDoc(ref, { items: local, updatedAt: Date.now() }).catch(() => {
-        expensesState.items = local;
-        renderExpenses();
-      });
+      expensesState.items = readLocalExpenses(uid);
+      renderExpenses();
       return;
     }
     const data = snapshot.data();
-    expensesState.items = Array.isArray(data?.items) ? data.items : [];
-    if (!expensesState.items.length) {
-      expensesState.items = JSON.parse(JSON.stringify(INITIAL_EXPENSES));
-    } else {
-      expensesState.items = migrateItems(expensesState.items);
-    }
-    writeLocalCache();
+    expensesState.items = migrateItems(data?.items);
+    writeLocalCache(uid);
     renderExpenses();
   }, () => {
-    expensesState.items = readLocalExpenses();
+    if (version !== sessionVersion || currentUid !== uid) return;
+    expensesState.items = readLocalExpenses(uid);
     renderExpenses();
   });
 }
 
 function detachCloud() {
-  currentUid = null;
-  clearTimeout(saveTimer);
-  if (cloudUnsubscribe) { cloudUnsubscribe(); cloudUnsubscribe = null; }
-  expensesState.items = readLocalExpenses();
-  renderExpenses();
+  resetExpensesSession();
 }
 
 function saveExpenses() {
+  if (!currentUid) return;
   writeLocalCache();
   updateStats();
-  if (!currentUid) return;
   clearTimeout(saveTimer);
+  const uid = currentUid;
+  const version = sessionVersion;
+  const items = JSON.parse(JSON.stringify(expensesState.items));
   saveTimer = setTimeout(() => {
-    setDoc(doc(HubAuth.db, "users", currentUid, "expenses", "records"), {
-      items: expensesState.items,
+    if (version !== sessionVersion || currentUid !== uid) return;
+    setDoc(doc(HubAuth.db, "users", uid, "expenses", "records"), {
+      items,
       updatedAt: Date.now()
     }).catch(() => {
-      showToast("云端同步失败，已暂存本地。");
+      if (version === sessionVersion && currentUid === uid) {
+        showToast("云端同步失败，已暂存本地。");
+      }
     });
   }, 400);
 }
@@ -1642,6 +838,7 @@ function initExpensesEvents() {
   // 打开弹窗
   if (openModalBtn && modal) {
     openModalBtn.addEventListener("click", () => {
+      if (!currentUid) return;
       form.reset();
       const dateInput = document.getElementById("exp-form-date");
       if (dateInput) {
@@ -1672,6 +869,7 @@ function initExpensesEvents() {
   if (form && modal) {
     form.addEventListener("submit", e => {
       e.preventDefault();
+      if (!currentUid) return;
       const date = document.getElementById("exp-form-date").value.trim();
       const title = document.getElementById("exp-form-title").value.trim();
       const category = document.getElementById("exp-form-cat").value;
@@ -1811,8 +1009,7 @@ function initExpensesEvents() {
   });
 }
 
-// 初始化数据
-expensesState.items = readLocalExpenses();
+// 初始化为空；认证完成后只读取当前账户的数据。
 renderExpenses();
 initExpensesEvents();
 

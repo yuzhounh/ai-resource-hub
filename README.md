@@ -25,7 +25,7 @@ AI Resource Hub 将工具集、API 控制台、Agent 生态地图、科研自动
 - **API 控制台 (`#api`)**：国内外模型厂商和 API Router 的 Key、Usage、充值、套餐与文档入口，集成 Coding Plan 对比与参考。
 - **模型价格 (`#pricing`)**：公开的主流模型 API 每百万 token 价格快照，含缓存输入、同厂商相对成本、推荐定位与厂商定价入口。
 - **笔记 (`#notes`)**：随手采集 AI 工具、模型、开源项目与 API 链接，一键生成结构化提示词复制给 AI 合并入库；内容保存在 Google 账户。
-- **支出 (`#expenses`)**：跟踪 AI 订阅、Token Plan、API 充值与网络服务消费支出，支持单栏月度卡片、悬停编辑/删除与数据云同步。
+- **支出 (`#expenses`)**：登录后跟踪 AI 订阅、Token Plan、API 充值与网络服务消费支出，支持单栏月度卡片、悬停编辑/删除与数据云同步；按账户隔离缓存，新账户默认为空，不内置个人历史记录。
 - **连通性报告 (`#connectivity`)**：Windows 凭据 API 密钥多协议（Chat / Responses / Anthropic Messages / Batch）连通性验证报告，含 16 服务商实测快照与模型级明细；服务商归档状态保存在 Google 账户，并自动同步资源管理的归档。
 - **Agent 生态地图 (`#agents`)**：AI 编程、知识工作、桌面和浏览器操作、常驻个人 Agent、Coding / Token Plan、API Router 与基础模型。
 - **科研全景图 (`#research`)**：端到端研究系统、Deep Research 与文献综述、Agent Skills 技能库、Awesome 合集、学术写作规范与选型速查。
@@ -35,7 +35,7 @@ AI Resource Hub 将工具集、API 控制台、Agent 生态地图、科研自动
 
 - 九个并列的一级分类标签，全站单页无缝切换（无需跳转外部 HTML）；部分页面提供二级分类导航。
 - 独立的行级/卡片级即时过滤搜索框，`/` 键快捷聚焦，`Esc` 清空。
-- 页面右上角 Google 账号入口：笔记、连通性与资源管理三个页面需登录后才显示内容，数据保存在登录用户自己的 Firestore 路径中。
+- 页面右上角 Google 账号入口：笔记、支出、连通性与资源管理四个页面需登录后才显示内容，个人数据保存在登录用户自己的 Firestore 路径中，并受所有者访问规则保护。
 - 资源管理中归档的服务商，会在连通性页面自动归档（按服务商名称匹配）。
 - 手动维护 Plan、限时优惠、模型、Harness 兼容性、用量快照和备注。
 - URL 哈希深链接、浏览器前进与后退，支持直接锚定任意二级分类。
@@ -45,7 +45,7 @@ AI Resource Hub 将工具集、API 控制台、Agent 生态地图、科研自动
 
 直接用浏览器打开 `index.html` 即可浏览工具集、控制台、生态图等公开页面，不需要安装依赖或启动服务器。
 
-笔记、连通性与 Plan 管理使用 Firebase Web SDK（Google 登录 + Firestore），需要通过本地 HTTP 服务或线上域名访问，并在 Firebase Authentication 的 Authorized domains 中加入对应域名。
+笔记、支出、连通性与 Plan 管理使用 Firebase Web SDK（Google 登录 + Firestore），需要通过本地 HTTP 服务或线上域名访问，并在 Firebase Authentication 的 Authorized domains 中加入对应域名。
 
 ## Google 账号配置
 
@@ -55,7 +55,7 @@ AI Resource Hub 将工具集、API 控制台、Agent 生态地图、科研自动
 4. 将 `firestore.rules` 中的占位 UID 替换为该 UID。
 5. 在 Firebase Console 发布规则，或使用 Firebase CLI 部署规则。
 
-Firestore 仅保存笔记、套餐、用量与归档状态等个人数据。项目没有 API Key 字段，也不会调用供应商 API；表单和 JSON 导入会拦截常见格式的 API Key 与 Bearer Token。不要在备注、错误信息或导入文件中保存任何凭证。
+Firestore 仅保存笔记、支出、套餐、用量与归档状态等个人数据。支出缓存使用 UID 独立存储；旧版共享缓存仅迁移到原所有者账户，退出或切换账户会清空显示并取消待同步操作。项目没有 API Key 字段，也不会调用供应商 API；表单和 JSON 导入会拦截常见格式的 API Key 与 Bearer Token。不要在备注、错误信息或导入文件中保存任何凭证。
 
 ## 连通性报告更新
 
