@@ -1,0 +1,10 @@
+@media (max-width: 760px) {
+  .primary-tabs { flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain; }
+  .primary-tabs a, .subnav a, .filter-btn { min-height: 44px; display: inline-flex; align-items: center; }
+  button { min-height: 44px; }
+  .hub-user-button, .copy-btn { min-width: 44px; min-height: 44px; }
+  input, textarea, select, .search input, .view-toolbar > input { font-size: 16px; }
+  .view-toolbar, .manager-toolbar { position: static; }
+  .view-connectivity .providers-grid { grid-template-columns: minmax(0, 1fr); }
+  .hub-user-menu, .manager-user-menu { max-width: calc(100vw - 28px); }
+}
