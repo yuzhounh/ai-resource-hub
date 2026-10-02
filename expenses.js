@@ -4,8 +4,9 @@
 // localStorage 按用户 UID 缓存；未登录及新账户不加载任何预置记录。
 // ============================================================
 
-import { doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+import { doc, onSnapshot, runTransaction } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 import { HubAuth } from "./hub-auth.js";
+import { ExpenseSync, mergeExpenseChange } from "./expense-sync.js?v=20261003a";
 
 const STORAGE_KEY = "ai_hub_expenses_records";
 // 与 firestore.rules 中的所有者一致；旧版共享缓存仅迁移给原所有者。
@@ -31,7 +32,8 @@ let expensesState = {
 
 let currentUid = null;
 let cloudUnsubscribe = null;
-let saveTimer = null;
+let expenseSync = null;
+let editingBase = null;
 let sessionVersion = 0;
 
 function escapeHtml(str) {
@@ -127,8 +129,9 @@ function writeLocalCache(uid = currentUid) {
 
 function resetExpensesSession(uid = null) {
   sessionVersion += 1;
-  clearTimeout(saveTimer);
-  saveTimer = null;
+  expenseSync?.stop();
+  expenseSync = null;
+  editingBase = null;
   if (cloudUnsubscribe) { cloudUnsubscribe(); cloudUnsubscribe = null; }
   currentUid = uid;
   expensesState.items = readLocalExpenses(uid);
@@ -145,27 +148,43 @@ function resetExpensesSession(uid = null) {
   const modal = document.getElementById("expenses-modal");
   if (modal?.open) modal.close();
   renderExpenses();
+  renderSyncStatus({ pending: 0, conflicts: [] });
 }
 
 function attachCloud(uid) {
   resetExpensesSession(uid);
   const version = sessionVersion;
   const ref = doc(HubAuth.db, "users", uid, "expenses", "records");
-  cloudUnsubscribe = onSnapshot(ref, snapshot => {
+  expenseSync = new ExpenseSync({
+    uid, storage: localStorage, initialItems: expensesState.items,
+    transact: (operation, isActive) => runTransaction(HubAuth.db, async transaction => {
+      const snapshot = await transaction.get(ref);
+      if (!isActive()) throw Object.assign(new Error('Account session ended'), { code: 'expense-cancelled' });
+      const items = migrateItems(snapshot.exists() ? snapshot.data()?.items : []);
+      const merged = mergeExpenseChange(items, operation);
+      transaction.set(ref, { items: merged, updatedAt: Date.now() }, { merge: true });
+      return merged;
+    }),
+    onChange: (items, status) => {
+      if (version !== sessionVersion || currentUid !== uid) return;
+      expensesState.items = migrateItems(items);
+      writeLocalCache(uid);
+      // Keep unsaved form values intact while a remote snapshot arrives.
+      if (!expensesState.editingId) renderExpenses();
+      renderSyncStatus(status);
+    },
+    onError: showToast
+  });
+  expenseSync.refresh();
+  cloudUnsubscribe = onSnapshot(ref, { includeMetadataChanges: true }, snapshot => {
     if (version !== sessionVersion || currentUid !== uid) return;
-    if (!snapshot.exists()) {
-      expensesState.items = readLocalExpenses(uid);
-      renderExpenses();
-      return;
-    }
-    const data = snapshot.data();
-    expensesState.items = migrateItems(data?.items);
-    writeLocalCache(uid);
-    renderExpenses();
+    // A cache miss while offline is not evidence that the server deleted history.
+    if (!snapshot.exists() && snapshot.metadata?.fromCache) return;
+    expenseSync.receive(migrateItems(snapshot.exists() ? snapshot.data()?.items : []), !snapshot.metadata?.fromCache);
   }, () => {
     if (version !== sessionVersion || currentUid !== uid) return;
-    expensesState.items = readLocalExpenses(uid);
-    renderExpenses();
+    expenseSync.lastError = '无法读取云端数据，已保留本机记录和待同步修改。';
+    expenseSync.refresh();
   });
 }
 
@@ -173,25 +192,27 @@ function detachCloud() {
   resetExpensesSession();
 }
 
-function saveExpenses() {
-  if (!currentUid) return;
-  writeLocalCache();
-  updateStats();
-  clearTimeout(saveTimer);
-  const uid = currentUid;
-  const version = sessionVersion;
-  const items = JSON.parse(JSON.stringify(expensesState.items));
-  saveTimer = setTimeout(() => {
-    if (version !== sessionVersion || currentUid !== uid) return;
-    setDoc(doc(HubAuth.db, "users", uid, "expenses", "records"), {
-      items,
-      updatedAt: Date.now()
-    }).catch(() => {
-      if (version === sessionVersion && currentUid === uid) {
-        showToast("云端同步失败，已暂存本地。");
-      }
-    });
-  }, 400);
+function saveExpenses(before, after) {
+  return currentUid && expenseSync ? expenseSync.queue(
+    before ? migrateItems([before])[0] : null,
+    after ? migrateItems([after])[0] : null
+  ) : false;
+}
+
+function renderSyncStatus(status) {
+  const element = document.getElementById('expenses-sync-status');
+  if (!element) return;
+  element.hidden = !currentUid;
+  const message = status.error || (status.pending ? `${status.pending} 项修改待同步${status.busy ? '，正在同步…' : ''}` : status.hasServerState ? '已同步' : '等待云端确认；当前显示本机缓存');
+  const describe = item => item ? `${item.date} · ${item.title} · ${CATEGORY_MAP[item.category]?.label || item.category} · ${formatCurrency(item.amount)} · ${item.amountDisplay || ''} · ${item.description || ''} · ${item.notes || ''}` : '此记录已删除';
+  element.innerHTML = `<p>${escapeHtml(message)} ${status.pending && !status.busy ? '<button type="button" data-sync="retry">重试同步</button>' : ''}</p>`
+    + status.conflicts.map(operation => `<div class="expenses-sync-conflict">
+      <strong>${escapeHtml(operation.after?.title || operation.before?.title || '支出记录')}：同步冲突</strong>
+      <p>本机：${escapeHtml(describe(operation.after))}</p>
+      <p>云端：${escapeHtml(describe(operation.remote))}</p>
+      <button type="button" data-sync="local" data-id="${escapeHtml(operation.recordId)}" ${status.busy ? 'disabled' : ''}>保留本机修改</button>
+      <button type="button" data-sync="remote" data-id="${escapeHtml(operation.recordId)}" ${status.busy ? 'disabled' : ''}>采用云端版本</button>
+    </div>`).join('');
 }
 
 // 更新顶部统计数据
@@ -901,8 +922,7 @@ function initExpensesEvents() {
         notes
       };
 
-      expensesState.items.unshift(newItem);
-      saveExpenses();
+      if (!saveExpenses(null, newItem)) return;
       renderExpenses();
       modal.close();
       showToast("已成功记录 1 笔新支出！");
@@ -940,16 +960,18 @@ function initExpensesEvents() {
 
       const action = btn.dataset.action;
       const itemIndex = expensesState.items.findIndex(i => i.id === id);
-      if (itemIndex === -1) return;
-      const item = expensesState.items[itemIndex];
+      const item = expensesState.items[itemIndex] || (editingBase?.id === id ? editingBase : null);
+      if (!item) return;
 
       if (action === "edit-item") {
         expensesState.editingId = id;
+        editingBase = JSON.parse(JSON.stringify(item));
         renderExpenses();
         const editRow = listEl.querySelector(`.expenses-item-row[data-id="${id}"]`);
         editRow?.querySelector(".edit-title")?.focus();
       } else if (action === "cancel-edit") {
         expensesState.editingId = null;
+        editingBase = null;
         renderExpenses();
       } else if (action === "save-edit") {
         const newDate = row.querySelector(".edit-date")?.value.trim() || item.date;
@@ -965,23 +987,19 @@ function initExpensesEvents() {
           return;
         }
 
-        item.date = newDate;
-        item.title = newTitle;
-        item.category = newCat;
-        item.description = newDesc;
-        if (!isNaN(newAmount)) item.amount = Math.round(newAmount * 100) / 100;
-        item.amountDisplay = newDisplay;
-        item.notes = newNotes;
+        const updated = { ...item, date: newDate, title: newTitle, category: newCat,
+          description: newDesc, amount: isNaN(newAmount) ? item.amount : Math.round(newAmount * 100) / 100,
+          amountDisplay: newDisplay, notes: newNotes };
+        if (!saveExpenses(editingBase || item, updated)) return;
 
         expensesState.editingId = null;
-        saveExpenses();
+        editingBase = null;
         renderExpenses();
         showToast("已保存支出修改。");
       } else if (action === "delete-item") {
         const confirmDelete = window.confirm(`确定要删除“${item.title}”（${item.amountDisplay || formatCurrency(item.amount)}）这条支出记录吗？`);
         if (confirmDelete) {
-          expensesState.items.splice(itemIndex, 1);
-          saveExpenses();
+          if (!saveExpenses(item, null)) return;
           renderExpenses();
           showToast("已删除 1 条支出记录。");
         }
@@ -1010,6 +1028,19 @@ function initExpensesEvents() {
 }
 
 // 初始化为空；认证完成后只读取当前账户的数据。
+document.getElementById('expenses-sync-status')?.addEventListener('click', event => {
+  const button = event.target.closest('button[data-sync]');
+  if (!button || !expenseSync) return;
+  if (button.dataset.sync === 'retry') void expenseSync.flush();
+  else expenseSync.resolve(button.dataset.id, button.dataset.sync === 'local');
+});
+window.addEventListener('online', () => { void expenseSync?.flush(); });
+window.addEventListener('storage', event => {
+  if (expenseSync && (event.key === null || event.key.startsWith(expenseSync.prefix))) {
+    expenseSync.refresh();
+    void expenseSync.flush();
+  }
+});
 renderExpenses();
 initExpensesEvents();
 

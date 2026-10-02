@@ -6,6 +6,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 
 const source = fs.readFileSync(path.join(__dirname, 'expenses.js'), 'utf8');
+const syncSource = fs.readFileSync(path.join(__dirname, 'expense-sync.js'), 'utf8').replace(/^export /gm, '');
 const cacheKey = 'ai_hub_expenses_records';
 const ownerUid = '8ASrz9xvKmMcrGkV7Yu98i6IrZO2';
 const entry = (title = 'Private fixture', amount = 7) => ({
@@ -16,7 +17,7 @@ const plain = value => JSON.parse(JSON.stringify(value));
 
 function fixture(initialCache = {}) {
   const storage = new Map(Object.entries(initialCache));
-  const reads = [], subscriptions = [], writes = [], timers = new Map();
+  const reads = [], subscriptions = [], writes = [], timers = new Map(), cloud = new Map();
   let authChange, timerId = 0;
   const element = () => ({
     innerHTML: '', textContent: '', value: '', open: false, listeners: {},
@@ -27,41 +28,53 @@ function fixture(initialCache = {}) {
   });
   const ids = Object.fromEntries([
     'expenses-list', 'expenses-form', 'expenses-modal', 'expenses-search',
-    'expenses-btn-open-modal', 'exp-stat-count', 'exp-stat-total'
+    'expenses-btn-open-modal', 'exp-stat-count', 'exp-stat-total', 'expenses-sync-status'
   ].map(id => [id, element()]));
   const context = vm.createContext({
-    console, Date, Math,
+    console, Date, Math, crypto: require('node:crypto').webcrypto,
+    window: { addEventListener() {} },
     document: {
       getElementById: id => ids[id] || null,
       querySelectorAll: () => [], addEventListener() {}
     },
     localStorage: {
+      get length() { return storage.size; },
+      key(index) { return [...storage.keys()][index]; },
       getItem(key) { reads.push(key); return storage.get(key) ?? null; },
       setItem(key, value) { storage.set(key, value); },
       removeItem(key) { storage.delete(key); }
     },
     HubAuth: { db: {}, onChange(callback) { authChange = callback; callback(null); } },
     doc: (_db, ...segments) => segments.join('/'),
-    onSnapshot(ref, success, error) {
+    onSnapshot(ref, _options, success, error) {
       const subscription = { ref, success, error, stopped: false };
       subscriptions.push(subscription);
       return () => { subscription.stopped = true; };
     },
-    setDoc(ref, data) { writes.push({ ref, data: plain(data) }); return Promise.resolve(); },
+    async runTransaction(_db, callback) {
+      const buffered = [];
+      const result = await callback({
+        async get(ref) { return { exists: () => cloud.has(ref), data: () => ({ items: plain(cloud.get(ref)) }) }; },
+        set(ref, data) { buffered.push({ ref, data: plain(data) }); }
+      });
+      for (const write of buffered) { cloud.set(write.ref, write.data.items); writes.push(write); }
+      return result;
+    },
     setTimeout(callback) { timers.set(++timerId, callback); return timerId; },
     clearTimeout(id) { timers.delete(id); }
   });
-  vm.runInContext(source.replace(/^import .*;\r?\n/gm, '').replace(/^export .*;?\s*$/gm, '') +
-    '\nglobalThis.expensesTest = { expensesState, saveExpenses, readLocalExpenses };', context);
+  vm.runInContext(syncSource + '\n' + source.replace(/^import .*;\r?\n/gm, '').replace(/^export .*;?\s*$/gm, '') +
+    '\nglobalThis.expensesTest = { expensesState, saveExpenses, readLocalExpenses, getSync: () => expenseSync };', context);
   return {
     ...context.expensesTest, storage, reads, subscriptions, writes, timers, ids,
     login: uid => authChange(uid ? { uid } : null),
-    snapshot(items, exists = true, subscription = subscriptions.at(-1)) {
-      subscription.success({ exists: () => exists, data: () => ({ items }) });
+    snapshot(items, exists = true, subscription = subscriptions.at(-1), fromCache = false) {
+      if (exists) cloud.set(subscription.ref, items); else cloud.delete(subscription.ref);
+      subscription.success({ exists: () => exists, data: () => ({ items }), metadata: { fromCache } });
     },
-    flush() {
-      const callbacks = [...timers.values()]; timers.clear();
-      callbacks.forEach(callback => callback());
+    async flush() {
+      for (let index = 0; index < 20; index++) await Promise.resolve();
+      assert.equal(context.expensesTest.getSync()?.busy || false, false);
     }
   };
 }
@@ -113,12 +126,12 @@ test('legacy cache migrates only to the owner; empty cloud data remains empty', 
   assert.deepEqual(plain(f.expensesState.items), []);
 });
 
-test('logout clears displayed records, closes the form and cancels pending writes', () => {
+test('logout clears displayed records, closes the form and cancels pending writes', async () => {
   const f = fixture(); f.login(ownerUid); f.snapshot([entry()]);
   f.ids['expenses-modal'].open = true;
-  f.saveExpenses(); const pending = [...f.timers.values()][0];
+  f.saveExpenses(entry(), entry('Pending edit'));
   const oldSubscription = f.subscriptions.at(-1);
-  f.login(null); pending(); f.snapshot([entry()], true, oldSubscription);
+  f.login(null); await f.flush(); f.snapshot([entry()], true, oldSubscription);
   assert.deepEqual(plain(f.expensesState.items), []);
   assert.doesNotMatch(f.ids['expenses-list'].innerHTML, /Private fixture/);
   assert.equal(f.ids['exp-stat-count'].textContent, '0 笔');
@@ -129,23 +142,24 @@ test('logout clears displayed records, closes the form and cancels pending write
   assert.equal(f.writes.length, 0);
 });
 
-test('account switching ignores stale cloud callbacks and uses separate write paths', () => {
+test('account switching ignores stale cloud callbacks and uses separate write paths', async () => {
   const f = fixture(); f.login(ownerUid); f.snapshot([entry()]);
-  f.saveExpenses(); const pending = [...f.timers.values()][0];
+  f.saveExpenses(entry(), entry('Pending edit'));
   const oldSubscription = f.subscriptions.at(-1);
   f.login('other-user'); f.snapshot([entry('Other fixture', 9)]);
-  pending(); f.snapshot([entry()], true, oldSubscription); oldSubscription.error();
+  await f.flush(); f.snapshot([entry()], true, oldSubscription); oldSubscription.error();
   assert.equal(f.expensesState.items[0].title, 'Other fixture');
   assert.equal(f.writes.length, 0);
-  f.saveExpenses(); f.flush();
+  f.saveExpenses(entry('Other fixture', 9), entry('Saved other fixture', 10)); await f.flush();
   assert.equal(f.writes[0].ref, 'users/other-user/expenses/records');
-  assert.equal(f.writes[0].data.items[0].title, 'Other fixture');
-  assert.equal(JSON.parse(f.storage.get(`${cacheKey}:${ownerUid}`))[0].title, 'Private fixture');
+  assert.equal(f.writes[0].data.items[0].title, 'Saved other fixture');
+  assert.equal(JSON.parse(f.storage.get(`${cacheKey}:${ownerUid}`))[0].title, 'Pending edit');
+  assert.ok([...f.storage.keys()].some(key => key.startsWith(`${cacheKey}:pending:${ownerUid}:`)));
 });
 
-test('deleting the last record persists an empty list without replenishing history', () => {
+test('deleting the last record persists an empty list without replenishing history', async () => {
   const f = fixture(); f.login(ownerUid); f.snapshot([entry()]);
-  f.expensesState.items = []; f.saveExpenses(); f.flush(); f.snapshot([]);
+  f.saveExpenses(entry(), null); await f.flush(); f.snapshot([]);
   assert.deepEqual(f.writes[0].data.items, []);
   assert.deepEqual(plain(f.expensesState.items), []);
 });
@@ -153,5 +167,13 @@ test('deleting the last record persists an empty list without replenishing histo
 test('public expense source contains no historical seed and the entry point is refreshed', () => {
   assert.doesNotMatch(source, /INITIAL_EXPENSES|exp_\d{8}_/);
   const html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
-  assert.match(html, /expenses\.js\?v=20261002a/);
+  assert.match(html, /expenses\.js\?v=20261003a/);
+});
+
+test('offline Firestore cache miss preserves the account cache until server confirmation', () => {
+  const f = fixture({ [`${cacheKey}:${ownerUid}`]: JSON.stringify([entry()]) });
+  f.login(ownerUid); f.snapshot(undefined, false, undefined, true);
+  assert.equal(f.expensesState.items.length, 1);
+  f.snapshot(undefined, false);
+  assert.equal(f.expensesState.items.length, 0);
 });
