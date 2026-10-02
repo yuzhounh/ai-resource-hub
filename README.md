@@ -1,16 +1,19 @@
 <p align="center">
-  <img src="./ai-resource-hub.svg" width="144" alt="AI Resource Hub icon">
+  <img src="ai-resource-hub.svg" width="112" alt="AI Resource Hub logo">
 </p>
 
 <h1 align="center">AI Resource Hub</h1>
 
-<p align="center"><strong>AI 工具集、API 控制台与 Agent 生态地图等的统一入口</strong></p>
+<p align="center"><strong>AI 工具、API 控制台、模型价格与 Agent 生态的统一入口。</strong></p>
 
 <p align="center">
-  <a href="https://github.com/yuzhounh/ai-resource-hub/releases"><img src="https://img.shields.io/badge/version-v2.2.2-8875DE" alt="version v2.2.2"></a>
-  <a href="https://ai-resource-hub.pages.dev/"><img src="https://img.shields.io/badge/Cloudflare_Pages-online-F38020?logo=cloudflare" alt="Cloudflare Pages online"></a>
-  <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-D39448" alt="MIT License"></a>
-  <img src="https://img.shields.io/badge/last updated-2026--09--26-668DD8" alt="last updated 2026-09-26">
+  <a href="https://ai-resource-hub.pages.dev/"><img src="https://img.shields.io/badge/Website-Cloudflare%20Pages-f38020?style=flat&amp;logo=cloudflare&amp;logoColor=white" alt="Website: Cloudflare Pages"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-f59e0b?style=flat" alt="License: MIT"></a>
+  <img src="https://img.shields.io/badge/JavaScript-Browser-f7df1e?style=flat&amp;logo=javascript&amp;logoColor=white" alt="JavaScript: Browser">
+</p>
+
+<p align="center">
+  <a href="https://ai-resource-hub.pages.dev/">在线体验</a> · <a href="https://github.com/yuzhounh/ai-resource-hub/releases/latest">发布版本</a> · <a href="#本地使用">快速开始</a> · <a href="LICENSE">开源协议</a>
 </p>
 
 AI Resource Hub 将工具集、API 控制台、Agent 生态地图、科研自动化、笔记、连通性报告与资源管理整合为一个统一入口，覆盖常用 AI 产品、模型与 API 控制台、AI Agent 产品和运行形态，并提供个人数据云同步能力。
@@ -81,6 +84,6 @@ Firestore 仅保存笔记、支出、套餐、用量与归档状态等个人数�
 
 - [ai-agent-landscape](https://github.com/yuzhounh/ai-agent-landscape)：独立维护的 AI Agent 生态资料，与本项目的生态导航主题相关。
 
-## License
+## 开源协议
 
 [MIT](./LICENSE)
