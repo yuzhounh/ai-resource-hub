@@ -8,3 +8,12 @@
   .view-connectivity .providers-grid { grid-template-columns: minmax(0, 1fr); }
   .hub-user-menu, .manager-user-menu { max-width: calc(100vw - 28px); }
 }
+
+@media (min-width: 744px) and (min-height: 600px) and (pointer: coarse) {
+  .primary-tabs { flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain; }
+  .primary-tabs a, .subnav a, .filter-btn { min-height: 44px; display: inline-flex; align-items: center; }
+  button { min-height: 44px; }
+  .hub-user-button, .copy-btn { min-width: 44px; }
+  input, textarea, select, .search input, .view-toolbar > input { font-size: 16px; }
+  .view-connectivity .providers-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+}
