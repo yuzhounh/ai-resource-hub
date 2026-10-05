@@ -224,6 +224,100 @@
       }
     }
 
+    /* 登录状态下 9 个 Tab 较宽（需约 1060px 才能单行排下），在将要换行时自动收起为汉堡菜单 */
+    @media (max-width: 1060px) {
+      body.hub-signed-in .primary-bar {
+        display: none !important;
+      }
+      body.hub-signed-in .site-header .hub-account {
+        display: none !important;
+      }
+      body.hub-signed-in .theme-toggle-desktop {
+        display: none !important;
+      }
+      body.hub-signed-in .mobile-drawer-toggle {
+        display: grid !important;
+        place-items: center !important;
+        width: 40px !important;
+        height: 40px !important;
+        min-width: 40px !important;
+        min-height: 40px !important;
+        padding: 0 !important;
+        border-radius: 50% !important;
+        border: 1px solid var(--line) !important;
+        background: var(--card) !important;
+        color: var(--text) !important;
+        cursor: pointer;
+        box-shadow: none !important;
+        transition: all .15s ease;
+      }
+      body.hub-signed-in .mobile-drawer-toggle:hover {
+        border-color: var(--accent) !important;
+        color: var(--accent) !important;
+        background: var(--soft) !important;
+      }
+      body.hub-signed-in .mobile-drawer-toggle svg {
+        width: 20px !important;
+        height: 20px !important;
+      }
+      body.hub-signed-in .brand-row {
+        flex-wrap: nowrap !important;
+        gap: 12px !important;
+      }
+      body.hub-signed-in .brand-title {
+        margin-bottom: 0 !important;
+      }
+      body.hub-signed-in .site-header p {
+        display: none !important;
+      }
+    }
+
+    /* 动态侦测换行降级保护：只要 Tab 无法单行容纳即转为汉堡菜单 */
+    body.tabs-wrapped .primary-bar {
+      display: none !important;
+    }
+    body.tabs-wrapped .site-header .hub-account {
+      display: none !important;
+    }
+    body.tabs-wrapped .theme-toggle-desktop {
+      display: none !important;
+    }
+    body.tabs-wrapped .mobile-drawer-toggle {
+      display: grid !important;
+      place-items: center !important;
+      width: 40px !important;
+      height: 40px !important;
+      min-width: 40px !important;
+      min-height: 40px !important;
+      padding: 0 !important;
+      border-radius: 50% !important;
+      border: 1px solid var(--line) !important;
+      background: var(--card) !important;
+      color: var(--text) !important;
+      cursor: pointer;
+      box-shadow: none !important;
+      transition: all .15s ease;
+    }
+    body.tabs-wrapped .mobile-drawer-toggle:hover {
+      border-color: var(--accent) !important;
+      color: var(--accent) !important;
+      background: var(--soft) !important;
+    }
+    body.tabs-wrapped .mobile-drawer-toggle svg {
+      width: 20px !important;
+      height: 20px !important;
+    }
+    body.tabs-wrapped .brand-row {
+      flex-wrap: nowrap !important;
+      gap: 12px !important;
+    }
+    body.tabs-wrapped .brand-title {
+      margin-bottom: 0 !important;
+    }
+    body.tabs-wrapped .site-header p {
+      display: none !important;
+    }
+
     /* Mobile Drawer & Modal Styles (Unified 248px Width, 72px Head, 40px Buttons) */
     .mobile-drawer-layer {
       position: fixed;
@@ -12082,7 +12176,39 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
       }
     }
 
-    document.addEventListener('hub-auth-change', updateMobileAccountUI);
+    // ---- 动态导航栏换行侦测（当需要换行时自动折叠入汉堡菜单）----
+    function checkTabsOverflow() {
+      const tabsNav = document.querySelector('.primary-tabs');
+      if (!tabsNav) return;
+      const isSignedIn = document.body.classList.contains('hub-signed-in');
+      const visibleTabs = [...tabsNav.querySelectorAll('a')].filter(el => {
+        if (el.classList.contains('hub-gated-tab') && !isSignedIn) return false;
+        return true;
+      });
+      if (!visibleTabs.length) return;
+
+      let totalWidth = 0;
+      visibleTabs.forEach(tab => {
+        totalWidth += (tab.offsetWidth || (tab.id === 'tab-research' ? 118 : 96));
+      });
+      totalWidth += (visibleTabs.length - 1) * 8;
+      if (isSignedIn) totalWidth += 24;
+
+      const shell = document.querySelector('.site-header.app-shell') || document.body;
+      const availableWidth = shell.clientWidth || (window.innerWidth - 44);
+
+      const isWrapped = (availableWidth < totalWidth) || window.innerWidth <= 820 || (isSignedIn && window.innerWidth <= 1060);
+      document.body.classList.toggle('tabs-wrapped', isWrapped);
+    }
+
+    window.addEventListener('resize', checkTabsOverflow);
+    document.addEventListener('hub-auth-change', () => {
+      checkTabsOverflow();
+      updateMobileAccountUI();
+    });
+    checkTabsOverflow();
+    setTimeout(checkTabsOverflow, 100);
+    setTimeout(checkTabsOverflow, 500);
   </script>
   <script src="./pricing.js?v=20260930a"></script>
   <script type="module" src="./manager.js?v=20260905k"></script>
