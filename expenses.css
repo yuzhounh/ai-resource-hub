@@ -990,24 +990,24 @@
 }
 
 .expenses-modal-close {
-  background: transparent;
-  border: 0;
+  background: var(--card);
+  border: 1px solid var(--line);
   color: var(--muted);
-  font-size: 22px;
+  font-size: 20px;
   line-height: 1;
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
   transition: all .15s;
 }
 
 .expenses-modal-close:hover {
+  border-color: var(--accent);
   background: var(--soft);
-  color: var(--text);
+  color: var(--accent);
 }
 
 .expenses-modal-body {

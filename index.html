@@ -1,6 +1,16 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
+  <script>
+    (function(){
+      try {
+        var saved = localStorage.getItem('ai-resource-hub-theme');
+        if (saved === 'dark' || saved === 'light') {
+          document.documentElement.dataset.theme = saved;
+        }
+      } catch(e) {}
+    })();
+  </script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="AI 工具集、API 控制台与 Agent 生态地图的统一导航入口">
@@ -13,14 +23,18 @@
   <title>AI Resource Hub</title>
   <style>
     :root{color-scheme:light dark;--bg:#f6f7f9;--card:#fff;--text:#17191c;--muted:#69707c;--line:#e3e6ea;--accent:#2563eb;--soft:#eef4ff;--warn:#fff7e6;--bar:color-mix(in srgb,var(--bg) 91%,transparent)}
-    @media(prefers-color-scheme:dark){:root{--bg:#0d0f12;--card:#16191e;--text:#f3f4f6;--muted:#9aa3ad;--line:#2a3038;--accent:#8ab4ff;--soft:#172238;--warn:#2a2111}}
+    @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d0f12;--card:#16191e;--text:#f3f4f6;--muted:#9aa3ad;--line:#2a3038;--accent:#8ab4ff;--soft:#172238;--warn:#2a2111}}
+    :root[data-theme="light"]{color-scheme:light;--bg:#f6f7f9;--card:#fff;--text:#17191c;--muted:#69707c;--line:#e3e6ea;--accent:#2563eb;--soft:#eef4ff;--warn:#fff7e6;--bar:color-mix(in srgb,var(--bg) 91%,transparent)}
+    :root[data-theme="dark"]{color-scheme:dark;--bg:#0d0f12;--card:#16191e;--text:#f3f4f6;--muted:#9aa3ad;--line:#2a3038;--accent:#8ab4ff;--soft:#172238;--warn:#2a2111}
+    @media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .view-connectivity{--success-text:#34d399;--warning-text:#fbbf24;--danger-text:#f87171;--purple:#c084fc;--amber:#fb923c;--cyan:#22d3ee}}
+    :root[data-theme="dark"] .view-connectivity{--success-text:#34d399;--warning-text:#fbbf24;--danger-text:#f87171;--purple:#c084fc;--amber:#fb923c;--cyan:#22d3ee}
     *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:150px}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.55}
     a{color:var(--accent)}.app-shell{width:min(calc(100% - 44px),1280px);margin-inline:auto}.site-header{padding:30px 0 18px;text-align:left}.brand-row{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}.brand{min-width:0}.brand-title{display:flex;align-items:center;justify-content:flex-start;gap:10px;margin-bottom:6px}.brand-title img{width:36px;height:36px;flex:0 0 auto}.site-header h1{font-size:34px;letter-spacing:-.03em;margin:0}.site-header p{color:var(--muted);margin:0}
     .hub-account{position:relative;flex:0 0 auto;display:flex;align-items:center}.hub-signin-button{border:1px solid var(--line);background:var(--card);color:var(--text);font:inherit;font-size:14px;font-weight:650;padding:9px 16px;border-radius:999px;cursor:pointer;transition:.15s;white-space:nowrap}.hub-signin-button:hover{border-color:var(--accent);color:var(--accent)}.hub-user{position:relative}.hub-user-button{display:flex;align-items:center;justify-content:center;width:38px;height:38px;padding:0;border:1px solid var(--line);border-radius:50%;background:var(--card);cursor:pointer;overflow:hidden}.hub-user-button img{width:100%;height:100%;object-fit:cover;display:block}.hub-user-button span{font-weight:700;color:var(--accent);font-size:16px}.hub-user-menu{position:absolute;right:0;top:calc(100% + 8px);z-index:60;width:250px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,.12);padding:12px}.hub-user-menu-profile{display:flex;align-items:center;gap:10px;padding:4px 4px 10px;border-bottom:1px solid var(--line)}.hub-user-menu-avatar{width:36px;height:36px;flex:0 0 auto;border-radius:50%;overflow:hidden;background:var(--soft);display:flex;align-items:center;justify-content:center}.hub-user-menu-avatar img{width:100%;height:100%;object-fit:cover}.hub-user-menu-avatar span{font-weight:700;color:var(--accent)}.hub-user-menu-identity{min-width:0;display:flex;flex-direction:column;gap:2px}.hub-user-menu-identity strong{font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hub-user-menu-identity span{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hub-user-menu-actions{padding-top:8px}.hub-user-menu-actions button{width:100%;border:1px solid var(--line);background:transparent;color:var(--text);font:inherit;font-size:13px;padding:8px 10px;border-radius:9px;cursor:pointer}.hub-user-menu-actions button:hover{border-color:var(--accent);color:var(--accent)}
     .hub-gated-tab{display:none!important}body.hub-signed-in .hub-gated-tab{display:block}body.hub-signed-in .primary-tabs .hub-gated-tab{display:inline-flex!important}
     .view[data-hub-locked]>:not(.hub-lock-card){display:none!important}.view:not([data-hub-locked])>.hub-lock-card{display:none!important}.hub-lock-card{max-width:520px;margin:70px auto;padding:38px 30px;text-align:center;background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.05)}.view-connectivity .hub-lock-card{margin:70px auto}.hub-lock-icon{font-size:30px;margin-bottom:10px}.hub-lock-card h2{margin:0 0 10px;font-size:22px}.hub-lock-card>p{color:var(--muted);font-size:14px;line-height:1.7;margin:0 0 20px}.hub-lock-card .hub-signin-button{font-size:15px;padding:11px 22px}.hub-lock-message{margin:14px 0 0!important;font-size:13px;color:var(--muted)}.hub-lock-message.error{color:var(--danger-text,var(--accent))}
     .primary-bar{position:sticky;top:0;z-index:30;background:var(--bar);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}.primary-tabs{display:flex;flex-wrap:wrap;gap:8px;padding:10px 0}.primary-tabs a{flex:0 0 auto;color:var(--muted);font-weight:650;text-decoration:none;padding:9px 14px;border-radius:10px}.primary-tabs a:hover{color:var(--text);background:var(--card)}.primary-tabs a[aria-selected="true"]{color:var(--accent);background:var(--card);box-shadow:inset 0 0 0 1px var(--line)}
-    .view{padding:28px 0 70px}.view[hidden]{display:none!important}.view-summary{height:25px;line-height:25px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color:var(--muted);font-size:16px;margin:0 0 20px}.view-toolbar{position:sticky;top:59px;z-index:20;padding:9px 0 12px;background:var(--bar);backdrop-filter:blur(12px)}.search input,.view-toolbar>input{width:100%;padding:13px 15px;border-radius:13px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:15px;outline:none}.search input:focus,.view-toolbar>input:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 15%,transparent)}
+    .view{padding:28px 0 70px}.view[hidden]{display:none!important}.view-summary{height:25px;line-height:25px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color:var(--muted);font-size:16px;margin:0 0 20px}.view-toolbar{position:static;padding:9px 0 12px;background:transparent;backdrop-filter:none}.search input,.view-toolbar>input{width:100%;padding:13px 15px;border-radius:13px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:15px;outline:none}.search input:focus,.view-toolbar>input:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 15%,transparent)}
     .subnav{display:flex;flex-wrap:wrap;gap:8px;padding:10px 0 0}.subnav a{flex:0 0 auto;white-space:nowrap;text-decoration:none;color:var(--text);border:1px solid var(--line);background:var(--card);padding:7px 10px;border-radius:999px;font-size:13px}.subnav a:hover,.subnav a.active{border-color:var(--accent);color:var(--accent)}.subnav em{font-style:normal;color:var(--muted)}
     section{scroll-margin-top:150px}.hidden{display:none!important}footer{color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:18px;margin-top:40px}.empty-state{background:var(--card);border:1px dashed var(--line);border-radius:13px;padding:22px;text-align:center;color:var(--muted)}
 
@@ -118,6 +132,350 @@
     .view-connectivity .provider-card.conn-archived:hover{opacity:.75;filter:grayscale(.2)}
     .view-connectivity .provider-card[data-conn-hidden]{display:none}
 
+  
+    /* Non-sticky search toolbars: scroll naturally with content */
+    .view-toolbar,
+    .manager-toolbar {
+      position: static !important;
+      top: auto !important;
+      z-index: auto !important;
+      background: transparent !important;
+      backdrop-filter: none !important;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .theme-toggle-desktop {
+      display: grid !important;
+      place-items: center !important;
+      width: 40px !important;
+      height: 40px !important;
+      min-width: 40px !important;
+      min-height: 40px !important;
+      padding: 0 !important;
+      border-radius: 50% !important;
+      border: 1px solid var(--line) !important;
+      background: var(--card) !important;
+      color: var(--text) !important;
+      cursor: pointer;
+      box-shadow: none !important;
+      transition: all .15s ease;
+    }
+    .theme-toggle-desktop:hover {
+      border-color: var(--accent) !important;
+      color: var(--accent) !important;
+      background: var(--soft) !important;
+    }
+    .theme-toggle-desktop svg {
+      width: 20px !important;
+      height: 20px !important;
+    }
+    .mobile-drawer-toggle {
+      display: none !important;
+    }
+
+    @media (max-width: 820px) {
+      .primary-bar {
+        display: none !important;
+      }
+      .site-header .hub-account {
+        display: none !important;
+      }
+      .theme-toggle-desktop {
+        display: none !important;
+      }
+      .mobile-drawer-toggle {
+        display: grid !important;
+        place-items: center !important;
+        width: 40px !important;
+        height: 40px !important;
+        min-width: 40px !important;
+        min-height: 40px !important;
+        padding: 0 !important;
+        border-radius: 50% !important;
+        border: 1px solid var(--line) !important;
+        background: var(--card) !important;
+        color: var(--text) !important;
+        cursor: pointer;
+        box-shadow: none !important;
+        transition: all .15s ease;
+      }
+      .mobile-drawer-toggle:hover {
+        border-color: var(--accent) !important;
+        color: var(--accent) !important;
+        background: var(--soft) !important;
+      }
+      .mobile-drawer-toggle svg {
+        width: 20px !important;
+        height: 20px !important;
+      }
+      .brand-row {
+        flex-wrap: nowrap !important;
+        gap: 12px !important;
+      }
+      .brand-title {
+        margin-bottom: 0 !important;
+      }
+      .site-header p {
+        display: none !important;
+      }
+    }
+
+    /* Mobile Drawer & Modal Styles (Unified 248px Width, 72px Head, 40px Buttons) */
+    .mobile-drawer-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .mobile-drawer-layer[hidden] {
+      display: none !important;
+    }
+    .mobile-drawer-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(2px);
+      cursor: pointer;
+    }
+    .mobile-drawer-panel {
+      position: relative;
+      z-index: 10;
+      width: min(72vw, 248px) !important;
+      height: 100% !important;
+      background: var(--card);
+      border-left: 1px solid var(--line);
+      border-top-left-radius: 16px;
+      border-bottom-left-radius: 16px;
+      box-shadow: -14px 0 40px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding: 0 !important;
+      overflow: hidden;
+      animation: mobile-drawer-slide .2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-sizing: border-box;
+    }
+    @keyframes mobile-drawer-slide {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+    .mobile-drawer-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 26px 16px 18px !important;
+      border-bottom: 1px solid var(--line);
+      background: var(--card);
+      border-top-left-radius: 16px;
+      flex: 0 0 auto;
+      box-sizing: border-box;
+    }
+    .mobile-drawer-close {
+      display: grid !important;
+      place-items: center !important;
+      width: 40px !important;
+      height: 40px !important;
+      min-width: 40px !important;
+      min-height: 40px !important;
+      padding: 0 !important;
+      border: 1px solid var(--line) !important;
+      border-radius: 50% !important;
+      background: var(--card) !important;
+      color: var(--muted) !important;
+      cursor: pointer;
+      box-shadow: none !important;
+      transition: all .15s ease;
+    }
+    .mobile-drawer-close:hover {
+      border-color: var(--accent) !important;
+      color: var(--accent) !important;
+      background: var(--soft) !important;
+    }
+    .mobile-drawer-close svg {
+      width: 20px !important;
+      height: 20px !important;
+    }
+
+    .mobile-drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: stretch;
+      gap: 12px;
+      padding: 14px 16px 12px;
+      box-sizing: border-box;
+    }
+    .mobile-menu-section {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .mobile-menu-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      padding-left: 2px;
+    }
+    .mobile-nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .mobile-nav-item {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      width: 100% !important;
+      min-height: 40px !important;
+      height: 40px !important;
+      padding: 0 12px !important;
+      border-radius: 10px !important;
+      background: var(--bg) !important;
+      border: 1px solid var(--line) !important;
+      color: var(--text) !important;
+      font-size: 13.5px !important;
+      font-weight: 500 !important;
+      cursor: pointer;
+      text-align: left;
+      transition: all .15s ease;
+      box-sizing: border-box;
+    }
+    .mobile-nav-item:hover {
+      border-color: color-mix(in srgb, var(--accent) 45%, var(--line)) !important;
+      background: var(--card) !important;
+    }
+    .mobile-nav-item.is-active {
+      background: var(--soft) !important;
+      color: var(--accent) !important;
+      border-color: color-mix(in srgb, var(--accent) 30%, transparent) !important;
+      font-weight: 600 !important;
+    }
+    .mobile-nav-name {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .mobile-nav-item.hub-gated-tab {
+      display: none !important;
+    }
+    body.hub-signed-in .mobile-nav-item.hub-gated-tab {
+      display: flex !important;
+    }
+
+    .mobile-drawer-foot {
+      padding: 12px 16px 18px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: auto;
+      flex: 0 0 auto;
+      box-sizing: border-box;
+    }
+    .mobile-foot-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 10px;
+      border-radius: 12px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      min-height: 48px;
+      box-sizing: border-box;
+    }
+    .mobile-foot-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .mobile-drawer-action-btn {
+      width: 40px !important;
+      height: 40px !important;
+      min-width: 40px !important;
+      min-height: 40px !important;
+      padding: 0 !important;
+      display: grid !important;
+      place-items: center !important;
+      flex: 0 0 40px !important;
+      border-radius: 50% !important;
+      background: var(--card) !important;
+      border: 1px solid var(--line) !important;
+      box-shadow: none !important;
+      color: var(--text) !important;
+      cursor: pointer;
+      transition: all .15s ease;
+    }
+    .mobile-drawer-action-btn:hover {
+      border-color: var(--accent) !important;
+      color: var(--accent) !important;
+      background: var(--soft) !important;
+    }
+    .mobile-drawer-action-btn svg {
+      width: 20px !important;
+      height: 20px !important;
+    }
+    .mobile-auth-btn {
+      padding: 8px 14px !important;
+      border-radius: 10px !important;
+      font-size: 12px !important;
+      font-weight: 650 !important;
+      min-height: 40px !important;
+      height: 40px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      box-sizing: border-box !important;
+      border: 1px solid var(--line) !important;
+      background: var(--card) !important;
+      color: var(--text) !important;
+      cursor: pointer;
+      transition: all .15s ease;
+    }
+    .mobile-auth-btn:hover {
+      border-color: var(--accent) !important;
+      color: var(--accent) !important;
+      background: var(--soft) !important;
+    }
+    .mobile-user-profile {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+    }
+    .mobile-user-name {
+      max-width: 80px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .mobile-signout-btn {
+      padding: 6px 12px !important;
+      min-height: 32px !important;
+      height: 32px !important;
+      border-radius: 8px !important;
+      font-size: 12px !important;
+      font-weight: 600 !important;
+      border: 1px solid var(--line) !important;
+      background: var(--card) !important;
+      color: #ef4444 !important;
+      cursor: pointer;
+      transition: all .15s ease;
+    }
+    .mobile-signout-btn:hover {
+      border-color: #ef4444 !important;
+      background: color-mix(in srgb, #ef4444 10%, transparent) !important;
+    }
   </style>
   <link rel="stylesheet" href="./mobile.css">
 </head>
@@ -128,29 +486,43 @@
         <div class="brand-title"><img src="./favicon.svg?v=20261001c" alt=""><h1>AI Resource Hub</h1></div>
         <p>AI 工具集、API 控制台与 Agent 生态地图等的统一入口</p>
       </div>
-      <div id="hub-account" class="hub-account" data-state="signed-out">
-        <button id="hub-signin" class="hub-signin-button" type="button">Google 登录</button>
-        <div id="hub-user" class="hub-user" hidden>
-          <button id="hub-user-menu-button" class="hub-user-button" type="button" aria-label="打开用户菜单" aria-haspopup="true" aria-expanded="false">
-            <img id="hub-user-avatar" alt="" hidden>
-            <span id="hub-user-avatar-fallback" aria-hidden="true"></span>
-          </button>
-          <div id="hub-user-menu" class="hub-user-menu" hidden>
-            <div class="hub-user-menu-profile">
-              <div class="hub-user-menu-avatar">
-                <img id="hub-menu-avatar" alt="" hidden>
-                <span id="hub-menu-avatar-fallback" aria-hidden="true"></span>
+      <div class="header-actions">
+        <button id="theme-toggle-desktop" class="theme-toggle-desktop" type="button" aria-label="切换外观主题" title="切换外观主题">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+        <div id="hub-account" class="hub-account" data-state="signed-out">
+          <button id="hub-signin" class="hub-signin-button" type="button">Google 登录</button>
+          <div id="hub-user" class="hub-user" hidden>
+            <button id="hub-user-menu-button" class="hub-user-button" type="button" aria-label="打开用户菜单" aria-haspopup="true" aria-expanded="false">
+              <img id="hub-user-avatar" alt="" hidden>
+              <span id="hub-user-avatar-fallback" aria-hidden="true"></span>
+            </button>
+            <div id="hub-user-menu" class="hub-user-menu" hidden>
+              <div class="hub-user-menu-profile">
+                <div class="hub-user-menu-avatar">
+                  <img id="hub-menu-avatar" alt="" hidden>
+                  <span id="hub-menu-avatar-fallback" aria-hidden="true"></span>
+                </div>
+                <div class="hub-user-menu-identity">
+                  <strong id="hub-user-name"></strong>
+                  <span id="hub-user-email"></span>
+                </div>
               </div>
-              <div class="hub-user-menu-identity">
-                <strong id="hub-user-name"></strong>
-                <span id="hub-user-email"></span>
+              <div class="hub-user-menu-actions">
+                <button id="hub-signout" type="button">退出登录</button>
               </div>
-            </div>
-            <div class="hub-user-menu-actions">
-              <button id="hub-signout" type="button">退出登录</button>
             </div>
           </div>
         </div>
+        <button id="mobile-drawer-toggle" class="mobile-drawer-toggle" type="button" aria-label="打开导航与设置菜单" title="打开导航与设置菜单">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
       </div>
     </div>
   </header>
@@ -11047,6 +11419,9 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
       });
       const changed=!firstLoad&&activeView!==view;
       activeView=view;
+      document.querySelectorAll('.mobile-nav-item').forEach(btn => {
+        btn.classList.toggle('is-active', btn.dataset.view === view);
+      });
       const tabEl=document.getElementById(`tab-${view}`);
       const tabTitle=(tabEl.childNodes[0]?.textContent||tabEl.textContent).trim();
       document.title=`${tabTitle} · AI Resource Hub`;
@@ -11514,6 +11889,124 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
         resetTimer=setTimeout(()=>{button.classList.remove('copied');button.title=origTitle;},2000);
       });
     });
+
+    // ---- 外观主题切换与状态同步 ----
+    function getHubTheme() {
+      const saved = localStorage.getItem('ai-resource-hub-theme');
+      if (saved === 'dark' || saved === 'light') return saved;
+      return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+    }
+
+    function updateHubThemeUI(theme) {
+      document.documentElement.dataset.theme = theme;
+      const isDark = theme === 'dark';
+      const sunSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
+      const moonSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+      const icon = isDark ? sunSvg : moonSvg;
+      const title = isDark ? '切换浅色模式' : '切换深色模式';
+      const desktopBtn = document.getElementById('theme-toggle-desktop');
+      if (desktopBtn) { desktopBtn.innerHTML = icon; desktopBtn.title = title; }
+      const mobileBtn = document.getElementById('mobile-theme-toggle');
+      if (mobileBtn) { mobileBtn.innerHTML = icon; mobileBtn.title = title; }
+    }
+
+    function toggleHubTheme() {
+      const current = getHubTheme();
+      const next = current === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('ai-resource-hub-theme', next);
+      updateHubThemeUI(next);
+    }
+
+    const desktopThemeBtn = document.getElementById('theme-toggle-desktop');
+    if (desktopThemeBtn) desktopThemeBtn.addEventListener('click', toggleHubTheme);
+    const mobileThemeBtn = document.getElementById('mobile-theme-toggle');
+    if (mobileThemeBtn) mobileThemeBtn.addEventListener('click', toggleHubTheme);
+
+    updateHubThemeUI(getHubTheme());
+    if (window.matchMedia) {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+        if (!localStorage.getItem('ai-resource-hub-theme')) {
+          updateHubThemeUI(getHubTheme());
+        }
+      });
+    }
+
+    // ---- 移动端抽屉开关与导航控制 ----
+    const drawerLayer = document.getElementById('mobile-drawer-layer');
+    const drawerCloseBtn = document.getElementById('mobile-drawer-close');
+    const drawerToggleBtn = document.getElementById('mobile-drawer-toggle');
+    const drawerBackdrop = document.getElementById('mobile-drawer-backdrop');
+
+    function openMobileDrawer() {
+      if (drawerLayer) {
+        drawerLayer.hidden = false;
+        document.body.style.overflow = 'hidden';
+        updateMobileAccountUI();
+      }
+    }
+
+    function closeMobileDrawer() {
+      if (drawerLayer) {
+        drawerLayer.hidden = true;
+        document.body.style.overflow = '';
+      }
+    }
+
+    if (drawerToggleBtn) drawerToggleBtn.addEventListener('click', openMobileDrawer);
+    if (drawerCloseBtn) drawerCloseBtn.addEventListener('click', closeMobileDrawer);
+    if (drawerBackdrop) drawerBackdrop.addEventListener('click', closeMobileDrawer);
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && drawerLayer && !drawerLayer.hidden) {
+        closeMobileDrawer();
+      }
+    });
+
+    document.querySelectorAll('.mobile-nav-item').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const view = btn.dataset.view;
+        if (view) {
+          location.hash = `#${view}`;
+          closeMobileDrawer();
+        }
+      });
+    });
+
+    // ---- 移动端抽屉账户登录状态同步 ----
+    function updateMobileAccountUI() {
+      const container = document.getElementById('mobile-account-container');
+      if (!container) return;
+      const isSignedIn = document.body.classList.contains('hub-signed-in');
+      if (isSignedIn) {
+        const userName = document.getElementById('hub-user-name')?.textContent || 'Google 用户';
+        container.innerHTML = `
+          <div class="mobile-user-profile">
+            <span class="mobile-user-name" title="${userName}">${userName}</span>
+            <button type="button" class="mobile-signout-btn" id="mobile-hub-signout">退出</button>
+          </div>
+        `;
+        const signoutBtn = document.getElementById('mobile-hub-signout');
+        if (signoutBtn) {
+          signoutBtn.addEventListener('click', () => {
+            closeMobileDrawer();
+            document.getElementById('hub-signout')?.click();
+          });
+        }
+      } else {
+        container.innerHTML = `
+          <button type="button" class="mobile-auth-btn" id="mobile-hub-signin">Google 登录</button>
+        `;
+        const signinBtn = document.getElementById('mobile-hub-signin');
+        if (signinBtn) {
+          signinBtn.addEventListener('click', () => {
+            closeMobileDrawer();
+            document.getElementById('hub-signin')?.click();
+          });
+        }
+      }
+    }
+
+    document.addEventListener('hub-auth-change', updateMobileAccountUI);
   </script>
   <script src="./pricing.js?v=20260930a"></script>
   <script type="module" src="./manager.js?v=20260905k"></script>
