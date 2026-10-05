@@ -526,6 +526,77 @@
       </div>
     </div>
   </header>
+
+  <!-- 移动端侧滑抽屉菜单 -->
+  <div id="mobile-drawer-layer" class="mobile-drawer-layer" hidden role="presentation">
+    <div id="mobile-drawer-backdrop" class="mobile-drawer-backdrop"></div>
+    <aside class="mobile-drawer-panel" role="dialog" aria-modal="true" aria-label="快捷设置与导航">
+      <div class="mobile-drawer-head">
+        <div class="brand-title" style="margin: 0; gap: 8px;">
+          <img src="./favicon.svg?v=20261001c" alt="" style="width: 28px; height: 28px; flex: 0 0 auto;">
+          <span style="font-size: 17px; font-weight: 700; letter-spacing: -0.02em;">AI Resource Hub</span>
+        </div>
+        <button type="button" id="mobile-drawer-close" class="mobile-drawer-close" aria-label="关闭菜单">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="mobile-drawer-body">
+        <div class="mobile-menu-section">
+          <span class="mobile-menu-section-title">功能导航</span>
+          <nav class="mobile-nav-list" aria-label="移动端分类导航">
+            <button type="button" class="mobile-nav-item" data-view="tools">
+              <span class="mobile-nav-name">工具集</span>
+            </button>
+            <button type="button" class="mobile-nav-item" data-view="api">
+              <span class="mobile-nav-name">控制台</span>
+            </button>
+            <button type="button" class="mobile-nav-item" data-view="pricing">
+              <span class="mobile-nav-name">模型价格</span>
+            </button>
+            <button type="button" class="mobile-nav-item" data-view="agents">
+              <span class="mobile-nav-name">生态图</span>
+            </button>
+            <button type="button" class="mobile-nav-item" data-view="research">
+              <span class="mobile-nav-name">科研自动化</span>
+            </button>
+            <button type="button" class="mobile-nav-item hub-gated-tab" data-view="notes">
+              <span class="mobile-nav-name">笔记</span>
+            </button>
+            <button type="button" class="mobile-nav-item hub-gated-tab" data-view="expenses">
+              <span class="mobile-nav-name">支出</span>
+            </button>
+            <button type="button" class="mobile-nav-item hub-gated-tab" data-view="connectivity">
+              <span class="mobile-nav-name">连通性</span>
+            </button>
+            <button type="button" class="mobile-nav-item hub-gated-tab" data-view="manage">
+              <span class="mobile-nav-name">资源管理</span>
+            </button>
+          </nav>
+        </div>
+      </div>
+
+      <div class="mobile-drawer-foot">
+        <div class="mobile-foot-row">
+          <span class="mobile-foot-label">外观主题</span>
+          <button type="button" id="mobile-theme-toggle" class="mobile-drawer-action-btn" aria-label="切换外观主题" title="切换外观主题">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="mobile-foot-row" id="mobile-foot-account-row">
+          <span class="mobile-foot-label">账户状态</span>
+          <div id="mobile-account-container">
+            <button type="button" class="mobile-auth-btn" id="mobile-hub-signin">Google 登录</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
   <div class="primary-bar">
     <nav class="primary-tabs app-shell" role="tablist" aria-label="资源分类">
       <a id="tab-tools" role="tab" href="#tools" aria-controls="view-tools">工具集</a>
@@ -11939,14 +12010,19 @@ Anthropic Messages: HTTP (731 ms)">三协议定向测试｜Chat Completions: 连
 
     function openMobileDrawer() {
       if (drawerLayer) {
+        drawerLayer.removeAttribute('hidden');
         drawerLayer.hidden = false;
         document.body.style.overflow = 'hidden';
+        document.querySelectorAll('.mobile-nav-item').forEach(btn => {
+          btn.classList.toggle('is-active', btn.dataset.view === activeView);
+        });
         updateMobileAccountUI();
       }
     }
 
     function closeMobileDrawer() {
       if (drawerLayer) {
+        drawerLayer.setAttribute('hidden', '');
         drawerLayer.hidden = true;
         document.body.style.overflow = '';
       }
