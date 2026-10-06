@@ -20,7 +20,7 @@ AI Resource Hub 将工具集、API 控制台、Agent 生态地图、科研自动
 
 ## 在线访问
 
-当前版本：**2.2.3**。支出同步加入逐项事务合并、冲突选择与离线待同步恢复，详见 [发布说明](https://github.com/yuzhounh/ai-resource-hub/releases/tag/v2.2.3)。
+当前版本：**2.2.4**。移除登录后的“笔记”标签；支出、资源管理、连通性页面完成移动端响应式优化，并支持触屏长按条目弹出编辑/删除等操作。
 
 <https://ai-resource-hub.pages.dev/>
 
