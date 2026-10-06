@@ -52,3 +52,35 @@
 .manager-tab-pill:not(.active) .manager-tab-count{background:color-mix(in srgb,var(--muted) 16%,transparent);color:var(--muted)}
 .manager-list-actions button[data-archive]:hover{color:var(--manager-warn)}
 .manager-list-actions button[data-unarchive]:hover{color:var(--manager-ok)}
+
+/* ---- 响应式补充（2026-10-07） ---- */
+.view-manager{min-width:0}
+.manager-list-main,.manager-card,.manager-plan-provider-info,.manager-record-header>div{min-width:0}
+.manager-list-title,.manager-list-title strong,.manager-list-meta{overflow-wrap:anywhere}
+.manager-list-title{flex-wrap:wrap}
+.manager-record-header .manager-list-actions,.manager-list-actions{flex-wrap:wrap}
+@media(max-width:900px){.manager-dashboard-grid{grid-template-columns:1fr}.manager-toolbar{flex-wrap:wrap}.manager-heading h1{font-size:26px}}
+@media(max-width:700px){
+  .manager-search{flex:none}
+  .manager-plan-card,.manager-promotion-card{padding:15px 14px}
+  .manager-plan-card .manager-list-title strong,.manager-promotion-card .manager-list-title strong{font-size:17px}
+  .manager-record-header{flex-direction:column;align-items:stretch}
+  .manager-record-header .manager-list-actions{flex-direction:row;justify-content:flex-start}
+  .manager-plan-provider{flex-wrap:wrap}
+  .manager-nav{margin-inline:-4px;padding-inline:4px}
+  .manager-dialog{width:calc(100% - 16px);max-height:92vh}
+  .manager-dialog form{padding:16px}
+  .manager-field input,.manager-field select,.manager-field textarea{font-size:16px}
+  .manager-button,.manager-icon-button{min-height:38px}
+  .manager-list-actions .manager-button{flex:1 1 auto}
+}
+
+/* 触屏：归档/编辑/删除默认隐藏，长按卡片后弹出 */
+@media(hover:none){
+  .manager-list-item{position:relative;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+  .manager-list-item .manager-list-actions{display:none!important;position:absolute;right:10px;top:10px;z-index:6;flex-direction:row!important;gap:6px;padding:5px;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+  .manager-list-item.lp-open .manager-list-actions{display:flex!important}
+  .manager-list-item.lp-open{border-color:var(--accent)}
+  .manager-list-actions button{border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--text);font:inherit;font-size:13px;padding:7px 12px;min-height:36px;cursor:pointer}
+  .manager-list-actions button[data-delete]{color:var(--manager-bad)}
+}
