@@ -14,7 +14,7 @@ body.hub-signed-in .primary-tabs .hub-gated-tab {
   display: inline-flex !important;
 }
 
-body.hub-signed-in .primary-tabs #tab-notes {
+body.hub-signed-in .primary-tabs #tab-expenses {
   margin-left: auto;
 }
 
@@ -28,7 +28,7 @@ body.hub-signed-in .primary-tabs #tab-notes {
 }
 
 @media (max-width: 768px) {
-  body.hub-signed-in .primary-tabs #tab-notes {
+  body.hub-signed-in .primary-tabs #tab-expenses {
     margin-left: 0;
   }
 }

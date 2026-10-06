@@ -35,3 +35,29 @@
   height: 32px !important;
   max-height: 32px !important;
 }
+
+/* 连通性：手机上收紧供应商卡片，标题不换行 */
+@media (max-width: 760px) {
+  .view-connectivity .section-title { flex-wrap: wrap; gap: 2px 12px; align-items: baseline; }
+  .view-connectivity .section-title h2 { white-space: nowrap; flex: 0 0 auto; }
+  .view-connectivity .section-title small { flex: 1 1 160px; min-width: 0; }
+  .view-connectivity .providers-grid { gap: 8px; }
+  .view-connectivity .provider-card { padding: 11px 13px; border-radius: 12px; }
+  .view-connectivity .provider-card button { min-height: 0; }
+  .view-connectivity .provider-name { font-size: 15px; margin-bottom: 2px; }
+  .view-connectivity .url-box { margin-bottom: 4px; gap: 4px; }
+  .view-connectivity .provider-url { font-size: 12.5px; }
+  .view-connectivity .provider-card .copy-btn,
+  .view-connectivity .provider-card .refresh-btn { min-width: 34px; min-height: 34px; width: 34px; height: 34px; }
+  .view-connectivity .provider-metrics { gap: 12px; font-size: 12.5px; }
+  .view-connectivity .provider-state { margin-bottom: 4px; }
+}
+
+/* 连通性：整体统计快照在手机上两列紧凑排布 */
+@media (max-width: 760px) {
+  .view-connectivity .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .view-connectivity .stat-card { padding: 10px 12px; gap: 2px; border-radius: 12px; min-width: 0; }
+  .view-connectivity .stat-label { font-size: 12px; line-height: 1.3; }
+  .view-connectivity .stat-value { font-size: 21px; line-height: 1.2; }
+  .view-connectivity .stat-sub { font-size: 11px; line-height: 1.35; overflow-wrap: anywhere; }
+}

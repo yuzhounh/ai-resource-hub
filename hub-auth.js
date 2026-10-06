@@ -1,9 +1,9 @@
 // ============================================================
 // hub-auth.js — Google 账户统一入口
 // 职责：
-//   1. 初始化 Firebase（Auth + Firestore），供 manager.js / notes.js 复用
+//   1. 初始化 Firebase（Auth + Firestore），供 manager.js 复用
 //   2. 页面右上角的全局登录入口与用户菜单
-//   3. 笔记 / 连通性 / Plan 管理三个视图的登录门控
+//   3. 连通性 / Plan 管理三个视图的登录门控
 //   4. 订阅 Plan 管理归档记录名称（Plan 名称 / 优惠名称），向连通性页面广播（hub-archived-plans 事件）
 // 内联脚本通过 window.HubAuth 访问本模块能力。
 // ============================================================
@@ -46,7 +46,7 @@ googleProvider.setCustomParameters({ prompt: "select_account" });
 setPersistence(auth, browserLocalPersistence).catch(() => {});
 
 // 需要登录 Google 账号才能查看内容的视图
-const GATED_VIEWS = ["notes", "expenses", "connectivity", "manage"];
+const GATED_VIEWS = ["expenses", "connectivity", "manage"];
 
 const els = {
   account: document.getElementById("hub-account"),

@@ -1150,3 +1150,86 @@
 .expenses-sync-status button { margin: 4px 8px 4px 0; padding: 6px 10px; border: 1px solid currentColor; border-radius: 6px; background: transparent; color: inherit; cursor: pointer; }
 .expenses-sync-status button:disabled { opacity: .5; cursor: wait; }
 .expenses-sync-conflict { padding: 12px; margin-top: 8px; border: 1px solid #d97706; border-radius: 8px; color: var(--text, #334155); }
+
+/* ---- 响应式补充（2026-10-07） ---- */
+.view-expenses { min-width: 0; }
+.expenses-stat-card, .expenses-month-card, .expenses-chart-section { min-width: 0; }
+.expenses-item-row, .expenses-item-main-line, .expenses-item-right { min-width: 0; }
+.expenses-item-desc, .expenses-item-note { overflow-wrap: anywhere; }
+
+@media (max-width: 1100px) {
+  .expenses-edit-grid { grid-template-columns: 1fr 1fr 1fr; }
+  .expenses-edit-grid > :nth-child(n+3) { grid-column: auto; }
+}
+
+@media (max-width: 900px) {
+  .expenses-edit-sub-grid { grid-template-columns: 1fr; }
+  .expenses-pie-legend { min-width: 0; flex-basis: 100%; }
+}
+
+@media (max-width: 650px) {
+  .view-expenses { padding-top: 12px; }
+  .expenses-stat-card { padding: 12px 14px; }
+  .expenses-chart-section { padding: 12px; }
+  .expenses-filter-bar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin-inline: -4px;
+    padding: 0 4px 6px;
+    scrollbar-width: thin;
+  }
+  .expenses-filter-pill { flex: 0 0 auto; padding: 7px 14px; }
+  .expenses-edit-grid, .expenses-edit-sub-grid { grid-template-columns: 1fr; }
+  .expenses-input, .expenses-select, .expenses-textarea { font-size: 16px; }
+  .expenses-item-actions button { min-height: 36px; min-width: 36px; }
+}
+
+@media (max-width: 420px) {
+  .expenses-chart-row { grid-template-columns: 48px 1fr 72px; gap: 6px; padding: 4px 4px; }
+  .expenses-chart-row > :nth-child(4) { display: none; }
+  .expenses-toast { max-width: calc(100vw - 32px); }
+}
+
+/* ---- 移动端：分布图收进卡片 / 饼图独占一行 / 条目紧凑 ---- */
+.expenses-chart-layout { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1.15fr); }
+.expenses-chart-panel { overflow: hidden; min-width: 0; }
+.expenses-chart-sec-header, .expenses-pie-header { flex-wrap: wrap; row-gap: 4px; }
+.expenses-pie-legend-name { min-width: 0; }
+
+@media (max-width: 960px) {
+  .expenses-chart-layout { grid-template-columns: minmax(0, 1fr); }
+  .expenses-pie-card { min-height: 0; }
+  .expenses-pie-content { flex-direction: column; align-items: stretch; gap: 14px; }
+  .expenses-pie-svg-wrap { width: 180px; height: 180px; margin: 4px auto 0; }
+  .expenses-pie-legend { flex: none; width: 100%; min-width: 0; }
+}
+
+@media (max-width: 650px) {
+  .expenses-chart-panel { padding: 12px; border-radius: 14px; }
+  .expenses-chart-row { grid-template-columns: 52px minmax(0, 1fr) auto auto; }
+  .expenses-month-aside { padding: 10px 14px; }
+  .expenses-item-row { flex-direction: column; gap: 3px; padding: 9px 14px; }
+  .expenses-item-date {
+    width: auto; min-width: 0; padding: 0; background: none; border: 0;
+    text-align: left; font-size: 11.5px; color: var(--muted); line-height: 1.2;
+  }
+  .expenses-item-content { width: 100%; }
+  .expenses-item-main-line { flex-direction: row; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .expenses-item-info { flex: 1; min-width: 0; gap: 8px; }
+  .expenses-item-right { width: auto; margin-top: 0; gap: 0; }
+  .expenses-amount-val { font-size: 15px; }
+  .expenses-item-heading { flex-wrap: wrap; gap: 2px 8px; }
+}
+
+/* 触屏：编辑/删除默认隐藏，长按条目后弹出 */
+@media (hover: none) {
+  .expenses-item-row:not(.editing), .manager-list-item { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+  .expenses-item-row .expenses-item-actions {
+    display: none; position: absolute; right: 10px; top: 6px; z-index: 6;
+    padding: 5px; gap: 6px; background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,.18);
+    opacity: 1; pointer-events: auto; transform: none;
+  }
+  .expenses-item-row.lp-open .expenses-item-actions { display: flex; }
+  .expenses-item-row.lp-open { background-color: color-mix(in srgb, var(--accent) 7%, transparent); }
+}

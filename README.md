@@ -29,7 +29,6 @@ AI Resource Hub 将工具集、API 控制台、Agent 生态地图、科研自动
 - **工具集 (`#tools`)**：AI 助手、搜索、科研、Coding / Agent、模型平台、榜单与创作工具导航。
 - **API 控制台 (`#api`)**：国内外模型厂商和 API Router 的 Key、Usage、充值、套餐与文档入口，集成 Coding Plan 对比与参考。
 - **模型价格 (`#pricing`)**：公开的主流模型 API 每百万 token 价格快照，含缓存输入、同厂商相对成本、推荐定位与厂商定价入口。
-- **笔记 (`#notes`)**：随手采集 AI 工具、模型、开源项目与 API 链接，一键生成结构化提示词复制给 AI 合并入库；内容保存在 Google 账户。
 - **支出 (`#expenses`)**：登录后跟踪 AI 订阅、Token Plan、API 充值与网络服务消费支出，支持单栏月度卡片、悬停编辑/删除与数据云同步；按账户隔离缓存，新账户默认为空，不内置个人历史记录。
 - **连通性报告 (`#connectivity`)**：Windows 凭据 API 密钥多协议（Chat / Responses / Anthropic Messages / Batch）连通性验证报告，含 16 服务商实测快照与模型级明细；服务商归档状态保存在 Google 账户，并自动同步资源管理的归档。
 - **Agent 生态地图 (`#agents`)**：AI 编程、知识工作、桌面和浏览器操作、常驻个人 Agent、Coding / Token Plan、API Router 与基础模型。
@@ -82,7 +81,7 @@ Firestore 仅保存笔记、支出、套餐、用量与归档状态等个人数�
 - `favicon.svg`：浏览器标签页图标。
 - `hub-auth.js`：Firebase 初始化、右上角 Google 账号入口、多视图登录门控与 Plan 归档广播。
 - `manager.css` / `manager.js`：资源管理区样式与 Firestore 数据管理交互。
-- `notes.css` / `notes.js`：笔记区样式与 Firestore 云同步逻辑。
+- `notes.css`：顶部导航与登录门控标签的共享样式。
 - `expenses.css` / `expenses.js`：支出板块样式、统计看板、单栏月度卡片与数据持久化逻辑。
 - `firestore.rules`：只允许固定 Firebase UID 访问个人数据的规则模板。
 
