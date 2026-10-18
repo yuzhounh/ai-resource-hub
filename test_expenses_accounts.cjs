@@ -167,7 +167,7 @@ test('deleting the last record persists an empty list without replenishing histo
 test('public expense source contains no historical seed and the entry point is refreshed', () => {
   assert.doesNotMatch(source, /INITIAL_EXPENSES|exp_\d{8}_/);
   const html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
-  assert.match(html, /expenses\.js\?v=20261003a/);
+  assert.match(html, /expenses\.js\?v=20261019a/);
 });
 
 test('offline Firestore cache miss preserves the account cache until server confirmation', () => {
