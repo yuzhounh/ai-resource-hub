@@ -830,7 +830,7 @@
 .expenses-item-right {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 6px;
   flex-shrink: 0;
   min-height: 24px;
 }
@@ -855,7 +855,7 @@
 .expenses-item-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   opacity: 0;
   pointer-events: none;
   transition: opacity .15s ease, transform .15s ease;
@@ -888,6 +888,22 @@
 
 .expenses-action-btn:hover {
   border-color: var(--accent);
+  color: var(--accent);
+  background: var(--soft);
+}
+
+.expenses-item-actions .expenses-icon-btn {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
+  color: var(--muted);
+  border-radius: 6px;
+}
+
+.expenses-item-actions .expenses-icon-btn:hover,
+.expenses-item-actions .expenses-icon-btn:focus-visible {
   color: var(--accent);
   background: var(--soft);
 }
@@ -1216,7 +1232,7 @@
   .expenses-item-content { width: 100%; }
   .expenses-item-main-line { flex-direction: row; align-items: flex-start; justify-content: space-between; gap: 10px; }
   .expenses-item-info { flex: 1; min-width: 0; gap: 8px; }
-  .expenses-item-right { width: auto; margin-top: 0; gap: 0; }
+  .expenses-item-right { width: auto; margin-top: 0; gap: 6px; }
   .expenses-amount-val { font-size: 15px; }
   .expenses-item-heading { flex-wrap: wrap; gap: 2px 8px; }
 }
