@@ -715,8 +715,12 @@ function renderExpenses() {
                   <span class="expenses-amount-val">${formatCurrency(item.amount)}</span>
                 </div>
                 <div class="expenses-item-actions">
-                  <button type="button" class="expenses-action-btn" data-action="edit-item" title="编辑此条支出">编辑</button>
-                  <button type="button" class="expenses-action-btn danger" data-action="delete-item" title="删除此条支出">删除</button>
+                  <button type="button" class="expenses-action-btn expenses-icon-btn" data-action="edit-item" title="编辑此条支出" aria-label="编辑此条支出">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 3 5 5-12 12-6 1 1-6Z"/><path d="m14 5 5 5"/></svg>
+                  </button>
+                  <button type="button" class="expenses-action-btn expenses-icon-btn danger" data-action="delete-item" title="删除此条支出" aria-label="删除此条支出">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></svg>
+                  </button>
                 </div>
               </div>
             </div>
