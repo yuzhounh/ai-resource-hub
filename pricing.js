@@ -1,5 +1,5 @@
-// Updated on 2026-09-30.
-// Prices are displayed as supplied there; source links let readers check current rates.
+// Historical dataset: script dated 2026-09-30, original footer dated 2026-09-29.
+// Preserved on 2026-10-21. Keep these original rows and source links unchanged.
 const pricingSources = {
   OpenAI: { url: 'https://developers.openai.com/api/docs/pricing', label: 'OpenAI Developer' },
   Anthropic: { url: 'https://platform.claude.com/docs/en/about-claude/pricing', label: 'Anthropic' },
@@ -62,9 +62,99 @@ const pricingRows = [
 
 const pricingTable = document.getElementById('pricing-table');
 const pricingBody = document.getElementById('pricing-body');
+const pricingSearch = document.getElementById('pricing-search');
+const pricingSnapshots = [{
+  id: '2026-09-30',
+  label: '2026-09-30 · 更新前快照',
+  date: '2026-09-30',
+  sources: pricingSources,
+  rows: pricingRows,
+  historical: true,
+  footer: '更新于 2026-09-29，记录当前各厂商主流模型的推荐定位与定价基准有效状态。基准倍数 =（普通输入价 + 输出价）÷ 同厂商默认推荐模型对应价格之和，以主力推荐模型为 1.00×，仅用于同一厂商内各型号的相对成本参考（— 表示没有合适的统一按量价格，不代表免费）。价格按每百万 token 计，缓存输入不参与基准倍数计算；不同币种、上下文长度和计费通道不能直接横向比较，实际计费请参考各厂商官方定价页。'
+}];
+
+const pricingVersions = [pricingCurrent, ...pricingSnapshots];
+for (const snapshot of pricingVersions) {
+  const entry = document.createElement('div');
+  const row = document.createElement('div');
+  row.className = 'pricing-snapshot-row';
+  const link = document.createElement('a');
+  link.className = 'pricing-snapshot-link';  link.href = '#pricing/' + snapshot.date;
+  link.textContent = snapshot.date + ' 快照';
+  const toggle = document.createElement('a');
+  const record = document.createElement('div');
+  record.id = 'pricing-record-' + snapshot.date;
+  record.className = 'pricing-snapshot-record';
+  record.hidden = true;
+  toggle.href = '#' + record.id;
+  toggle.textContent = '更新记录';
+  toggle.setAttribute('role', 'button');
+  toggle.setAttribute('aria-controls', record.id);
+  toggle.setAttribute('aria-expanded', 'false');
+  toggle.setAttribute('aria-label', snapshot.date + ' 快照更新记录');
+  const onToggle = event => {
+    event.preventDefault();
+    record.hidden = !record.hidden;
+    toggle.setAttribute('aria-expanded', String(!record.hidden));
+  };
+  toggle.addEventListener('click', onToggle);
+  toggle.addEventListener('keydown', event => {
+    if (event.key === ' ') onToggle(event);
+  });
+  const status = document.createElement('p');
+  status.className = 'pricing-snapshot-status';
+  status.textContent = snapshot.historical
+    ? '原脚本日期 2026-09-30（原页脚标注 09-29），2026-10-21 归档。保留原表的 27 条记录与来源；未保留该版本更早的逐项更新记录。'
+    : '官方信息核对日期 ' + snapshot.date + ' · ' + snapshot.rows.length + ' 条价格记录';
+  record.append(status);
+  if (snapshot.updates) {
+    const list = document.createElement('ul');
+    for (const update of snapshot.updates) {
+      const item = document.createElement('li');
+      item.append(update.text + ' ');
+      const source = document.createElement('a');
+      source.href = update.url;
+      source.textContent = '官方来源';
+      source.target = '_blank';
+      source.rel = 'noopener';
+      item.append(source);
+      list.append(item);
+    }
+    record.append(list);
+  }
+  row.append(link, toggle);
+  entry.append(row, record);
+  document.getElementById('pricing-history-links').append(entry);
+}
+
+function pricingRatio(item, rows) {
+  const baseline = rows.find(row => row.vendor === item.vendor && row.isFlagship &&
+    (row.channel || 'direct') === (item.channel || 'direct'));
+  const prices = [item.input, item.output, baseline?.input, baseline?.output]
+    .map(value => /^([$¥])(\d+(?:\.\d+)?)$/.exec(value || ''));
+  if (prices.some(value => !value) || !prices.every(value => value[1] === prices[0][1])) return '—';
+  const base = Number(prices[2][2]) + Number(prices[3][2]);
+  return base > 0 ? ((Number(prices[0][2]) + Number(prices[1][2])) / base).toFixed(2) + '×' : '—';
+}
+
+function showPricingHistory(open) {
+  document.getElementById('pricing-history').hidden = !open;
+  document.getElementById('pricing-history-toggle').setAttribute('aria-expanded', String(open));
+}
+
+function renderPricing(snapshot) {
+  pricingBody.replaceChildren();
+  document.getElementById('pricing-heading').textContent = snapshot.historical ? snapshot.label : '模型价格对比';
+  document.getElementById('pricing-footer').textContent = snapshot.footer;
+  showPricingHistory(location.hash.startsWith('#pricing/') && pricingVersions.includes(snapshot));
+  document.querySelectorAll('#pricing-snapshot-nav .pricing-snapshot-link').forEach(link => {
+    const selected = link.getAttribute('href') === '#pricing/' + snapshot.date;
+    if (selected) link.setAttribute('aria-current', 'page');
+    else link.removeAttribute('aria-current');
+  });
 
 let lastVendor = null;
-pricingRows.forEach((item) => {
+snapshot.rows.forEach((item) => {
   const tr = document.createElement('tr');
   const isFirstInVendor = item.vendor !== lastVendor;
   lastVendor = item.vendor;
@@ -85,7 +175,7 @@ pricingRows.forEach((item) => {
   tr.dataset.model = item.model;
   tr.dataset.desc = item.desc;
 
-  const source = pricingSources[item.vendor] || { url: '#', label: item.vendor };
+  const source = snapshot.sources[item.vendor] || { url: '#', label: item.vendor };
 
   // 1. 厂商 / 平台 (首行展示厂商名链接，同组后续型号行留白)
   const tdVendor = document.createElement('td');
@@ -115,6 +205,9 @@ pricingRows.forEach((item) => {
   modelSpan.className = 'model-name';
   modelSpan.textContent = item.model;
   tdModel.append(modelSpan);
+  if (!snapshot.historical) {
+    modelSpan.title = [source.note, item.note].filter(Boolean).join('\n');
+  }
   tr.append(tdModel);
 
   // 3. 输入 / 1M
@@ -138,7 +231,7 @@ pricingRows.forEach((item) => {
   // 6. 基准倍数 (统一两位小数，如 1.00×)
   const tdRatio = document.createElement('td');
   tdRatio.className = 'cell-ratio cell-price';
-  tdRatio.textContent = item.ratio;
+  tdRatio.textContent = snapshot.historical ? item.ratio : pricingRatio(item, snapshot.rows);
   tr.append(tdRatio);
 
   // 7. 推荐定位 (无背景色，保留emoji和标准文字颜色，仅默认推荐加粗)
@@ -153,9 +246,10 @@ pricingRows.forEach((item) => {
   tr.append(tdRecommend);
   pricingBody.append(tr);
 });
+  filterPricing();
+}
 
-const pricingSearch = document.getElementById('pricing-search');
-pricingSearch.addEventListener('input', () => {
+function filterPricing() {
   const query = pricingSearch.value.trim().toLocaleLowerCase();
   let visible = 0;
   if (query) {
@@ -173,4 +267,31 @@ pricingSearch.addEventListener('input', () => {
     if (match) visible++;
   });
   document.getElementById('pricing-empty').hidden = visible !== 0;
-});
+}
+
+let activePricingSnapshot = null;
+function syncPricingSnapshot() {
+  const [view, id] = location.hash.slice(1).split('/');
+  if (view !== 'pricing' && activePricingSnapshot) return;
+  const snapshot = view === 'pricing' && id
+    ? pricingVersions.find(item => item.date === id) || pricingCurrent
+    : pricingCurrent;
+  activePricingSnapshot = snapshot;
+  renderPricing(snapshot);
+}
+
+{
+  const toggle = document.getElementById('pricing-history-toggle');
+  const onToggle = event => {
+    event.preventDefault();
+    showPricingHistory(document.getElementById('pricing-history').hidden);
+  };
+  toggle.addEventListener('click', onToggle);
+  toggle.addEventListener('keydown', event => {
+    if (event.key === ' ') onToggle(event);
+  });
+}
+
+pricingSearch.addEventListener('input', filterPricing);
+addEventListener('hashchange', syncPricingSnapshot);
+syncPricingSnapshot();
