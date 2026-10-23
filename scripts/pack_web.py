@@ -7,7 +7,7 @@ import subprocess
 root=Path(__file__).resolve().parents[1]
 version=(root/'VERSION').read_text('utf-8').strip()
 output=root/'dist'/version
-output.mkdir(parents=True,exist_ok=False)
+output.mkdir(parents=True,exist_ok=True)
 extensions={'.html','.css','.js','.mjs','.svg','.ico','.json','.png','.jpg','.webp','.woff2','.pdf','.txt'}
 paths=[]
 for relative in subprocess.check_output(['git','ls-files'],cwd=root,text=True).splitlines():
