@@ -277,6 +277,10 @@ def generate_html(results, report_out, *, generated_at=None, historical=False):
 
 
 def _sync_to_hub(hub_index_path, report_html):
+    if (hub_index_path.parent / 'connectivity' / 'manifest.json').exists():
+        from embedded_report import update_embedded_report
+        update_embedded_report(hub_index_path.parent, report_html)
+        return
     try:
         from bs4 import BeautifulSoup
         soup = BeautifulSoup(report_html, 'html.parser')

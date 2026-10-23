@@ -1,0 +1,12 @@
+{
+  "baseline": "95829b7",
+  "rows": 1167,
+  "providers": 16,
+  "allSixColumnsAndAttributesPreserved": true,
+  "reportSnapshotPreserved": true,
+  "originalHtmlBytes": 1035782,
+  "currentHtmlBytes": 258613,
+  "lazyFragmentBytes": 22467,
+  "lazyRowsBytes": 844755,
+  "note": "Uncompressed source bytes; no measured network, latency, heap or energy claim. This checks the changed data representation, not downloads or copies."
+}
