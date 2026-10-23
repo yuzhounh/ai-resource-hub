@@ -20,7 +20,11 @@ AI Resource Hub 将工具集、API 控制台、Agent 生态地图、科研自动
 
 ## 在线访问
 
-当前版本：**2.2.4**。移除登录后的“笔记”标签；支出、资源管理、连通性页面完成移动端响应式优化，并支持触屏长按条目弹出编辑/删除等操作。
+当前日常版本：**2.2.5**。保留现有手机布局、触屏长按操作和账户数据；连通性报告在进入且已登录时读取，表格只创建当前25/50/100条记录。管理页进入时订阅、离开时释放监听，延迟回调受账户/视图世代保护，快照更新按帧合并，数据未完整加载时不能导出空缺备份。共享Plan归档及支出事务/离线同步保持。
+
+本轮入口HTML由1,035,782字节降至约259KB。1,167条模型记录的六列内容、属性、链接、16服务商卡片和原始快照经格式转换核对保持；原始快照在`connectivity/manifest.json`的snapshot文件中保留，界面不重复读取这份元数据。深链接、完整搜索、排序和显示归档保留。以上为未压缩源码字节和实际创建行数，不是设备内存、加载耗时或电量测量。
+
+报告刷新仍使用`api-connectivity/refresh_api_report.py`的既有手动流程；生成器更新分离后的资源，不会重新把整表写进入口页。验证用`python -m unittest discover -s api-connectivity -p "test_*report.py"`、`python api-connectivity/verify_embedded_report.py`及`node --test test_view_subscriptions.mjs`，不读取凭据或运行真实模型探测。发布包由`python scripts/pack_web.py`生成，复制正常完成即完成，不追加传输完整性校验；只发布到维护中心确认拥有的平台。
 
 <https://ai-resource-hub.pages.dev/>
 

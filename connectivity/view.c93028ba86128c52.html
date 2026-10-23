@@ -1,0 +1,312 @@
+
+<p class="view-summary">Windows 凭据 API 密钥多协议连通性验证报告；16 服务商实测快照与协议适配明细。</p>
+<div class="view-toolbar">
+<div class="search"><input id="connectivity-search" placeholder="搜索服务商、模型名称或协议…（按 / 聚焦）" type="search"/></div>
+<nav class="subnav">
+<a href="#connectivity/conn-stats">整体统计</a>
+<a href="#connectivity/conn-providers">供应商 <em id="connProvidersCount">16</em></a>
+<a href="#connectivity/conn-models">模型实测明细 <em>202</em></a>
+<button class="conn-archive-toggle-btn" id="connShowArchivedToggle" title="显示已归档的服务商" type="button">显示归档</button>
+</nav>
+</div>
+<section data-title="整体统计" id="conn-stats">
+<div class="section-title"><h2>整体统计快照</h2></div>
+<div class="stats-grid">
+<div class="stat-card">
+<div class="stat-label" id="providerStatLabel">目录请求成功 / 已配置</div>
+<div class="stat-value" id="providerStatValue">16 / 16</div>
+<div class="stat-sub" id="providerStatSub">目录失败 0 / 缺少凭据 0</div>
+</div>
+<div class="stat-card">
+<div class="stat-label" id="successStatLabel">模型实测成功</div>
+<div class="stat-value" id="successStatValue" style="color: var(--success-text);">202</div>
+<div class="stat-sub" id="successStatSub">Chat: 190 | Resp: 10 | Anth: 10</div>
+</div>
+<div class="stat-card">
+<div class="stat-label">免消耗 / Batch / 收录</div>
+<div class="stat-value" id="skippedStatValue" style="color: var(--warning-text);">871</div>
+<div class="stat-sub" id="skippedStatSub">41 Batch推断 / 131 分类跳过 / 699 未测试</div>
+</div>
+<div class="stat-card">
+<div class="stat-label">平均实时响应延迟</div>
+<div class="stat-value" id="latencyStatValue" style="color: var(--primary);">2435 ms</div>
+<div class="stat-sub" id="latencyStatSub">仅统计成功记录</div>
+</div>
+</div>
+</section>
+<section data-title="供应商" id="conn-providers">
+<div class="section-title">
+<h2>供应商</h2>
+<small>点击服务商卡片可筛选模型；复制按钮复制 Base URL</small>
+</div>
+<div class="providers-grid">
+<div class="provider-card" data-provider="AMD Radeon Cloud API">
+<div class="provider-card-head"><button aria-label="筛选 AMD Radeon Cloud API" aria-pressed="false" class="provider-name provider-select" data-provider="AMD Radeon Cloud API" type="button">AMD Radeon Cloud API</button></div>
+<div class="url-box">
+<span class="provider-url" title="https://developer.amd.com.cn/radeon/api/v1">https://developer.amd.com.cn/radeon/api/v1</span>
+<button aria-label="复制 AMD Radeon Cloud API 的 Base URL" class="copy-btn" data-copy-url="https://developer.amd.com.cn/radeon/api/v1" title="复制 Base URL">
+<svg class="copy-icon" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="15"><rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+</button>
+</div>
+<div class="provider-metrics">
+<div class="metric-item">目录模型: <b>4</b></div>
+<div class="metric-item">成功: <b style="color: var(--success-text);">3</b></div>
+<div class="metric-item">未通过: <b style="color: var(--danger-text);">1</b></div>
+</div>
+</div>
+<div class="provider-card" data-provider="B.AI API">
+<div class="provider-card-head"><button aria-label="筛选 B.AI API" aria-pressed="false" class="provider-name provider-select" data-provider="B.AI API" type="button">B.AI API</button></div>
+<div class="url-box">
+<span class="provider-url" title="https://api.b.ai/v1">https://api.b.ai/v1</span>
+<button aria-label="复制 B.AI API 的 Base URL" class="copy-btn" data-copy-url="https://api.b.ai/v1" title="复制 Base URL">
+<svg class="copy-icon" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="15"><rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+</button>
+</div>
+<div class="provider-metrics">
+<div class="metric-item">目录模型: <b>45</b></div>
+<div class="metric-item">成功: <b style="color: var(--success-text);">3</b></div>
+<div class="metric-item">未通过: <b style="color: var(--danger-text);">5</b></div>
+</div>
+</div>
+<div class="provider-card" data-provider="DeepSeek API">
+<div class="provider-card-head"><button aria-label="筛选 DeepSeek API" aria-pressed="false" class="provider-name provider-select" data-provider="DeepSeek API" type="button">DeepSeek API</button></div>
+<div class="url-box">
+<span class="provider-url" title="https://api.deepseek.com/v1">https://api.deepseek.com/v1</span>
+<button aria-label="复制 DeepSeek API 的 Base URL" class="copy-btn" data-copy-url="https://api.deepseek.com/v1" title="复制 Base URL">
+<svg class="copy-icon" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="15"><rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+</button>
+</div>
+<div class="provider-metrics">
+<div class="metric-item">目录模型: <b>3</b></div>
+<div class="metric-item">成功: <b style="color: var(--success-text);">3</b></div>
+</div>
+</div>
+<div class="provider-card" data-provider="Flatkey API">
+<div class="provider-card-head"><button aria-label="筛选 Flatkey API" aria-pressed="false" class="provider-name provider-select" data-provider="Flatkey API" type="button">Flatkey API</button></div>
+<div class="url-box">
+<span class="provider-url" title="https://router.flatkey.ai/v1">https://router.flatkey.ai/v1</span>
+<button aria-label="复制 Flatkey API 的 Base URL" class="copy-btn" data-copy-url="https://router.flatkey.ai/v1" title="复制 Base URL">
+<svg class="copy-icon" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="15"><rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+</button>
+</div>
+<div class="provider-metrics">
+<div class="metric-item">目录模型: <b>96</b></div>
+<div class="metric-item">成功: <b style="color: var(--success-text);">19</b></div>
+<div class="metric-item">未通过: <b style="color: var(--danger-text);">6</b></div>
+</div>
+</div>
+<div class="provider-card" data-provider="Gemini API">
+<div class="provider-card-head"><button aria-label="筛选 Gemini API" aria-pressed="false" class="provider-name provider-select" data-provider="Gemini API" type="button">Gemini API</button></div>
+<div class="url-box">
+<span class="provider-url" title="https://generativelanguage.googleapis.com/v1beta/openai">https://generativelanguage.googleapis.com/v1beta/openai</span>
+<button aria-label="复制 Gemini API 的 Base URL" class="copy-btn" data-copy-url="https://generativelanguage.googleapis.com/v1beta/openai" title="复制 Base URL">
+<svg class="copy-icon" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="15"><rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+</button>
+</div>
+<div class="provider-metrics">
+<div class="metric-item">目录模型: <b>50</b></div>
+<div class="metric-item">成功: <b style="color: var(--success-text);">10</b></div>
+<div class="metric-item">未通过: <b style="color: var(--danger-text);">17</b></div>
+</div>
+</div>
+<div class="provider-card" data-provider="GLM API">
+<div class="provider-card-head"><button aria-label="筛选 GLM API" aria-pressed="false" class="provider-name provider-select" data-provider="GLM API" type="button">GLM API</button></div>
+<div class="url-box">
+<span class="provider-url" title="https://open.bigmodel.cn/api/paas/v4">https://open.bigmodel.cn/api/paas/v4</span>
+<button aria-label="复制 GLM API 的 Base URL" class="copy-btn" data-copy-url="https://open.bigmodel.cn/api/paas/v4" title="复制 Base URL">
+<svg class="copy-icon" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="15"><rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+</button>
+</div>
+<div class="provider-metrics">
+<div class="metric-item">目录模型: <b>10</b></div>
+<div class="metric-item">成功: <b style="color: var(--success-text);">9</b></div>
+<div class="metric-item">未通过: <b style="color: var(--danger-text);">1</b></div>
+</div>
+</div>
+<div class="provider-card" data-provider="GPTs API">
+<div class="provider-card-head"><button aria-label="筛选 GPTs API" aria-pressed="false" class="provider-name provider-select" data-provider="GPTs API" type="button">GPTs API</button></div>
+<div class="url-box">
+<span class="provider-url" title="https://api.gptsapi.net/v1">https://api.gptsapi.net/v1</span>
+<button aria-label="复制 GPTs API 的 Base URL" class="copy-btn" data-copy-url="https://api.gptsapi.net/v1" title="复制 Base URL">
+<svg class="copy-icon" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="15"><rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+</button>
+</div>
+<div class="provider-metrics">
+<div class="metric-item">目录模型: <b>43</b></div>
+<div class="metric-item">成功: <b style="color: var(--success-text);">28</b></div>
+<div class="metric-item">未通过: <b style="color: var(--danger-text);">8</b></div>
+</div>
+</div>
+<div class="provider-card" data-provider="Kimi API">
+<div class="provider-card-head"><button aria-label="筛选 Kimi API" aria-pressed="false" class="provider-name provider-select" data-provider="Kimi API" type="button">Kimi API</button></div>
+<div class="url-box">
+<span class="provider-url" title="https://api.moonshot.cn/v1">https://api.moonshot.cn/v1</span>
+<button aria-label="复制 Kimi API 的 Base URL" class="copy-btn" data-copy-url="https://api.moonshot.cn/v1" title="复制 Base URL">
+<svg class="copy-icon" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="15"><rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+</button>
+</div>
+<div class="provider-metrics">
+<div class="metric-item">目录模型: <b>12</b></div>
+<div class="metric-item">成功: <b style="color: var(--success-text);">11</b></div>
+<div class="metric-item">未通过: <b style="color: var(--danger-text);">1</b></div>
+</div>
+</div>
+<div class="provider-card" data-provider="NVIDIA NIM API">
+<div class="provider-card-head"><button aria-label="筛选 NVIDIA NIM API" aria-pressed="false" class="provider-name provider-select" data-provider="NVIDIA NIM API" type="button">NVIDIA NIM API</button></div>
+<div class="url-box">
+<span class="provider-url" title="https://integrate.api.nvidia.com/v1">https://integrate.api.nvidia.com/v1</span>
+<button aria-label="复制 NVIDIA NIM API 的 Base URL" class="copy-btn" data-copy-url="https://integrate.api.nvidia.com/v1" title="复制 Base URL">
+<svg class="copy-icon" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="15"><rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+</button>
+</div>
+<div class="provider-metrics">
+<div class="metric-item">目录模型: <b>83</b></div>
+<div class="metric-item">成功: <b style="color: var(--success-text);">4</b></div>
+<div class="metric-item">未通过: <b style="color: var(--danger-text);">22</b></div>
+</div>
+</div>
+<div class="provider-card" data-provider="Ollama Cloud API">
+<div class="provider-card-head"><button aria-label="筛选 Ollama Cloud API" aria-pressed="false" class="provider-name provider-select" data-provider="Ollama Cloud API" type="button">Ollama Cloud API</button></div>
+<div class="url-box">
+<span class="provider-url" title="https://ollama.com/v1">https://ollama.com/v1</span>
+<button aria-label="复制 Ollama Cloud API 的 Base URL" class="copy-btn" data-copy-url="https://ollama.com/v1" title="复制 Base URL">
+<svg class="copy-icon" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="15"><rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+</button>
+</div>
+<div class="provider-metrics">
+<div class="metric-item">目录模型: <b>19</b></div>
+<div class="metric-item">成功: <b style="color: var(--success-text);">0</b></div>
+<div class="metric-item">未通过: <b style="color: var(--danger-text);">19</b></div>
+</div>
+</div>
+<div class="provider-card" data-provider="OpenCode Go">
+<div class="provider-card-head"><button aria-label="筛选 OpenCode Go" aria-pressed="false" class="provider-name provider-select" data-provider="OpenCode Go" type="button">OpenCode Go</button></div>
+<div class="url-box">
+<span class="provider-url" title="https://opencode.ai/zen/go/v1">https://opencode.ai/zen/go/v1</span>
+<button aria-label="复制 OpenCode Go 的 Base URL" class="copy-btn" data-copy-url="https://opencode.ai/zen/go/v1" title="复制 Base URL">
+<svg class="copy-icon" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="15"><rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+</button>
+</div>
+<div class="provider-metrics">
+<div class="metric-item">目录模型: <b>33</b></div>
+<div class="metric-item">成功: <b style="color: var(--success-text);">23</b></div>
+<div class="metric-item">未通过: <b style="color: var(--danger-text);">10</b></div>
+</div>
+</div>
+<div class="provider-card" data-provider="OpenRouter API">
+<div class="provider-card-head"><button aria-label="筛选 OpenRouter API" aria-pressed="false" class="provider-name provider-select" data-provider="OpenRouter API" type="button">OpenRouter API</button></div>
+<div class="url-box">
+<span class="provider-url" title="https://openrouter.ai/api/v1">https://openrouter.ai/api/v1</span>
+<button aria-label="复制 OpenRouter API 的 Base URL" class="copy-btn" data-copy-url="https://openrouter.ai/api/v1" title="复制 Base URL">
+<svg class="copy-icon" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="15"><rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+</button>
+</div>
+<div class="provider-metrics">
+<div class="metric-item">目录模型: <b>396</b></div>
+<div class="metric-item">成功: <b style="color: var(--success-text);">18</b></div>
+<div class="metric-item">未通过: <b style="color: var(--danger-text);">1</b></div>
+</div>
+</div>
+<div class="provider-card" data-provider="Qwen API">
+<div class="provider-card-head"><button aria-label="筛选 Qwen API" aria-pressed="false" class="provider-name provider-select" data-provider="Qwen API" type="button">Qwen API</button></div>
+<div class="url-box">
+<span class="provider-url" title="https://dashscope.aliyuncs.com/compatible-mode/v1">https://dashscope.aliyuncs.com/compatible-mode/v1</span>
+<button aria-label="复制 Qwen API 的 Base URL" class="copy-btn" data-copy-url="https://dashscope.aliyuncs.com/compatible-mode/v1" title="复制 Base URL">
+<svg class="copy-icon" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="15"><rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+</button>
+</div>
+<div class="provider-metrics">
+<div class="metric-item">目录模型: <b>246</b></div>
+<div class="metric-item">成功: <b style="color: var(--success-text);">23</b></div>
+<div class="metric-item">未通过: <b style="color: var(--danger-text);">2</b></div>
+</div>
+</div>
+<div class="provider-card" data-provider="Qwen Token Plan">
+<div class="provider-card-head"><button aria-label="筛选 Qwen Token Plan" aria-pressed="false" class="provider-name provider-select" data-provider="Qwen Token Plan" type="button">Qwen Token Plan</button></div>
+<div class="url-box">
+<span class="provider-url" title="https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1">https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1</span>
+<button aria-label="复制 Qwen Token Plan 的 Base URL" class="copy-btn" data-copy-url="https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1" title="复制 Base URL">
+<svg class="copy-icon" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="15"><rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+</button>
+</div>
+<div class="provider-metrics">
+<div class="metric-item">目录模型: <b>12</b></div>
+<div class="metric-item">成功: <b style="color: var(--success-text);">8</b></div>
+</div>
+</div>
+<div class="provider-card" data-provider="SiliconFlow API">
+<div class="provider-card-head"><button aria-label="筛选 SiliconFlow API" aria-pressed="false" class="provider-name provider-select" data-provider="SiliconFlow API" type="button">SiliconFlow API</button></div>
+<div class="url-box">
+<span class="provider-url" title="https://api.siliconflow.cn/v1">https://api.siliconflow.cn/v1</span>
+<button aria-label="复制 SiliconFlow API 的 Base URL" class="copy-btn" data-copy-url="https://api.siliconflow.cn/v1" title="复制 Base URL">
+<svg class="copy-icon" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="15"><rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+</button>
+</div>
+<div class="provider-metrics">
+<div class="metric-item">目录模型: <b>95</b></div>
+<div class="metric-item">成功: <b style="color: var(--success-text);">21</b></div>
+</div>
+</div>
+<div class="provider-card" data-provider="TokenRhythm API">
+<div class="provider-card-head"><button aria-label="筛选 TokenRhythm API" aria-pressed="false" class="provider-name provider-select" data-provider="TokenRhythm API" type="button">TokenRhythm API</button></div>
+<div class="url-box">
+<span class="provider-url" title="https://tokenrhythm.studio/v1">https://tokenrhythm.studio/v1</span>
+<button aria-label="复制 TokenRhythm API 的 Base URL" class="copy-btn" data-copy-url="https://tokenrhythm.studio/v1" title="复制 Base URL">
+<svg class="copy-icon" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="15"><rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+</button>
+</div>
+<div class="provider-metrics">
+<div class="metric-item">目录模型: <b>20</b></div>
+<div class="metric-item">成功: <b style="color: var(--success-text);">19</b></div>
+<div class="metric-item">未通过: <b style="color: var(--danger-text);">1</b></div>
+</div>
+</div>
+</div>
+</section>
+<section data-title="模型实测明细" id="conn-models">
+<div class="section-title"><h2>模型级调用与协议适配明细</h2></div>
+<div class="table-controls">
+<div class="filter-tags">
+<button aria-pressed="true" class="filter-btn active" data-status="ALL">全部 (1167)</button>
+<button aria-pressed="false" class="filter-btn" data-status="SUCCESS">成功 (202)</button>
+<button aria-pressed="false" class="filter-btn" data-status="BATCH">Batch (41)</button>
+<button aria-pressed="false" class="filter-btn" data-status="SKIPPED">跳过/未测试 (830)</button>
+<button aria-pressed="false" class="filter-btn" data-status="FAILED">探测失败 (94)</button>
+<button aria-label="刷新全部服务商" class="filter-btn refresh-text-btn" id="refreshScope" type="button">刷新全部</button>
+</div>
+</div>
+<div aria-label="模型探测明细，可横向滚动" class="table-container" role="region" tabindex="0">
+<table id="modelsTable">
+<thead>
+<tr>
+<th>服务商</th>
+<th>模型名称 (Model ID)</th>
+<th aria-sort="none" class="sortable" data-sort="protocol" tabindex="0">生效协议<span class="sort-ind">↕</span></th>
+<th aria-sort="none" class="sortable" data-sort="latency" tabindex="0">响应延迟<span class="sort-ind">↕</span></th>
+<th aria-sort="none" class="sortable" data-sort="status" tabindex="0">状态<span class="sort-ind">↕</span></th>
+<th>探测结果 / 响应详情</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+<div class="table-pagination" id="connPagination">
+<div class="pagination-info">
+<label class="pagination-size-label">每页显示
+              <select class="pagination-size-select" id="connPageSize">
+<option selected="" value="25">25 条</option>
+<option value="50">50 条</option>
+<option value="100">100 条</option>
+</select>
+</label>
+<span class="pagination-summary">共 <b id="connTotalCount">1167</b> 条，第 <span id="connPageInfo">1 / 47</span> 页</span>
+</div>
+<div class="pagination-nav">
+<button class="pagination-btn" id="connPrevPage" title="上一页" type="button">上一页</button>
+<div class="pagination-pages" id="connPageButtons"></div>
+<button class="pagination-btn" id="connNextPage" title="下一页" type="button">下一页</button>
+</div>
+</div>
+</section>
+
+<footer>凭据通过 Windows 凭据管理器读取，不保存在前端页面中；测试耗时包含协议回退与重试。连通性结果以实际调用为准。</footer>

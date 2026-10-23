@@ -10,6 +10,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 import { auth, db } from "./hub-auth.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+import { ActiveViewSubscriptions } from "./view-subscriptions.mjs?v=20261023a";
 
 const collectionNames = ["plans", "promotions", "transactions", "models", "compatibilityTests", "usageSnapshots", "notes"];
 const state = {
@@ -18,7 +19,6 @@ const state = {
   planTab: "active",
   query: "",
   editing: null,
-  unsubscribers: [],
   data: Object.fromEntries(collectionNames.map(name => [name, []]))
 };
 
@@ -874,11 +874,23 @@ function friendlyError(error) {
   return error?.message || "操作失败，请稍后重试。";
 }
 
-function subscribeData(user) {
-  state.unsubscribers.forEach(unsubscribe => unsubscribe());
-  state.unsubscribers = [];
+let managerRenderFrame=0;
+function subscribeData(user,isCurrent) {
+  const unsubscribers=[];
+  const ready=new Set();
+  const exportButton=document.getElementById('manager-export');
+  if(exportButton) exportButton.disabled=true;
+  setMessage(els.syncMessage,'正在加载管理数据…');
+  const stop=()=>{
+    unsubscribers.forEach(unsubscribe=>unsubscribe());
+    if(managerRenderFrame) cancelAnimationFrame(managerRenderFrame);
+    managerRenderFrame=0;
+    if(exportButton) exportButton.disabled=true;
+  };
+  try{
   collectionNames.forEach(name => {
     const unsubscribe = onSnapshot(collection(db, "users", user.uid, name), snapshot => {
+      if(!isCurrent()) return;
       if (name === "plans") {
         snapshot.docs.forEach(docSnap => {
           const data = docSnap.data();
@@ -892,12 +904,26 @@ function subscribeData(user) {
         if (name === "plans") delete item.credentialLabel;
         return item;
       });
-      renderAll();
-      setMessage(els.syncMessage);
-    }, error => setMessage(els.syncMessage, friendlyError(error), "error"));
-    state.unsubscribers.push(unsubscribe);
+      ready.add(name);
+      if(!managerRenderFrame) managerRenderFrame=requestAnimationFrame(()=>{
+        managerRenderFrame=0;
+        if(isCurrent()) renderAll();
+      });
+      if(ready.size===collectionNames.length){
+        if(exportButton) exportButton.disabled=false;
+        setMessage(els.syncMessage);
+      }
+    }, error => {if(isCurrent()) setMessage(els.syncMessage, friendlyError(error), "error");});
+    unsubscribers.push(unsubscribe);
   });
+  }catch(error){stop();throw error;}
+  return stop;
 }
+const managerSubscriptions=new ActiveViewSubscriptions(subscribeData);
+function syncManagerSubscriptions(){
+  managerSubscriptions.update(state.user,!document.getElementById('view-manage').hidden);
+}
+addEventListener('hashchange',syncManagerSubscriptions);
 
 function showPanel(name) {
   state.activePanel = name;
@@ -1005,15 +1031,20 @@ els.search.addEventListener("input", () => {
 });
 
 onAuthStateChanged(auth, user => {
+  const changed=state.user?.uid!==user?.uid;
+  if(changed){
+    managerSubscriptions.update(null,false);
+    state.data = Object.fromEntries(collectionNames.map(name => [name, []]));
+    renderAll();
+  }
   state.user = user;
   els.app.hidden = !user;
   if (user) {
-    showPanel("plans");
+    if(changed) showPanel("plans");
     els.uid.textContent = user.uid;
-    subscribeData(user);
+    syncManagerSubscriptions();
   } else {
-    state.unsubscribers.forEach(unsubscribe => unsubscribe());
-    state.unsubscribers = [];
+    managerSubscriptions.update(null,false);
     state.data = Object.fromEntries(collectionNames.map(name => [name, []]));
     renderAll();
   }
