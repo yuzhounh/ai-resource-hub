@@ -10,7 +10,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 import { auth, db } from "./hub-auth.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-import { ActiveViewSubscriptions } from "./view-subscriptions.mjs?v=20261023a";
+import { ActiveViewSubscriptions } from "./view-subscriptions.mjs?v=20261023b";
 
 const collectionNames = ["plans", "promotions", "transactions", "models", "compatibilityTests", "usageSnapshots", "notes"];
 const state = {
@@ -628,6 +628,12 @@ function renderAll() {
   renderNotes();
 }
 
+function renderActivePanel(){
+  const render={dashboard:renderDashboard,plans:renderPlans,transactions:renderTransactions,
+    models:renderModels,compatibility:renderCompatibility,usage:renderUsage,notes:renderNotes}[state.activePanel];
+  if(render) render();
+}
+
 function optionsHtml(options, selected, placeholder = "请选择") {
   return `<option value="">${escapeHtml(placeholder)}</option>${options.map(option => {
     const value = typeof option === "string" ? option : option.value;
@@ -875,10 +881,15 @@ function friendlyError(error) {
 }
 
 let managerRenderFrame=0;
-function subscribeData(user,isCurrent) {
+function subscribeData(user,isCurrent,panel) {
   const unsubscribers=[];
   const ready=new Set();
   const exportButton=document.getElementById('manager-export');
+  const dependencies={plans:['plans','promotions'],transactions:['plans','transactions'],
+    models:['plans','models'],compatibility:['plans','models','compatibilityTests'],
+    usage:['plans','usageSnapshots'],notes:['plans','notes']};
+  // A legacy global export control needs all collections for a complete backup.
+  const names=exportButton?collectionNames:(dependencies[panel]||collectionNames);
   if(exportButton) exportButton.disabled=true;
   setMessage(els.syncMessage,'正在加载管理数据…');
   const stop=()=>{
@@ -888,7 +899,7 @@ function subscribeData(user,isCurrent) {
     if(exportButton) exportButton.disabled=true;
   };
   try{
-  collectionNames.forEach(name => {
+  names.forEach(name => {
     const unsubscribe = onSnapshot(collection(db, "users", user.uid, name), snapshot => {
       if(!isCurrent()) return;
       if (name === "plans") {
@@ -907,9 +918,9 @@ function subscribeData(user,isCurrent) {
       ready.add(name);
       if(!managerRenderFrame) managerRenderFrame=requestAnimationFrame(()=>{
         managerRenderFrame=0;
-        if(isCurrent()) renderAll();
+        if(isCurrent()) renderActivePanel();
       });
-      if(ready.size===collectionNames.length){
+      if(ready.size===names.length){
         if(exportButton) exportButton.disabled=false;
         setMessage(els.syncMessage);
       }
@@ -921,7 +932,7 @@ function subscribeData(user,isCurrent) {
 }
 const managerSubscriptions=new ActiveViewSubscriptions(subscribeData);
 function syncManagerSubscriptions(){
-  managerSubscriptions.update(state.user,!document.getElementById('view-manage').hidden);
+  managerSubscriptions.update(state.user,!document.getElementById('view-manage').hidden,state.activePanel);
 }
 addEventListener('hashchange',syncManagerSubscriptions);
 
@@ -933,6 +944,8 @@ function showPanel(name) {
     panel.hidden = !active;
     panel.classList.toggle("active", active);
   });
+  syncManagerSubscriptions();
+  renderActivePanel();
 }
 
 function exportData() {
@@ -1027,7 +1040,7 @@ document.getElementById("manager-app").addEventListener("click", event => {
 });
 els.search.addEventListener("input", () => {
   state.query = els.search.value.trim().toLowerCase();
-  renderAll();
+  renderActivePanel();
 });
 
 onAuthStateChanged(auth, user => {

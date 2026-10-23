@@ -57,7 +57,7 @@ test('a failed start can retry and a synchronous account change cleans up the st
   assert.equal(watcher.uid,null);
 });
 
-test('manager integrates seven guarded listeners, coalesces renders and never exports partial data',()=>{
+test('manager selects panel dependencies, coalesces renders and preserves complete legacy exports',()=>{
   const code=fs.readFileSync(new URL('./manager.js',import.meta.url),'utf8');
   const body=code.slice(code.indexOf('let managerRenderFrame=0;'),code.indexOf('function showPanel(name)'));
   const callbacks=[],frames=new Map(),exportButton={disabled:false},view={hidden:true};
@@ -65,7 +65,7 @@ test('manager integrates seven guarded listeners, coalesces renders and never ex
   const context={ActiveViewSubscriptions,state:{user:{uid:'a'},data:{}},db:{},
     collectionNames:['plans','promotions','transactions','models','compatibilityTests','usageSnapshots','notes'],
     document:{getElementById:id=>id==='manager-export'?exportButton:view},els:{syncMessage:{}},
-    setMessage(){},friendlyError:error=>error.message,addEventListener(){},renderAll(){renders++},
+    setMessage(){},friendlyError:error=>error.message,addEventListener(){},renderActivePanel(){renders++},
     collection:(_db,...segments)=>segments,onSnapshot:(segments,next,error)=>{
       const callback={segments,next,error,stopped:false};callbacks.push(callback);return()=>{callback.stopped=true};
     },requestAnimationFrame:fn=>{frames.set(++frameId,fn);return frameId},cancelAnimationFrame:id=>frames.delete(id),
@@ -89,4 +89,14 @@ test('manager integrates seven guarded listeners, coalesces renders and never ex
   };
   assert.throws(()=>context.sync(),/failed registration/);
   assert.equal(started,1);
+  context.document.getElementById=id=>id==='manager-export'?null:view;
+  context.state.activePanel='plans';
+  context.onSnapshot=(segments,next,error)=>{callbacks.push({segments,next,error});return()=>{}};
+  const before=callbacks.length;
+  context.sync();
+  assert.deepEqual(callbacks.slice(before).map(item=>item.segments[2]),['plans','promotions']);
+  context.state.activePanel='compatibility';
+  const plansEnd=callbacks.length;
+  context.sync();
+  assert.deepEqual(callbacks.slice(plansEnd).map(item=>item.segments[2]),['plans','models','compatibilityTests']);
 });
