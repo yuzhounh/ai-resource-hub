@@ -170,7 +170,8 @@ onAuthStateChanged(auth, user => {
   if (els.account) {
     els.account.dataset.state = user ? "signed-in" : "signed-out";
     els.signin.hidden = Boolean(user);
-    els.user.hidden = !user;
+    els.signout.hidden = !user;
+    els.user.hidden = false;
   }
   if (user) {
     els.userName.textContent = user.displayName || "Google 用户";
@@ -188,6 +189,16 @@ onAuthStateChanged(auth, user => {
       els.menuAvatar.src = avatarUrl;
     }
   } else {
+    els.userName.textContent = "未登录";
+    els.userEmail.textContent = "";
+    els.avatar.hidden = true;
+    els.menuAvatar.hidden = true;
+    els.avatar.removeAttribute("src");
+    els.menuAvatar.removeAttribute("src");
+    els.avatarFallback.hidden = false;
+    els.menuAvatarFallback.hidden = false;
+    els.avatarFallback.textContent = "U";
+    els.menuAvatarFallback.textContent = "U";
     els.menu.hidden = true;
     els.menuButton.setAttribute("aria-expanded", "false");
   }
@@ -215,6 +226,12 @@ if (els.menuButton) {
     toggleUserMenu();
   };
 }
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && els.menu && !els.menu.hidden) {
+    toggleUserMenu(false);
+    els.menuButton?.focus();
+  }
+});
 
 if (!window.__hub_doc_click_bound__) {
   window.__hub_doc_click_bound__ = true;

@@ -8,7 +8,7 @@ import {
   setDoc,
   updateDoc
 } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
-import { auth, db } from "./hub-auth.js";
+import { auth, db } from "./hub-auth.js?v=20261102a";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 import { ActiveViewSubscriptions } from "./view-subscriptions.mjs?v=20261023b";
 

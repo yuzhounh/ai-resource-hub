@@ -5,7 +5,7 @@
 // ============================================================
 
 import { doc, onSnapshot, runTransaction } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
-import { HubAuth } from "./hub-auth.js";
+import { HubAuth } from "./hub-auth.js?v=20261102a";
 import { ExpenseSync, mergeExpenseChange } from "./expense-sync.js?v=20261003a";
 
 const STORAGE_KEY = "ai_hub_expenses_records";
@@ -13,11 +13,11 @@ const STORAGE_KEY = "ai_hub_expenses_records";
 const LEGACY_OWNER_UID = "8ASrz9xvKmMcrGkV7Yu98i6IrZO2";
 
 const CATEGORY_MAP = {
-  vpn: { label: "VPN", cls: "vpn" },
-  api: { label: "API", cls: "api" },
   sub: { label: "订阅", cls: "sub" },
-  quota: { label: "额度", cls: "quota" },
+  api: { label: "API", cls: "api" },
   cloud: { label: "云平台", cls: "cloud" },
+  vpn: { label: "VPN", cls: "vpn" },
+  quota: { label: "额度", cls: "quota" },
   other: { label: "会员", cls: "other" }
 };
 
@@ -601,9 +601,29 @@ function formatDisplayDate(dateStr) {
   return dateStr;
 }
 
+// 同名项目沿用最近支出日期的有效分类，仅使用当前账户的记录。
+function getExpenseProjectHistory() {
+  const projects = new Map();
+  for (const item of expensesState.items) {
+    const title = (item.title || "").trim();
+    if (!title || !Object.hasOwn(CATEGORY_MAP, item.category)) continue;
+    const key = title.toLowerCase();
+    const previous = projects.get(key);
+    if (!previous || item.date >= previous.date) projects.set(key, item);
+  }
+  return projects;
+}
+
 // 主渲染函数
 function renderExpenses() {
   updateStats();
+  const projectOptions = document.getElementById("exp-form-projects");
+  if (projectOptions && !document.getElementById("expenses-modal")?.open) {
+    projectOptions.innerHTML = '<option value="" disabled selected>请选择项目名称</option>'
+      + [...getExpenseProjectHistory().values()]
+        .map(item => `<option value="${escapeHtml(item.title.trim())}">${escapeHtml(item.title.trim())}</option>`).join("")
+      + '<option value="" data-new="true">新增项目…</option>';
+  }
   const listEl = document.getElementById("expenses-list");
   if (!listEl) return;
 
@@ -670,11 +690,11 @@ function renderExpenses() {
               <div class="expenses-edit-grid">
                 <input class="expenses-input edit-date" type="date" value="${escapeHtml(item.date)}" title="日期">
                 <select class="expenses-select edit-category">
-                  <option value="vpn" ${item.category === "vpn" ? "selected" : ""}>VPN / 机场</option>
-                  <option value="api" ${item.category === "api" ? "selected" : ""}>API 充值</option>
                   <option value="sub" ${item.category === "sub" ? "selected" : ""}>AI 订阅</option>
-                  <option value="quota" ${item.category === "quota" ? "selected" : ""}>额度充值</option>
+                  <option value="api" ${item.category === "api" ? "selected" : ""}>API 充值</option>
                   <option value="cloud" ${item.category === "cloud" ? "selected" : ""}>云平台</option>
+                  <option value="vpn" ${item.category === "vpn" ? "selected" : ""}>VPN / 机场</option>
+                  <option value="quota" ${item.category === "quota" ? "selected" : ""}>额度充值</option>
                   <option value="other" ${item.category === "other" ? "selected" : ""}>会员</option>
                 </select>
                 <input class="expenses-input edit-title" type="text" value="${escapeHtml(item.title)}" placeholder="支出项目名称">
@@ -762,6 +782,37 @@ function initExpensesEvents() {
   const searchInput = document.getElementById("expenses-search");
   const listEl = document.getElementById("expenses-list");
   const filterBar = document.getElementById("expenses-filter-bar");
+
+  const titleInput = document.getElementById("exp-form-title");
+  const projectSelect = document.getElementById("exp-form-projects");
+  const categoryInput = document.getElementById("exp-form-cat");
+  let previousProjectTitle = "";
+  form?.addEventListener("reset", () => {
+    previousProjectTitle = "";
+    if (titleInput) { titleInput.hidden = true; titleInput.disabled = true; }
+    if (projectSelect) projectSelect.required = true;
+  });
+  const matchProjectCategory = () => {
+    if (!currentUid || !titleInput || !categoryInput) return;
+    const title = titleInput.value.trim().toLowerCase();
+    // input 后的 change 不重复匹配，保留用户手动修改的分类。
+    if (title === previousProjectTitle) return;
+    previousProjectTitle = title;
+    const previous = getExpenseProjectHistory().get(title);
+    if (previous) categoryInput.value = previous.category;
+  };
+  titleInput?.addEventListener("input", matchProjectCategory);
+  titleInput?.addEventListener("change", matchProjectCategory);
+  projectSelect?.addEventListener("change", () => {
+    if (!titleInput) return;
+    const isNew = projectSelect.selectedOptions[0]?.dataset.new === "true";
+    titleInput.hidden = !isNew;
+    titleInput.disabled = !isNew;
+    projectSelect.required = !isNew;
+    titleInput.value = isNew ? "" : projectSelect.value;
+    matchProjectCategory();
+    if (isNew) titleInput.focus();
+  });
 
   // 展开/收起类别支出条形图
   if (toggleChartBtn && chartPanel) {

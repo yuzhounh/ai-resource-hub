@@ -182,7 +182,7 @@
         display: none !important;
       }
       .site-header .hub-account {
-        display: none !important;
+        display: flex !important;
       }
       .theme-toggle-desktop {
         display: none !important;
@@ -230,7 +230,7 @@
         display: none !important;
       }
       body.hub-signed-in .site-header .hub-account {
-        display: none !important;
+        display: flex !important;
       }
       body.hub-signed-in .theme-toggle-desktop {
         display: none !important;
@@ -277,7 +277,7 @@
       display: none !important;
     }
     body.tabs-wrapped .site-header .hub-account {
-      display: none !important;
+      display: flex !important;
     }
     body.tabs-wrapped .theme-toggle-desktop {
       display: none !important;
@@ -572,6 +572,21 @@
     }
   </style>
   <link rel="stylesheet" href="./mobile.css?v=20261007b">
+  <style>
+    .hub-user-menu{width:260px;padding:8px;box-sizing:border-box;box-shadow:0 12px 36px rgba(0,0,0,.14);}
+    .hub-user-button img[hidden],.hub-user-menu-avatar img[hidden]{display:none;}
+    .hub-user-menu-profile{padding:8px 10px 12px;margin-bottom:4px;}
+    .hub-user-menu-actions{display:grid;gap:4px;padding:4px 0;}
+    .hub-user-menu-actions button{display:flex;align-items:center;gap:12px;min-height:40px;padding:9px 12px;border:0;border-radius:8px;text-align:left;font-size:14px;line-height:1.4;}
+    .hub-user-menu-actions button[hidden]{display:none;}
+    #hub-account[data-state="signed-in"] #hub-signout{display:flex;}
+    #hub-account[data-state="signed-out"] #hub-signout{display:none;}
+    .hub-user-menu-actions button:hover{background:var(--soft);}
+    .hub-user-menu-actions button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;}
+    .hub-user-menu-actions svg{width:18px;height:18px;flex:0 0 18px;color:var(--muted);}
+    .hub-user-menu-session{border-top:1px solid var(--line);margin-top:4px;padding-top:8px;}
+    .mobile-signout-btn{border:0;}
+  </style>
 </head>
 <body>
   <header class="site-header app-shell">
@@ -581,31 +596,42 @@
         <p>AI 工具集、API 控制台与 Agent 生态地图等的统一入口</p>
       </div>
       <div class="header-actions">
-        <button id="theme-toggle-desktop" class="theme-toggle-desktop" type="button" aria-label="切换外观主题" title="切换外观主题">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-          </svg>
-        </button>
         <div id="hub-account" class="hub-account" data-state="signed-out">
-          <button id="hub-signin" class="hub-signin-button" type="button">Google 登录</button>
-          <div id="hub-user" class="hub-user" hidden>
-            <button id="hub-user-menu-button" class="hub-user-button" type="button" aria-label="打开用户菜单" aria-haspopup="true" aria-expanded="false">
+          <div id="hub-user" class="hub-user">
+            <button id="hub-user-menu-button" class="hub-user-button" type="button" aria-label="打开用户菜单" aria-haspopup="true" aria-controls="hub-user-menu" aria-expanded="false">
               <img id="hub-user-avatar" alt="" hidden>
-              <span id="hub-user-avatar-fallback" aria-hidden="true"></span>
+              <span id="hub-user-avatar-fallback" aria-hidden="true">U</span>
             </button>
             <div id="hub-user-menu" class="hub-user-menu" hidden>
               <div class="hub-user-menu-profile">
                 <div class="hub-user-menu-avatar">
                   <img id="hub-menu-avatar" alt="" hidden>
-                  <span id="hub-menu-avatar-fallback" aria-hidden="true"></span>
+                  <span id="hub-menu-avatar-fallback" aria-hidden="true">U</span>
                 </div>
                 <div class="hub-user-menu-identity">
-                  <strong id="hub-user-name"></strong>
+                  <strong id="hub-user-name">未登录</strong>
                   <span id="hub-user-email"></span>
                 </div>
               </div>
               <div class="hub-user-menu-actions">
-                <button id="hub-signout" type="button">退出登录</button>
+                <button id="hub-menu-language" type="button" aria-label="语言 / Language">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 8 6 6m-7 0 6-6 2-5H2m5-2v2m7 18 5-11 5 11m-8-4h6"/></svg>
+                  <span id="hub-menu-language-label">English</span>
+                </button>
+                <button id="hub-menu-theme" type="button" aria-label="切换外观主题">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                  <span>深色模式</span>
+                </button>
+              </div>
+              <div class="hub-user-menu-actions hub-user-menu-session">
+                <button id="hub-signin" type="button">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M3 12h12m-4-4 4 4-4 4"/></svg>
+                  <span>Google 登录</span>
+                </button>
+                <button id="hub-signout" type="button" hidden>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4m5 4 5 5-5 5M9 12h12"/></svg>
+                  <span>退出登录</span>
+                </button>
               </div>
             </div>
           </div>
@@ -671,14 +697,6 @@
       </div>
 
       <div class="mobile-drawer-foot">
-        <div class="mobile-foot-row">
-          <span class="mobile-foot-label">外观主题</span>
-          <button type="button" id="mobile-theme-toggle" class="mobile-drawer-action-btn" aria-label="切换外观主题" title="切换外观主题">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-            </svg>
-          </button>
-        </div>
         <div class="mobile-foot-row" id="mobile-foot-account-row">
           <span class="mobile-foot-label">账户状态</span>
           <div id="mobile-account-container">
@@ -1637,11 +1655,11 @@
       <!-- 支出分类筛选标签（用于筛选下方支出明细列表） -->
       <div id="expenses-filter-bar" class="expenses-filter-bar">
         <button type="button" class="expenses-filter-pill active" data-cat="all">全部</button>
-        <button type="button" class="expenses-filter-pill" data-cat="vpn">VPN / 机场</button>
-        <button type="button" class="expenses-filter-pill" data-cat="api">API 充值</button>
         <button type="button" class="expenses-filter-pill" data-cat="sub">AI 订阅</button>
-        <button type="button" class="expenses-filter-pill" data-cat="quota">额度充值</button>
+        <button type="button" class="expenses-filter-pill" data-cat="api">API 充值</button>
         <button type="button" class="expenses-filter-pill" data-cat="cloud">云平台</button>
+        <button type="button" class="expenses-filter-pill" data-cat="vpn">VPN / 机场</button>
+        <button type="button" class="expenses-filter-pill" data-cat="quota">额度充值</button>
         <button type="button" class="expenses-filter-pill" data-cat="other">会员</button>
       </div>
 
@@ -1662,21 +1680,25 @@
                 <input id="exp-form-date" class="expenses-input" type="date" required>
               </div>
               <div class="expenses-form-group">
-                <label for="exp-form-cat">支出分类</label>
-                <select id="exp-form-cat" class="expenses-select">
-                  <option value="vpn">VPN / 机场</option>
-                  <option value="api">API 充值</option>
-                  <option value="sub">AI 订阅</option>
-                  <option value="quota">额度充值</option>
-                  <option value="cloud">云平台</option>
-                  <option value="other">会员</option>
+                <label for="exp-form-projects">项目名称</label>
+                <select id="exp-form-projects" class="expenses-select" required>
+                  <option value="" disabled selected>请选择项目名称</option>
+                  <option value="" data-new="true">新增项目…</option>
                 </select>
+                <input id="exp-form-title" class="expenses-input" type="text" placeholder="输入新项目名称" aria-label="新项目名称" hidden disabled required>
               </div>
             </div>
             <div class="expenses-form-row">
               <div class="expenses-form-group">
-                <label for="exp-form-title">项目名称</label>
-                <input id="exp-form-title" class="expenses-input" type="text" placeholder="如 Flower Cloud Lite, ChatGPT Plus" required>
+                <label for="exp-form-cat">支出分类</label>
+                <select id="exp-form-cat" class="expenses-select">
+                  <option value="sub">AI 订阅</option>
+                  <option value="api">API 充值</option>
+                  <option value="cloud">云平台</option>
+                  <option value="vpn">VPN / 机场</option>
+                  <option value="quota">额度充值</option>
+                  <option value="other">会员</option>
+                </select>
               </div>
               <div class="expenses-form-group">
                 <label for="exp-form-desc">规格 / 周期 / 套餐详情</label>
@@ -2013,11 +2035,9 @@
       const sunSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
       const moonSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
       const icon = isDark ? sunSvg : moonSvg;
-      const title = isDark ? '切换浅色模式' : '切换深色模式';
-      const desktopBtn = document.getElementById('theme-toggle-desktop');
-      if (desktopBtn) { desktopBtn.innerHTML = icon; desktopBtn.title = title; }
-      const mobileBtn = document.getElementById('mobile-theme-toggle');
-      if (mobileBtn) { mobileBtn.innerHTML = icon; mobileBtn.title = title; }
+      const label = isDark ? '浅色模式' : '深色模式';
+      const menuBtn = document.getElementById('hub-menu-theme');
+      if (menuBtn) menuBtn.innerHTML = `${icon}<span>${label}</span>`;
     }
 
     function toggleHubTheme() {
@@ -2027,10 +2047,8 @@
       updateHubThemeUI(next);
     }
 
-    const desktopThemeBtn = document.getElementById('theme-toggle-desktop');
-    if (desktopThemeBtn) desktopThemeBtn.addEventListener('click', toggleHubTheme);
-    const mobileThemeBtn = document.getElementById('mobile-theme-toggle');
-    if (mobileThemeBtn) mobileThemeBtn.addEventListener('click', toggleHubTheme);
+    const menuThemeBtn = document.getElementById('hub-menu-theme');
+    if (menuThemeBtn) menuThemeBtn.addEventListener('click', toggleHubTheme);
 
     updateHubThemeUI(getHubTheme());
     if (window.matchMedia) {
@@ -2157,8 +2175,9 @@
   </script>
   <script src="./pricing-data.js?v=20261021b"></script>
   <script src="./pricing.js?v=20261021d"></script>
-  <script type="module" src="./manager.js?v=20261023b"></script>
-  <script type="module" src="./expenses.js?v=20261019a"></script>
+  <script type="module" src="./manager.js?v=20261102a"></script>
+  <script type="module" src="./expenses.js?v=20261102c"></script>
   <script src="./longpress.js?v=20261007a"></script>
+  <script src="i18n.js?v=20261102a"></script>
 </body>
 </html>
