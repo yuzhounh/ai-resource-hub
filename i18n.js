@@ -178,6 +178,13 @@
     observer.observe(document.body, { childList: true, subtree: true, characterData: true });
   }
 
+  
+    window.addEventListener('storage', function (e) {
+      if (e.key === STORAGE_KEY && (e.newValue === 'zh' || e.newValue === 'en')) {
+        setLang(e.newValue);
+      }
+    });
+
   window.AIRHI18N = { getLang: getLang, setLang: setLang, isEn: isEn };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
