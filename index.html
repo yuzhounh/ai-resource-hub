@@ -491,6 +491,8 @@
       font-weight: 500;
       color: var(--text);
     }
+    .lang-toggle-btn { font-size: 13px !important; font-weight: 800 !important; }
+    .lang-toggle-text { font-size: 13px; font-weight: 800; line-height: 1; }
     .mobile-drawer-action-btn {
       width: 40px !important;
       height: 40px !important;
@@ -697,6 +699,18 @@
       </div>
 
       <div class="mobile-drawer-foot">
+        <div class="mobile-foot-row">
+          <span class="mobile-foot-label">外观主题</span>
+          <button type="button" id="mobile-theme-toggle" class="mobile-drawer-action-btn" aria-label="切换外观主题" title="切换外观主题">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </button>
+        </div>
+        <div class="mobile-foot-row">
+          <span class="mobile-foot-label">界面语言</span>
+          <button type="button" id="mobile-lang-toggle" class="mobile-drawer-action-btn lang-toggle-btn" aria-label="切换界面语言" title="切换界面语言 (L)">
+            <span class="lang-toggle-text">EN</span>
+          </button>
+        </div>
         <div class="mobile-foot-row" id="mobile-foot-account-row">
           <span class="mobile-foot-label">账户状态</span>
           <div id="mobile-account-container">
@@ -2038,6 +2052,8 @@
       const label = isDark ? '浅色模式' : '深色模式';
       const menuBtn = document.getElementById('hub-menu-theme');
       if (menuBtn) menuBtn.innerHTML = `${icon}<span>${label}</span>`;
+      const mobileThemeBtn = document.getElementById('mobile-theme-toggle');
+      if (mobileThemeBtn) mobileThemeBtn.innerHTML = icon;
     }
 
     function toggleHubTheme() {
@@ -2049,6 +2065,8 @@
 
     const menuThemeBtn = document.getElementById('hub-menu-theme');
     if (menuThemeBtn) menuThemeBtn.addEventListener('click', toggleHubTheme);
+    const mobileThemeBtn = document.getElementById('mobile-theme-toggle');
+    if (mobileThemeBtn) mobileThemeBtn.addEventListener('click', toggleHubTheme);
 
     updateHubThemeUI(getHubTheme());
     if (window.matchMedia) {

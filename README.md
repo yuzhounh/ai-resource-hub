@@ -4,6 +4,8 @@
 
 <h1 align="center">AI Resource Hub</h1>
 
+<p align="center">简体中文 · <a href="README.en.md">English</a></p>
+
 <p align="center"><strong>AI 工具、API 控制台、模型价格与 Agent 生态的统一入口。</strong></p>
 
 <p align="center">

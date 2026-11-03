@@ -8,6 +8,8 @@
 
   var DICT = {
     '语言 / Language': 'Language',
+    '界面语言': 'Language',
+    '切换界面语言': 'Toggle language',
     'AI 工具集、API 控制台与 Agent 生态地图等的统一入口':
       'A unified entry to AI tools, API consoles and the Agent ecosystem map',
     '切换外观主题': 'Toggle theme',
@@ -121,6 +123,17 @@
   function syncLanguageMenu() {
     var label = document.getElementById('hub-menu-language-label');
     if (label) label.textContent = isEn() ? '简体中文' : 'English';
+    var mobileBtn = document.getElementById('mobile-lang-toggle');
+    if (mobileBtn) {
+      var en = isEn();
+      var txt = en ? '中' : 'EN';
+      var title = en ? '切换为简体中文 (L)' : 'Switch to English (L)';
+      mobileBtn.title = title;
+      mobileBtn.setAttribute('aria-label', title);
+      var textEl = mobileBtn.querySelector('.lang-toggle-text');
+      if (textEl) textEl.textContent = txt;
+      else mobileBtn.textContent = txt;
+    }
   }
   function setLang(lang) {
     var next = normalize(lang);
@@ -140,6 +153,15 @@
     syncLanguageMenu();
     var languageButton = document.getElementById('hub-menu-language');
     if (languageButton) languageButton.addEventListener('click', function () { setLang(isEn() ? 'zh' : 'en'); });
+    var mobileLangBtn = document.getElementById('mobile-lang-toggle');
+    if (mobileLangBtn) mobileLangBtn.addEventListener('click', function () { setLang(isEn() ? 'zh' : 'en'); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'l' || e.key === 'L') {
+        var active = document.activeElement;
+        if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) return;
+        setLang(isEn() ? 'zh' : 'en');
+      }
+    });
     var observer = new MutationObserver(function (mutations) {
       var en = isEn();
       mutations.forEach(function (m) {
