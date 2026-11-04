@@ -14,6 +14,8 @@
       'A unified entry to AI tools, API consoles and the Agent ecosystem map',
     '切换外观主题': 'Toggle theme',
     '深色模式': 'Dark mode',
+    '浅色': 'Light',
+    '深色': 'Dark',
     '浅色模式': 'Light mode',
     '未登录': 'Not signed in',
     'Google 登录': 'Sign in with Google',
