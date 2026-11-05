@@ -124,7 +124,7 @@
   }
   function syncLanguageMenu() {
     var label = document.getElementById('hub-menu-language-label');
-    if (label) label.textContent = isEn() ? '简体中文' : 'English';
+    if (label) label.textContent = isEn() ? 'English' : '简体中文';
     var mobileBtn = document.getElementById('mobile-lang-toggle');
     if (mobileBtn) {
       var en = isEn();

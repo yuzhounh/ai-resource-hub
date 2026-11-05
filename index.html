@@ -619,12 +619,12 @@
                 <button id="hub-menu-language" type="button" aria-label="语言 / Language" style="display:flex;align-items:center;gap:8px;">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 8 6 6m-7 0 6-6 2-5H2m5-2v2m7 18 5-11 5 11m-8-4h6"/></svg>
                   <span>界面语言</span>
-                  <span id="hub-menu-language-label" style="margin-left:auto;color:var(--muted);font-size:12px;" data-no-i18n="true">English</span>
+                  <span id="hub-menu-language-label" style="margin-left:auto;color:var(--muted);font-size:12px;" data-no-i18n="true">简体中文</span>
                 </button>
                 <button id="hub-menu-theme" type="button" aria-label="切换外观主题" style="display:flex;align-items:center;gap:8px;">
                   <span id="hub-menu-theme-icon" style="display:inline-flex;align-items:center;"></span>
                   <span>外观主题</span>
-                  <span id="hub-menu-theme-val" style="margin-left:auto;color:var(--muted);font-size:12px;">深色</span>
+                  <span id="hub-menu-theme-val" style="margin-left:auto;color:var(--muted);font-size:12px;">浅色</span>
                 </button>
               </div>
               <div class="hub-user-menu-actions hub-user-menu-session">
@@ -2052,11 +2052,11 @@
       const moonSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
       const icon = isDark ? sunSvg : moonSvg;
       const isEn = window.AIRHI18N && window.AIRHI18N.isEn();
-      const targetVal = isDark ? (isEn ? 'Light' : '浅色') : (isEn ? 'Dark' : '深色');
+      const currentVal = isDark ? (isEn ? 'Dark' : '深色') : (isEn ? 'Light' : '浅色');
       const themeIconEl = document.getElementById('hub-menu-theme-icon');
-      if (themeIconEl) themeIconEl.innerHTML = icon;
+      if (themeIconEl) themeIconEl.innerHTML = isDark ? moonSvg : sunSvg;
       const themeValEl = document.getElementById('hub-menu-theme-val');
-      if (themeValEl) themeValEl.textContent = targetVal;
+      if (themeValEl) themeValEl.textContent = currentVal;
       const mobileThemeBtn = document.getElementById('mobile-theme-toggle');
       if (mobileThemeBtn) mobileThemeBtn.innerHTML = isDark ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>` : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
     }
